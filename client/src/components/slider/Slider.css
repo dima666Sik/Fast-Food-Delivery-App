@@ -1,0 +1,33 @@
+/* стили для заголовка карусели */
+.slider-title {
+	font-size: 2rem;
+	text-align: center;
+}
+
+/* стили для описания карусели */
+.slider-description {
+	font-size: 1.2rem;
+	text-align: center;
+}
+
+/* медиа-запрос для мобильных устройств */
+@media only screen and (max-width: 768px) {
+	.slider-title {
+		font-size: 1.4rem;
+	}
+
+	.slider-description {
+		font-size: 0.8rem;
+	}
+}
+
+/* медиа-запрос для планшетов */
+@media (min-width: 769px) and (max-width: 992px) {
+	.slider-title {
+		font-size: 1.8rem;
+	}
+
+	.slider-description {
+		font-size: 1.2rem;
+	}
+}
