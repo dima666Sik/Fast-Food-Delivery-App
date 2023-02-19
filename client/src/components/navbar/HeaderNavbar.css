@@ -2,6 +2,39 @@
 	color: black;
 }
 
-.active-link {
+.bi.bi-cart-plus {
 	color: orangered;
+}
+
+.navbar-pos {
+	box-shadow: 0px 0px 15px rgba(176, 176, 176, 0.5);
+	position: sticky;
+	top: 0;
+	z-index: 2;
+}
+.cart__plus__container {
+	position: relative;
+}
+
+.cart__badge {
+	position: absolute;
+	top: 5px;
+	right: -2px;
+	background: orangered;
+	color: #f7f5eb;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	font-size: 0.8rem;
+	font-weight: 500;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* медиа-запрос для планшетов */
+@media (max-width: 769px) {
+	.cart__badge {
+		left: 10px;
+	}
 }

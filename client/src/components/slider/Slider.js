@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Carousel } from "react-bootstrap";
+import { Button, Carousel } from "react-bootstrap";
 import "./Slider.css";
 
 const SliderCaption = ({ title, description }) => {
 	return (
 		<Carousel.Caption>
-			<h3 className="slider-title">{title}</h3>
+			<div className="block__title d-flex justify-content-center">
+				<h3 className="slider-title">{title}</h3>
+				<Button variant="primary" className="order-button">
+					Order Now <i className="bi bi-chevron-right"></i>
+				</Button>
+			</div>
 			<p className="slider-description">{description}</p>
 		</Carousel.Caption>
 	);

@@ -1,0 +1,74 @@
+.logo__container p {
+	font-weight: 600;
+	font-size: 0.95rem;
+}
+
+.logo__container h5 {
+	font-weight: 800;
+	font-size: 1.7em;
+}
+
+.footer__container {
+	padding-top: 50px;
+	padding-bottom: 30px;
+	background-color: #da4310a3;
+}
+.delivery__time__item {
+	background: transparent !important;
+}
+
+.delivery__time__item span {
+	font-weight: 600;
+	font-size: 1rem;
+	color: #212121;
+}
+
+.delivery__time__item p {
+	color: #212121;
+}
+
+.newsletter {
+	padding: 5px;
+	border: 1px solid #212121;
+	border-radius: 5px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	overflow: hidden;
+}
+
+.newsletter input {
+	background: transparent;
+	border: none;
+	outline: none;
+}
+
+.newsletter input:focus {
+	outline: none;
+}
+
+.newsletter span {
+	background: #212121;
+	border-radius: 5px;
+	flex-shrink: 0;
+}
+
+.newsletter span i {
+	color: #f7f5eb;
+	padding: 1rem 0.5rem;
+}
+
+.newsletter input::placeholder {
+	color: #212121;
+}
+
+.social__links span i {
+	padding: 4px 6px;
+	background-color: #212121;
+	color: #f7f5eb;
+	border-radius: 50%;
+}
+
+.copyright__text {
+	font-size: 1rem;
+}
