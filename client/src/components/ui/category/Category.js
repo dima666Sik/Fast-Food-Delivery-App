@@ -8,14 +8,13 @@ import "./Category.css";
 
 const categoryData = [
 	{
-		display: "Hamburger",
-		imgUrl: categoryImg1,
-	},
-	{
 		display: "Pizza",
 		imgUrl: categoryImg2,
 	},
-
+	{
+		display: "Hamburger",
+		imgUrl: categoryImg1,
+	},
 	{
 		display: "Sushi",
 		imgUrl: categoryImg3,
