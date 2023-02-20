@@ -1,23 +1,23 @@
 {
   "files": {
     "main.css": "/Fast-Food-Delivery-App/static/css/main.cd103889.css",
-    "main.js": "/Fast-Food-Delivery-App/static/js/main.6a3c47a0.js",
-    "static/js/222.bf19cfb7.chunk.js": "/Fast-Food-Delivery-App/static/js/222.bf19cfb7.chunk.js",
-    "static/js/733.7f780b51.chunk.js": "/Fast-Food-Delivery-App/static/js/733.7f780b51.chunk.js",
-    "static/js/414.31b5bf18.chunk.js": "/Fast-Food-Delivery-App/static/js/414.31b5bf18.chunk.js",
-    "static/media/third_img_for_slider.png": "/Fast-Food-Delivery-App/static/media/third_img_for_slider.ee467e3d22b3bf87687a.png",
-    "static/media/second_img_for_slider.png": "/Fast-Food-Delivery-App/static/media/second_img_for_slider.b4552423fb460ff5fc7b.png",
-    "static/media/first_pizza_slide.png": "/Fast-Food-Delivery-App/static/media/first_pizza_slide.b7a499336f78f2d7400c.png",
+    "main.js": "/Fast-Food-Delivery-App/static/js/main.65c64e86.js",
+    "static/js/222.97edb99a.chunk.js": "/Fast-Food-Delivery-App/static/js/222.97edb99a.chunk.js",
+    "static/js/733.6fd82dd2.chunk.js": "/Fast-Food-Delivery-App/static/js/733.6fd82dd2.chunk.js",
+    "static/js/414.05c1d375.chunk.js": "/Fast-Food-Delivery-App/static/js/414.05c1d375.chunk.js",
+    "static/media/first_pizza_slide.png": "/Fast-Food-Delivery-App/static/media/first_pizza_slide.d2d8a77b952b588f6deb.png",
+    "static/media/second_img_for_slider.png": "/Fast-Food-Delivery-App/static/media/second_img_for_slider.7413d7740b7c3c79639e.png",
+    "static/media/third_img_for_slider.png": "/Fast-Food-Delivery-App/static/media/third_img_for_slider.5d2c7d1d33e4755f61cf.png",
     "static/media/bootstrap-icons.woff?": "/Fast-Food-Delivery-App/static/media/bootstrap-icons.6959d0d983ee318f8880.woff",
     "static/media/bootstrap-icons.woff2?": "/Fast-Food-Delivery-App/static/media/bootstrap-icons.b2e5aab643c6f0fd2da6.woff2",
     "static/media/category-03.png": "/Fast-Food-Delivery-App/static/media/category-03.4114e1745453584e6b6d.png",
     "static/media/category-02.png": "/Fast-Food-Delivery-App/static/media/category-02.c5fb2d1e1ded1868633b.png",
     "index.html": "/Fast-Food-Delivery-App/index.html",
     "main.cd103889.css.map": "/Fast-Food-Delivery-App/static/css/main.cd103889.css.map",
-    "main.6a3c47a0.js.map": "/Fast-Food-Delivery-App/static/js/main.6a3c47a0.js.map"
+    "main.65c64e86.js.map": "/Fast-Food-Delivery-App/static/js/main.65c64e86.js.map"
   },
   "entrypoints": [
     "static/css/main.cd103889.css",
-    "static/js/main.6a3c47a0.js"
+    "static/js/main.65c64e86.js"
   ]
 }

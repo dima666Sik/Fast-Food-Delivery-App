@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkclient=self.webpackChunkclient||[]).push([[733],{733:function(e,c,s){e.exports=s.p+"static/media/second_img_for_slider.b4552423fb460ff5fc7b.png"}}]);

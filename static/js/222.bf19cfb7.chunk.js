@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkclient=self.webpackChunkclient||[]).push([[222],{222:function(e,i,s){e.exports=s.p+"static/media/first_pizza_slide.b7a499336f78f2d7400c.png"}}]);
