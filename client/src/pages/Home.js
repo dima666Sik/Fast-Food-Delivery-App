@@ -6,8 +6,6 @@ import Category from "../components/ui/category/Category";
 import MenuProducts from "../components/ui/menu-products/MenuProducts";
 import WhyWe from "../components/ui/why-we/WhyWe";
 import HotFood from "../components/ui/hot-food/HotFood";
-import Review from "../components/ui/review/Review";
-
 const Home = () => {
 	return (
 		<>
@@ -27,9 +25,6 @@ const Home = () => {
 				</section>
 				<section className="section__container">
 					<HotFood />
-				</section>
-				<section className="section__container">
-					<Review />
 				</section>
 			</Helmet>
 		</>
