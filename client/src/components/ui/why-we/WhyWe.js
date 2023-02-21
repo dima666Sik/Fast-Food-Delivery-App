@@ -14,7 +14,7 @@ const WhyWe = () => {
 				<Col lg="6" md="6">
 					<div className="why__fast-food">
 						<h2 className="fast__food-title mb-4">
-							Why <span>Tasty Treat?</span>
+							Why <span>Fast Food Dev?</span>
 						</h2>
 						<p className="fast__food-desc">
 							Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum,
