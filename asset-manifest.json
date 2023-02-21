@@ -1,23 +1,42 @@
 {
   "files": {
-    "main.css": "/Fast-Food-Delivery-App/static/css/main.cd103889.css",
-    "main.js": "/Fast-Food-Delivery-App/static/js/main.95357a51.js",
+    "main.css": "/Fast-Food-Delivery-App/static/css/main.b94a62e9.css",
+    "main.js": "/Fast-Food-Delivery-App/static/js/main.fd6d02e4.js",
     "static/js/222.97edb99a.chunk.js": "/Fast-Food-Delivery-App/static/js/222.97edb99a.chunk.js",
     "static/js/733.6fd82dd2.chunk.js": "/Fast-Food-Delivery-App/static/js/733.6fd82dd2.chunk.js",
     "static/js/414.05c1d375.chunk.js": "/Fast-Food-Delivery-App/static/js/414.05c1d375.chunk.js",
     "static/media/first_pizza_slide.png": "/Fast-Food-Delivery-App/static/media/first_pizza_slide.d2d8a77b952b588f6deb.png",
     "static/media/second_img_for_slider.png": "/Fast-Food-Delivery-App/static/media/second_img_for_slider.7413d7740b7c3c79639e.png",
     "static/media/third_img_for_slider.png": "/Fast-Food-Delivery-App/static/media/third_img_for_slider.5d2c7d1d33e4755f61cf.png",
+    "static/media/product_4.3.png": "/Fast-Food-Delivery-App/static/media/product_4.3.2df1cebb0cf62346965c.png",
+    "static/media/product_3.1.jpg": "/Fast-Food-Delivery-App/static/media/product_3.1.9c207cdf68c9700b11ce.jpg",
+    "static/media/product_2.2.jpg": "/Fast-Food-Delivery-App/static/media/product_2.2.4967c9cbe3fec366a31a.jpg",
+    "static/media/product_2.3.jpg": "/Fast-Food-Delivery-App/static/media/product_2.3.3914f9eb0c0b372910ea.jpg",
+    "static/media/product_4.2.jpg": "/Fast-Food-Delivery-App/static/media/product_4.2.e82e43e0a3fc5dab999e.jpg",
+    "static/media/product_4.1.jpg": "/Fast-Food-Delivery-App/static/media/product_4.1.3c8ecc492220a3922731.jpg",
+    "static/media/product_3.3.jpg": "/Fast-Food-Delivery-App/static/media/product_3.3.f482f459be92f0045d9a.jpg",
+    "static/media/product_3.2.jpg": "/Fast-Food-Delivery-App/static/media/product_3.2.ebcb16b50e4ef0060a5e.jpg",
+    "static/media/product_2.1.jpg": "/Fast-Food-Delivery-App/static/media/product_2.1.f15385546f60c8d0f0d9.jpg",
+    "static/media/product_01.3.jpg": "/Fast-Food-Delivery-App/static/media/product_01.3.3ca2e9753f9acf20ca46.jpg",
+    "static/media/product_01.1.jpg": "/Fast-Food-Delivery-App/static/media/product_01.1.2244bc02a3d347b6bdda.jpg",
+    "static/media/product_09.jpg": "/Fast-Food-Delivery-App/static/media/product_09.d21d528bedb9088bf89f.jpg",
+    "static/media/product_01.jpg": "/Fast-Food-Delivery-App/static/media/product_01.6be97a612b580d595585.jpg",
     "static/media/bootstrap-icons.woff?": "/Fast-Food-Delivery-App/static/media/bootstrap-icons.6959d0d983ee318f8880.woff",
+    "static/media/product_04.jpg": "/Fast-Food-Delivery-App/static/media/product_04.f7c5294d0481fb12cc4c.jpg",
+    "static/media/product_08.jpg": "/Fast-Food-Delivery-App/static/media/product_08.efc6c71968cf3ffe817a.jpg",
     "static/media/bootstrap-icons.woff2?": "/Fast-Food-Delivery-App/static/media/bootstrap-icons.b2e5aab643c6f0fd2da6.woff2",
+    "static/media/whyWeImg.png": "/Fast-Food-Delivery-App/static/media/whyWeImg.107e907682272081a0a1.png",
+    "static/media/bread(2).png": "/Fast-Food-Delivery-App/static/media/bread(2).dd485726262fc6f94474.png",
+    "static/media/bread(3).png": "/Fast-Food-Delivery-App/static/media/bread(3).e4b9fdd91579778ae4cc.png",
+    "static/media/bread(1).png": "/Fast-Food-Delivery-App/static/media/bread(1).2fbb5c91c696e21efcb6.png",
     "static/media/category-03.png": "/Fast-Food-Delivery-App/static/media/category-03.4114e1745453584e6b6d.png",
     "static/media/category-02.png": "/Fast-Food-Delivery-App/static/media/category-02.c5fb2d1e1ded1868633b.png",
     "index.html": "/Fast-Food-Delivery-App/index.html",
-    "main.cd103889.css.map": "/Fast-Food-Delivery-App/static/css/main.cd103889.css.map",
-    "main.95357a51.js.map": "/Fast-Food-Delivery-App/static/js/main.95357a51.js.map"
+    "main.b94a62e9.css.map": "/Fast-Food-Delivery-App/static/css/main.b94a62e9.css.map",
+    "main.fd6d02e4.js.map": "/Fast-Food-Delivery-App/static/js/main.fd6d02e4.js.map"
   },
   "entrypoints": [
-    "static/css/main.cd103889.css",
-    "static/js/main.95357a51.js"
+    "static/css/main.b94a62e9.css",
+    "static/js/main.fd6d02e4.js"
   ]
 }
