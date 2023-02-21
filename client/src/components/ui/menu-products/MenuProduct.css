@@ -1,0 +1,28 @@
+.food__category {
+	flex-wrap: wrap;
+	background: orangered;
+	text-align: center;
+	margin-top: 30px;
+	padding: 20px 0px;
+	border-radius: 8px;
+}
+
+.food__category button {
+	border: none;
+	outline: none;
+	padding: 7px 20px;
+	background: transparent;
+	color: #f7f5eb;
+}
+
+.food__category button img {
+	width: 20px;
+	height: 20px;
+}
+
+.foodBtnActive {
+	background: #f7f5eb !important;
+	border-radius: 5px;
+	color: #212121 !important;
+	font-weight: 500;
+}

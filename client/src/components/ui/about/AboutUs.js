@@ -1,8 +1,8 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import featureImg01 from "../../assets/images/aboutus/about__us__img1.png";
-import featureImg02 from "../../assets/images/aboutus/about__us__img2.png";
-import featureImg03 from "../../assets/images/aboutus/about__us__img3.png";
+import featureImg01 from "../../../assets/images/aboutus/about__us__img1.png";
+import featureImg02 from "../../../assets/images/aboutus/about__us__img2.png";
+import featureImg03 from "../../../assets/images/aboutus/about__us__img3.png";
 
 const featureData = [
 	{

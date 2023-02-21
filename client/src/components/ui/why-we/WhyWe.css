@@ -1,0 +1,26 @@
+.bi.bi-check2-circle {
+	color: orangered;
+}
+
+.fast__food-title span {
+	color: orangered;
+}
+
+.fast__food-desc {
+	color: #888;
+	line-height: 28px;
+}
+
+.choose__us-title {
+	font-weight: 600;
+	margin-bottom: 10px;
+}
+
+.choose__us-title i {
+	font-weight: 500 !important;
+	color: orangered;
+}
+
+.choose__us-desc {
+	color: #888;
+}
