@@ -44,8 +44,10 @@ const Register = (props) => {
 			setEmail(currentEmail);
 			if (!rgx.test(String(currentEmail).toLowerCase())) {
 				setEmailError("Incorrect E-mail");
-				if (!e.target.value.length)
+				if (!e.target.value.length) {
 					setEmailError("E-mail field cannot be empty!");
+					setTimeout(() => setEmailError(""), 2000);
+				}
 			} else {
 				setEmailError("");
 			}
@@ -58,8 +60,10 @@ const Register = (props) => {
 			setPassword(currentPass);
 			if (currentPass.length < 6 || currentPass.length > 8) {
 				setPasswordError("Password less 6 or large 8 chars!");
-				if (!e.target.value.length)
+				if (!e.target.value.length) {
 					setPasswordError("Password field cannot be empty!");
+					setTimeout(() => setPasswordError(""), 2000);
+				}
 			} else {
 				setPasswordError("");
 			}

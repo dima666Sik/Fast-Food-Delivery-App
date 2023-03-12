@@ -22,7 +22,14 @@ const HotFood = () => {
 				</Col>
 
 				{hotFood.map((item) => (
-					<Col lg="3" md="4" sm="6" xs="6" key={item.id}>
+					<Col
+						className="col__gallery__product__cards"
+						lg="3"
+						md="4"
+						sm="6"
+						xs="6"
+						key={item.id}
+					>
 						<ProductCard item={item} />
 					</Col>
 				))}

@@ -37,8 +37,10 @@ const Login = (props) => {
 			setEmail(currentEmail);
 			if (!rgx.test(String(currentEmail).toLowerCase())) {
 				setEmailError("Incorrect E-mail");
-				if (!e.target.value.length)
+				if (!e.target.value.length) {
 					setEmailError("E-mail field cannot be empty!");
+					setTimeout(() => setEmailError(""), 2000);
+				}
 			} else {
 				setEmailError("");
 			}
@@ -49,9 +51,10 @@ const Login = (props) => {
 		if (e.target.value !== 0) {
 			const currentPass = e.target.value;
 			setPassword(currentPass);
-			if (!e.target.value.length)
+			if (!e.target.value.length) {
 				setPasswordError("Password field cannot be empty!");
-			else setPasswordError("");
+				setTimeout(() => setPasswordError(""), 2000);
+			} else setPasswordError("");
 		}
 	};
 

@@ -36,7 +36,7 @@ const Slider = () => {
 					<img className="d-block w-100" src={img} alt={`Slide ${index + 1}`} />
 					<SliderCaption
 						title={`Do you want ${
-							index === 0 ? "pizza" : index === 1 ? "a burger" : "sushi"
+							index === 0 ? "pizza" : index === 1 ? "burger" : "sushi"
 						}?`}
 						description="Order delivery from us, incredible taste and quality are guaranteed."
 					/>
