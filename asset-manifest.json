@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/Fast-Food-Delivery-App/static/css/main.ec1130ef.css",
-    "main.js": "/Fast-Food-Delivery-App/static/js/main.cead9812.js",
+    "main.js": "/Fast-Food-Delivery-App/static/js/main.859f28ca.js",
     "static/js/222.97edb99a.chunk.js": "/Fast-Food-Delivery-App/static/js/222.97edb99a.chunk.js",
     "static/js/733.6fd82dd2.chunk.js": "/Fast-Food-Delivery-App/static/js/733.6fd82dd2.chunk.js",
     "static/js/414.05c1d375.chunk.js": "/Fast-Food-Delivery-App/static/js/414.05c1d375.chunk.js",
@@ -25,18 +25,18 @@
     "static/media/product_04.jpg": "/Fast-Food-Delivery-App/static/media/product_04.f7c5294d0481fb12cc4c.jpg",
     "static/media/product_08.jpg": "/Fast-Food-Delivery-App/static/media/product_08.efc6c71968cf3ffe817a.jpg",
     "static/media/bootstrap-icons.woff2?": "/Fast-Food-Delivery-App/static/media/bootstrap-icons.b2e5aab643c6f0fd2da6.woff2",
+    "static/media/sushi_1.png": "/Fast-Food-Delivery-App/static/media/sushi_1.79b1c1d220e5c2908fc4.png",
+    "static/media/sushi_2.png": "/Fast-Food-Delivery-App/static/media/sushi_2.2868258b67f88ca49b1c.png",
+    "static/media/sushi_3.png": "/Fast-Food-Delivery-App/static/media/sushi_3.f34c75683b120055291f.png",
     "static/media/whyWeImg.png": "/Fast-Food-Delivery-App/static/media/whyWeImg.107e907682272081a0a1.png",
-    "static/media/bread(2).png": "/Fast-Food-Delivery-App/static/media/bread(2).dd485726262fc6f94474.png",
-    "static/media/bread(3).png": "/Fast-Food-Delivery-App/static/media/bread(3).e4b9fdd91579778ae4cc.png",
-    "static/media/bread(1).png": "/Fast-Food-Delivery-App/static/media/bread(1).2fbb5c91c696e21efcb6.png",
     "static/media/category-03.png": "/Fast-Food-Delivery-App/static/media/category-03.4114e1745453584e6b6d.png",
     "static/media/category-02.png": "/Fast-Food-Delivery-App/static/media/category-02.c5fb2d1e1ded1868633b.png",
     "index.html": "/Fast-Food-Delivery-App/index.html",
     "main.ec1130ef.css.map": "/Fast-Food-Delivery-App/static/css/main.ec1130ef.css.map",
-    "main.cead9812.js.map": "/Fast-Food-Delivery-App/static/js/main.cead9812.js.map"
+    "main.859f28ca.js.map": "/Fast-Food-Delivery-App/static/js/main.859f28ca.js.map"
   },
   "entrypoints": [
     "static/css/main.ec1130ef.css",
-    "static/js/main.cead9812.js"
+    "static/js/main.859f28ca.js"
   ]
 }
