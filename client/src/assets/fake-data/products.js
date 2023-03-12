@@ -19,9 +19,9 @@ import product_05_image_01 from "../images/products/product_04.jpg";
 import product_05_image_02 from "../images/products/product_08.jpg";
 import product_05_image_03 from "../images/products/product_09.jpg";
 
-import product_06_image_01 from "../images/products/bread(1).png";
-import product_06_image_02 from "../images/products/bread(2).png";
-import product_06_image_03 from "../images/products/bread(3).png";
+import product_06_image_01 from "../images/products/sushi_1.png";
+import product_06_image_02 from "../images/products/sushi_2.png";
+import product_06_image_03 from "../images/products/sushi_3.png";
 
 const products = [
 	{
@@ -145,36 +145,36 @@ const products = [
 
 	{
 		id: "11",
-		title: "Crunchy Bread ",
+		title: "Maki Roll ",
 		price: 35.0,
 		image01: product_06_image_01,
 		image02: product_06_image_02,
 		image03: product_06_image_03,
-		category: "Bread",
+		category: "Sushi",
 
 		desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta ad et est, fugiat repudiandae neque illo delectus commodi magnam explicabo autem voluptates eaque velit vero facere mollitia. Placeat rem, molestiae error obcaecati enim doloribus impedit aliquam, maiores qui minus neque.",
 	},
 
 	{
 		id: "12",
-		title: "Delicious Bread ",
+		title: "Philadelphia Roll ",
 		price: 35.0,
 		image01: product_06_image_02,
 		image02: product_06_image_01,
 		image03: product_06_image_03,
-		category: "Bread",
+		category: "Sushi",
 
 		desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta ad et est, fugiat repudiandae neque illo delectus commodi magnam explicabo autem voluptates eaque velit vero facere mollitia. Placeat rem, molestiae error obcaecati enim doloribus impedit aliquam, maiores qui minus neque.",
 	},
 
 	{
 		id: "13",
-		title: "Loaf Bread ",
+		title: "Sashimi Roll ",
 		price: 35.0,
 		image01: product_06_image_03,
 		image02: product_06_image_02,
 		image03: product_06_image_03,
-		category: "Bread",
+		category: "Sushi",
 
 		desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta ad et est, fugiat repudiandae neque illo delectus commodi magnam explicabo autem voluptates eaque velit vero facere mollitia. Placeat rem, molestiae error obcaecati enim doloribus impedit aliquam, maiores qui minus neque.",
 	},

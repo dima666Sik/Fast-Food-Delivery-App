@@ -34,9 +34,9 @@ const MenuProducts = () => {
 			setAllProducts(filteredProducts);
 		}
 
-		if (category === "BREAD") {
+		if (category === "SUSHI") {
 			const filteredProducts = products.filter(
-				(item) => item.category === "Bread"
+				(item) => item.category === "Sushi"
 			);
 
 			setAllProducts(filteredProducts);
@@ -82,9 +82,9 @@ const MenuProducts = () => {
 
 						<button
 							className={`d-flex align-items-center gap-2 ${
-								category === "BREAD" ? "foodBtnActive" : ""
+								category === "SUSHI" ? "foodBtnActive" : ""
 							} `}
-							onClick={() => setCategory("BREAD")}
+							onClick={() => setCategory("SUSHI")}
 						>
 							<img src={foodCategoryImg3} alt="" />
 							Sushi
