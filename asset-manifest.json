@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/Fast-Food-Delivery-App/static/css/main.b94a62e9.css",
-    "main.js": "/Fast-Food-Delivery-App/static/js/main.fd6d02e4.js",
+    "main.css": "/Fast-Food-Delivery-App/static/css/main.ec1130ef.css",
+    "main.js": "/Fast-Food-Delivery-App/static/js/main.cead9812.js",
     "static/js/222.97edb99a.chunk.js": "/Fast-Food-Delivery-App/static/js/222.97edb99a.chunk.js",
     "static/js/733.6fd82dd2.chunk.js": "/Fast-Food-Delivery-App/static/js/733.6fd82dd2.chunk.js",
     "static/js/414.05c1d375.chunk.js": "/Fast-Food-Delivery-App/static/js/414.05c1d375.chunk.js",
@@ -32,11 +32,11 @@
     "static/media/category-03.png": "/Fast-Food-Delivery-App/static/media/category-03.4114e1745453584e6b6d.png",
     "static/media/category-02.png": "/Fast-Food-Delivery-App/static/media/category-02.c5fb2d1e1ded1868633b.png",
     "index.html": "/Fast-Food-Delivery-App/index.html",
-    "main.b94a62e9.css.map": "/Fast-Food-Delivery-App/static/css/main.b94a62e9.css.map",
-    "main.fd6d02e4.js.map": "/Fast-Food-Delivery-App/static/js/main.fd6d02e4.js.map"
+    "main.ec1130ef.css.map": "/Fast-Food-Delivery-App/static/css/main.ec1130ef.css.map",
+    "main.cead9812.js.map": "/Fast-Food-Delivery-App/static/js/main.cead9812.js.map"
   },
   "entrypoints": [
-    "static/css/main.b94a62e9.css",
-    "static/js/main.fd6d02e4.js"
+    "static/css/main.ec1130ef.css",
+    "static/js/main.cead9812.js"
   ]
 }
