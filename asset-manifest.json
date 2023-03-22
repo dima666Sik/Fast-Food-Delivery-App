@@ -1,10 +1,10 @@
 {
   "files": {
     "main.css": "/Fast-Food-Delivery-App/static/css/main.ec1130ef.css",
-    "main.js": "/Fast-Food-Delivery-App/static/js/main.859f28ca.js",
-    "static/js/222.97edb99a.chunk.js": "/Fast-Food-Delivery-App/static/js/222.97edb99a.chunk.js",
-    "static/js/733.6fd82dd2.chunk.js": "/Fast-Food-Delivery-App/static/js/733.6fd82dd2.chunk.js",
-    "static/js/414.05c1d375.chunk.js": "/Fast-Food-Delivery-App/static/js/414.05c1d375.chunk.js",
+    "main.js": "/Fast-Food-Delivery-App/static/js/main.e7d8d25d.js",
+    "static/js/222.2c35321b.chunk.js": "/Fast-Food-Delivery-App/static/js/222.2c35321b.chunk.js",
+    "static/js/733.7b4dc7b1.chunk.js": "/Fast-Food-Delivery-App/static/js/733.7b4dc7b1.chunk.js",
+    "static/js/414.0f3101d3.chunk.js": "/Fast-Food-Delivery-App/static/js/414.0f3101d3.chunk.js",
     "static/media/first_pizza_slide.png": "/Fast-Food-Delivery-App/static/media/first_pizza_slide.d2d8a77b952b588f6deb.png",
     "static/media/second_img_for_slider.png": "/Fast-Food-Delivery-App/static/media/second_img_for_slider.7413d7740b7c3c79639e.png",
     "static/media/third_img_for_slider.png": "/Fast-Food-Delivery-App/static/media/third_img_for_slider.5d2c7d1d33e4755f61cf.png",
@@ -33,10 +33,10 @@
     "static/media/category-02.png": "/Fast-Food-Delivery-App/static/media/category-02.c5fb2d1e1ded1868633b.png",
     "index.html": "/Fast-Food-Delivery-App/index.html",
     "main.ec1130ef.css.map": "/Fast-Food-Delivery-App/static/css/main.ec1130ef.css.map",
-    "main.859f28ca.js.map": "/Fast-Food-Delivery-App/static/js/main.859f28ca.js.map"
+    "main.e7d8d25d.js.map": "/Fast-Food-Delivery-App/static/js/main.e7d8d25d.js.map"
   },
   "entrypoints": [
     "static/css/main.ec1130ef.css",
-    "static/js/main.859f28ca.js"
+    "static/js/main.e7d8d25d.js"
   ]
 }
