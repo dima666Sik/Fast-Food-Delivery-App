@@ -4,10 +4,12 @@ import { Link } from "react-router-dom";
 import Login from "../../pages/Login";
 import Register from "../../pages/Register";
 import "./HeaderNavbar.css";
+import { useSelector } from "react-redux";
 
 export default function HeaderNavbar() {
 	const [showModal, setShowModal] = useState(false);
 	const [showRegisterModal, setShowRegisterModal] = useState(false);
+	const totalQuantity = useSelector((state) => state.cart.totalQuantity);
 
 	const handleLoginClick = () => {
 		setShowModal(true);
@@ -58,7 +60,7 @@ export default function HeaderNavbar() {
 									to="/checkout"
 								>
 									<i className="bi bi-cart-plus"></i>
-									<span className="cart__badge">2</span>
+									<span className="cart__badge">{totalQuantity}</span>
 								</Nav.Link>
 								<Nav.Link onClick={handleLoginClick}>
 									<i className="bi bi-person-circle"></i>
