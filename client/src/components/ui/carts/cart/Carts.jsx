@@ -12,7 +12,6 @@ const Carts = () => {
 		dispatch(cartUIActions.toggleVisible());
 	};
 	const totalAmount = useSelector((state) => state.cart.totalAmount);
-
 	return (
 		<div className="cart__container">
 			<ListGroup className="cart">
@@ -34,7 +33,7 @@ const Carts = () => {
 
 				<div className="cart__bottom">
 					<h6>
-						Subtotal amount: <span>${Number(totalAmount)}</span>
+						Subtotal amount: <span>${totalAmount}</span>
 					</h6>
 					<button>
 						<Link to="/checkout">Checkout</Link>
