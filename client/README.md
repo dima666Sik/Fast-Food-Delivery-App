@@ -22,8 +22,9 @@
 ---
 
 1. React.js
-2. React-Bootstrap
-3. CSS
+2. Redux ToolKit
+3. React-Bootstrap
+4. CSS
 
 ### How to start?
 
