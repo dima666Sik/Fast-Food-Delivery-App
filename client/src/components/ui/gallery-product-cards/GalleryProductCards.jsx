@@ -1,7 +1,7 @@
 import React from "react";
 import { Col } from "react-bootstrap";
 
-import ProductCard from "../product-card/ProductCard.js";
+import ProductCard from "../product-card/ProductCard.jsx";
 import "./GalleryProductCards.css";
 const GalleryProductCards = ({ products }) => {
 	return (

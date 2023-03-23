@@ -2,25 +2,25 @@
 	color: orangered;
 }
 
-.fast__food-title span {
+.fast__food__title span {
 	color: orangered;
 }
 
-.fast__food-desc {
+.fast__food__desc {
 	color: #888;
 	line-height: 28px;
 }
 
-.choose__us-title {
+.choose__us__title {
 	font-weight: 600;
 	margin-bottom: 10px;
 }
 
-.choose__us-title i {
+.choose__us__title i {
 	font-weight: 500 !important;
 	color: orangered;
 }
 
-.choose__us-desc {
+.choose__us__desc {
 	color: #888;
 }

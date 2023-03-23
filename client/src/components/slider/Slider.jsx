@@ -6,8 +6,8 @@ const SliderCaption = ({ title, description }) => {
 	return (
 		<Carousel.Caption>
 			<div className="block__title d-flex justify-content-center">
-				<h3 className="slider-title">{title}</h3>
-				<Button variant="primary" className="order-button">
+				<h3 className="slider__title">{title}</h3>
+				<Button variant="primary" className="order__button">
 					Order Now <i className="bi bi-chevron-right"></i>
 				</Button>
 			</div>

@@ -6,7 +6,7 @@
 	color: orangered;
 }
 
-.navbar-pos {
+.navbar__pos {
 	box-shadow: 0px 0px 15px rgba(176, 176, 176, 0.5);
 	position: sticky;
 	top: 0;

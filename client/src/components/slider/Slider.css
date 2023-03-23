@@ -1,17 +1,17 @@
 /* стили для заголовка карусели */
-.slider-title {
+.slider__title {
 	font-size: 2rem;
 	text-align: center;
 }
 
 /* стили для описания карусели */
-.slider-description {
+.slider__description {
 	font-size: 1.2rem;
 	text-align: center;
 }
 
 /* Common CSS for all Buttons */
-.order-button {
+.order__button {
 	font-size: 1rem !important;
 	cursor: pointer;
 	color: #f7f5eb !important;
@@ -21,7 +21,7 @@
 	border: 2px solid transparent;
 }
 
-.order-button:hover {
+.order__button:hover {
 	box-shadow: 0px 0px 20px 10px rgb(255, 138, 96);
 	background-color: rgb(255, 85, 23) !important;
 	border-color: rgb(255, 85, 23) !important;
@@ -33,11 +33,11 @@
 
 /* медиа-запрос для мобильных устройств */
 @media only screen and (max-width: 768px) {
-	.slider-title {
+	.slider__title {
 		font-size: 1.4rem;
 	}
 
-	.slider-description {
+	.slider__description {
 		font-size: 0.8rem;
 	}
 	.block__title {
@@ -46,7 +46,7 @@
 		gap: unset;
 	}
 
-	.order-button {
+	.order__button {
 		width: 20%;
 		font-size: 0.7rem !important;
 	}
@@ -54,28 +54,28 @@
 
 /* медиа-запрос для планшетов */
 @media (min-width: 769px) and (max-width: 992px) {
-	.slider-title {
+	.slider__title {
 		font-size: 1.8rem;
 	}
 
-	.slider-description {
+	.slider__description {
 		font-size: 1.2rem;
 	}
-	.order-button {
+	.order__button {
 		font-size: 0.9rem !important;
 	}
 }
 
 /* медиа-запрос для планшетов */
 @media (min-width: 200px) and (max-width: 768px) {
-	.slider-title {
+	.slider__title {
 		font-size: 1.2rem;
 	}
 
-	.slider-description {
+	.slider__description {
 		font-size: 0.7rem;
 	}
-	.order-button {
+	.order__button {
 		width: 45%;
 		font-size: 0.8rem !important;
 	}

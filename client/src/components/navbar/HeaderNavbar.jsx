@@ -4,15 +4,19 @@ import { Link } from "react-router-dom";
 import Login from "../../pages/Login";
 import Register from "../../pages/Register";
 import "./HeaderNavbar.css";
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import { cartUIActions } from "../../redux/store/shopping-cart/cartUISlice";
 export default function HeaderNavbar() {
-	const [showModal, setShowModal] = useState(false);
+	const [showLoginModal, setShowLoginModal] = useState(false);
 	const [showRegisterModal, setShowRegisterModal] = useState(false);
 	const totalQuantity = useSelector((state) => state.cart.totalQuantity);
+	const dispatch = useDispatch();
 
+	const toggleVisibleCart = () => {
+		dispatch(cartUIActions.toggleVisible());
+	};
 	const handleLoginClick = () => {
-		setShowModal(true);
+		setShowLoginModal(true);
 	};
 
 	const handleRegisterClick = () => {
@@ -20,13 +24,13 @@ export default function HeaderNavbar() {
 	};
 
 	const handleHideModal = () => {
-		setShowModal(false);
+		setShowLoginModal(false);
 		setShowRegisterModal(false);
 	};
 
 	return (
 		<>
-			<div className="navbar-pos">
+			<div className="navbar__pos">
 				<Navbar bg="dark" variant="dark" expand="md" collapseOnSelect>
 					<Container>
 						<Navbar.Brand>
@@ -56,8 +60,7 @@ export default function HeaderNavbar() {
 							<Nav>
 								<Nav.Link
 									className="cart__plus__container"
-									as={Link}
-									to="/checkout"
+									onClick={toggleVisibleCart}
 								>
 									<i className="bi bi-cart-plus"></i>
 									<span className="cart__badge">{totalQuantity}</span>
@@ -71,7 +74,7 @@ export default function HeaderNavbar() {
 				</Navbar>
 			</div>
 			<Login
-				show={showModal}
+				show={showLoginModal}
 				onHide={handleHideModal}
 				onRegisterClick={handleRegisterClick}
 			/>

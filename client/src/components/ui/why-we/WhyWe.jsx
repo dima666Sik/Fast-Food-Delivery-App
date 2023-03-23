@@ -13,10 +13,10 @@ const WhyWe = () => {
 
 				<Col lg="6" md="6">
 					<div className="why__fast-food">
-						<h2 className="fast__food-title mb-4">
+						<h2 className="fast__food__title mb-4">
 							Why <span>Fast Food Dev?</span>
 						</h2>
-						<p className="fast__food-desc">
+						<p className="fast__food__desc">
 							Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum,
 							minus. Tempora reprehenderit a corporis velit, laboriosam vitae
 							ullam, repellat illo sequi odio esse iste fugiat dolor, optio
@@ -25,10 +25,10 @@ const WhyWe = () => {
 
 						<ListGroup className="mt-4">
 							<ListGroupItem className="border-0 ps-0">
-								<p className="choose__us-title d-flex align-items-center gap-2 ">
+								<p className="choose__us__title d-flex align-items-center gap-2 ">
 									<i className="bi bi-check2-circle"></i> Fresh and tasty foods
 								</p>
-								<p className="choose__us-desc">
+								<p className="choose__us__desc">
 									Lorem ipsum, dolor sit amet consectetur adipisicing elit.
 									Quia, voluptatibus.
 								</p>
