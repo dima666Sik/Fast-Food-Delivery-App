@@ -1,7 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Form, Modal, Button } from "react-bootstrap";
 
+import { useFormValidation } from "../hooks/validationForms";
+import AlertText from "../components/alerts/alert-text/AlertText";
+
 const Login = (props) => {
+	const {
+		email,
+		setEmail,
+		password,
+		setPassword,
+		emailDirty,
+		setEmailDirty,
+		passwordDirty,
+		setPasswordDirty,
+		emailError,
+		passwordError,
+		formValid,
+		setFormValid,
+		emailHandler,
+		passwordHandler,
+	} = useFormValidation();
+
 	const handleRegisterClick = () => {
 		setEmailDirty(false);
 		setPasswordDirty(false);
@@ -9,67 +29,7 @@ const Login = (props) => {
 		setPassword("");
 		props.onHide();
 		props.onRegisterClick();
-	};
-
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-
-	const [emailDirty, setEmailDirty] = useState(false);
-	const [passwordDirty, setPasswordDirty] = useState(false);
-
-	const [emailError, setEmailError] = useState("E-mail field cannot be empty!");
-	const [passwordError, setPasswordError] = useState(
-		"Password field cannot be empty!"
-	);
-
-	const [formValid, setFormValid] = useState(false);
-
-	useEffect(() => {
-		if (emailError || passwordError) setFormValid(false);
-		else setFormValid(true);
-	}, [emailError, passwordError]);
-
-	const emailHandler = (e) => {
-		if (e.target.value !== 0) {
-			const rgx =
-				/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-			const currentEmail = e.target.value;
-			setEmail(currentEmail);
-			if (!rgx.test(String(currentEmail).toLowerCase())) {
-				setEmailError("Incorrect E-mail");
-				if (!e.target.value.length) {
-					setEmailError("E-mail field cannot be empty!");
-					setTimeout(() => setEmailError(""), 2000);
-				}
-			} else {
-				setEmailError("");
-			}
-		}
-	};
-
-	const passwordHandler = (e) => {
-		if (e.target.value !== 0) {
-			const currentPass = e.target.value;
-			setPassword(currentPass);
-			if (!e.target.value.length) {
-				setPasswordError("Password field cannot be empty!");
-				setTimeout(() => setPasswordError(""), 2000);
-			} else setPasswordError("");
-		}
-	};
-
-	const blurHandler = (e) => {
-		switch (e.target.name) {
-			case "email": {
-				setEmailDirty(true);
-				break;
-			}
-			case "password":
-				setPasswordDirty(true);
-				break;
-			default:
-				break;
-		}
+		setFormValid(false);
 	};
 
 	return (
@@ -88,14 +48,15 @@ const Login = (props) => {
 						<Form.Group controlId="fromBasicEmail">
 							<div className="d-flex justify-content-between">
 								<Form.Label>E-mail</Form.Label>
-								{emailDirty && emailError && (
-									<Form.Text className="text-danger">{emailError}</Form.Text>
-								)}
+								<AlertText
+									paramDirty={emailDirty}
+									paramError={emailError}
+									paramSuccess="E-mail is good!"
+								/>
 							</div>
 							<Form.Control
 								onChange={(e) => emailHandler(e)}
 								value={email}
-								onBlur={(e) => blurHandler(e)}
 								name="email"
 								type="email"
 								placeholder="Enter e-mail"
@@ -108,14 +69,15 @@ const Login = (props) => {
 						<Form.Group controlId="fromBasicPassword">
 							<div className="d-flex justify-content-between">
 								<Form.Label>Password</Form.Label>
-								{passwordDirty && passwordError && (
-									<Form.Text className="text-danger">{passwordError}</Form.Text>
-								)}
+								<AlertText
+									paramDirty={passwordDirty}
+									paramError={passwordError}
+									paramSuccess="Password is good!"
+								/>
 							</div>
 							<Form.Control
 								onChange={(e) => passwordHandler(e)}
 								value={password}
-								onBlur={(e) => blurHandler(e)}
 								name="password"
 								type="password"
 								placeholder="Enter password"

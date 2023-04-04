@@ -7,9 +7,8 @@
 ##### Here's features included in this project
 
 ✔️ Add to cart functionality <br>
-❌ Shopping cart functionality <br>
 ✔️ Product Filtering functionality <br>
-❌ Product page <br>
+✔️ Product page <br>
 ❌ Cart and checkout page <br>
 ❌ Contact page <br>
 ✔️ Login and Register page + Data Validation<br>

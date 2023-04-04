@@ -1,0 +1,8 @@
+.common__section__ad {
+	background: url("../../../assets/images/common-ad/banner.png");
+
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
+	padding: 100px 0px;
+}

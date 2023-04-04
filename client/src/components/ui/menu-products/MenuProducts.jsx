@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
+
 import products from "../../../assets/fake-data/products.js";
 import foodCategoryImg1 from "../../../assets/images/menu-products/product_1_pizza.png";
 

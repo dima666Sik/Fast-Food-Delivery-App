@@ -9,9 +9,27 @@ import {
 	ListGroupItem,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
+
 import "./Footer.css";
+import { useFormValidation } from "../../hooks/validationForms";
 
 const Footer = () => {
+	const {
+		email,
+		setEmail,
+		emailDirty,
+		setEmailDirty,
+		emailError,
+		formValid,
+		emailHandler,
+		blurHandler,
+	} = useFormValidation();
+
+	const handleRegisterClick = () => {
+		setEmailDirty(false);
+		setEmail("");
+	};
+
 	return (
 		<div className="footer__container">
 			<Container>
@@ -65,9 +83,19 @@ const Footer = () => {
 					<Col lg="3" md="4" sm="6">
 						<h5>Newsletters</h5>
 						<p>Subscribe our newsletter</p>
+						{emailDirty && emailError && (
+							<p className="text-danger">{emailError}</p>
+						)}
 						<div className="newsletter">
-							<input type="email" placeholder="Enter your e-mail" />
-							<span>
+							<input
+								placeholder="Enter your e-mail"
+								onChange={(e) => emailHandler(e)}
+								value={email}
+								onBlur={(e) => blurHandler(e)}
+								name="email"
+								type="email"
+							/>
+							<span disabled={!formValid}>
 								<i className="bi bi-send-fill"></i>
 							</span>
 						</div>

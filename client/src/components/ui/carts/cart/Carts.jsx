@@ -1,19 +1,32 @@
 import React from "react";
-import CartItem from "../cart-item/CartItem";
+import { useDispatch, useSelector } from "react-redux";
 import { ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
+
 import "./Carts.css";
-import { useDispatch, useSelector } from "react-redux";
+import CartItem from "../cart-item/CartItem";
+
 import { cartUIActions } from "../../../../redux/store/shopping-cart/cartUISlice";
 const Carts = () => {
 	const dispatch = useDispatch();
 	const cartProducts = useSelector((state) => state.cart.cartItems);
-	const toggleVisibleCart = () => {
+
+	const handleToggleVisibleCart = () => {
 		dispatch(cartUIActions.toggleVisible());
 	};
+
+	const toggleVisibleCart = handleToggleVisibleCart;
+
 	const totalAmount = useSelector((state) => state.cart.totalAmount);
+
+	const handleClickOutside = (event) => {
+		if (event.target.className === "cart__container") {
+			handleToggleVisibleCart();
+		}
+	};
+
 	return (
-		<div className="cart__container">
+		<div className="cart__container" onClick={handleClickOutside}>
 			<ListGroup className="cart">
 				<div className="cart__close" onClick={toggleVisibleCart}>
 					<span>

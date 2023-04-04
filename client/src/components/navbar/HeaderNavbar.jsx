@@ -1,20 +1,25 @@
 import React, { useState } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
 import Login from "../../pages/Login";
 import Register from "../../pages/Register";
 import "./HeaderNavbar.css";
-import { useDispatch, useSelector } from "react-redux";
 import { cartUIActions } from "../../redux/store/shopping-cart/cartUISlice";
+import Carts from "../ui/carts/cart/Carts";
+
 export default function HeaderNavbar() {
 	const [showLoginModal, setShowLoginModal] = useState(false);
 	const [showRegisterModal, setShowRegisterModal] = useState(false);
 	const totalQuantity = useSelector((state) => state.cart.totalQuantity);
 	const dispatch = useDispatch();
+	const visibleCart = useSelector((state) => state.cartUI.cartIsVisible);
 
 	const toggleVisibleCart = () => {
 		dispatch(cartUIActions.toggleVisible());
 	};
+
 	const handleLoginClick = () => {
 		setShowLoginModal(true);
 	};
@@ -83,6 +88,7 @@ export default function HeaderNavbar() {
 				onHide={handleHideModal}
 				onLoginClick={handleLoginClick}
 			/>
+			{visibleCart && <Carts />}
 		</>
 	);
 }
