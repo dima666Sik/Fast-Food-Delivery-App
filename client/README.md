@@ -65,7 +65,7 @@ npm start
 
 1. React.js
 2. Redux ToolKit
-3. React-Bootstrap
+3. React-Bootstrap, Bootstrap
 4. CSS
 
 ### Markers
