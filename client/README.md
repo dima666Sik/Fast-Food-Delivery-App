@@ -57,7 +57,7 @@ npm start
 ✔️ Cart and checkout page <br>
 ✔️ Contact page <br>
 ✔️ Login and Register page + Data Validation<br>
-✔️ Awesome modern minimalist UI
+✔️ Modern minimalist UI
 
 ### Technologies Used
 
