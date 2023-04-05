@@ -3,10 +3,11 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import Home from "../pages/Home";
 import FoodDetails from "../pages/food-details/FoodDetails";
-import Cart from "../pages/Cart";
-import Contact from "../pages/Contact";
+
 import AllFoods from "../pages/all-foods/AllFoods";
-// import Checkout from "../pages/Checkout";
+import Cart from "../pages/cart/Cart";
+import Checkout from "../pages/checkout/Checkout";
+import Contact from "../pages/contact/Contact";
 
 const Routers = () => {
 	return (
@@ -16,6 +17,7 @@ const Routers = () => {
 			<Route path="/foods" element={<AllFoods />} />
 			<Route path="/foods/:id" element={<FoodDetails />} />
 			<Route path="/cart" element={<Cart />} />
+			<Route path="/checkout" element={<Checkout />} />
 			<Route path="/contact" element={<Contact />} />
 			<Route path="*" element={<Navigate to="/" />} />
 		</Routes>

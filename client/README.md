@@ -54,10 +54,10 @@ npm start
 ✔️ Add to cart functionality <br>
 ✔️ Product Filtering functionality <br>
 ✔️ Product page <br>
-❌ Cart and checkout page <br>
-❌ Contact page <br>
+✔️ Cart and checkout page <br>
+✔️ Contact page <br>
 ✔️ Login and Register page + Data Validation<br>
-❌ Awesome modern minimalist UI
+✔️ Awesome modern minimalist UI
 
 ### Technologies Used
 

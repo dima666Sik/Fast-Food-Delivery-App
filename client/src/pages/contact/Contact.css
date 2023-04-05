@@ -1,0 +1,15 @@
+.contact__form input.form__group {
+	height: calc(2.5em + 0.75rem + 2px);
+}
+
+.form__group.text__area {
+	border: none;
+	border-bottom: 1px solid #2122454c;
+}
+.form__group.text__area:focus {
+	outline: none;
+}
+
+.form__group.text__name {
+	padding-right: 2rem;
+}
