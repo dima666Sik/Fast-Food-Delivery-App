@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -11,6 +11,10 @@ import "./Cart.css";
 const Cart = () => {
 	const cartItems = useSelector((state) => state.cart.cartItems);
 	const totalAmount = useSelector((state) => state.cart.totalAmount);
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
+
 	return (
 		<Helmet title="Cart">
 			<CommonAd title="Your Cart" />

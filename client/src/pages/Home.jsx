@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import AboutUs from "../components/ui/about/AboutUs";
 import Helmet from "../components/helmet/Helmet";
@@ -8,6 +8,10 @@ import MenuProducts from "../components/ui/menu-products/MenuProducts";
 import WhyWe from "../components/ui/why-we/WhyWe";
 import HotFood from "../components/ui/hot-food/HotFood";
 const Home = () => {
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
+
 	return (
 		<>
 			<Helmet title="Home">

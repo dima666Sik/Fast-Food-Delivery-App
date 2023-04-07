@@ -39,6 +39,10 @@
 	transition: 0.4s;
 }
 
+.like {
+	width: 20px;
+	margin-left: 5px;
+}
 .addToCart__btn:hover {
 	text-shadow: 0vw 0vw 0.4vw #f7f5eb;
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 
 import Helmet from "../../components/helmet/Helmet";
@@ -27,6 +27,10 @@ const AllFoods = () => {
 	);
 
 	const pagination = (paginationNumber) => setCurrentPage(paginationNumber);
+
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
 
 	return (
 		<Helmet title="All-Foods">

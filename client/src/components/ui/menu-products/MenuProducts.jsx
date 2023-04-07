@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 
 import products from "../../../assets/fake-data/products.js";
+
 import foodCategoryImg1 from "../../../assets/images/menu-products/product_1_pizza.png";
 
 import foodCategoryImg2 from "../../../assets/images/menu-products/product_2_hamburger.png";
 
 import foodCategoryImg3 from "../../../assets/images/menu-products/product_3_sushi.png";
+
 import GalleryProductCards from "../gallery-product-cards/GalleryProductCards";
 import "./MenuProduct.css";
 
