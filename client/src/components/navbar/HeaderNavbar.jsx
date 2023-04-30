@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,10 +8,12 @@ import Register from "../../pages/Register";
 import "./HeaderNavbar.css";
 import { cartUIActions } from "../../redux/store/shopping-cart/cartUISlice";
 import Carts from "../ui/carts/cart/Carts";
+// import { useCheckIsAuthenticated } from "../../auth/checkIsAuthenticated";
 
 export default function HeaderNavbar() {
 	const [showLoginModal, setShowLoginModal] = useState(false);
 	const [showRegisterModal, setShowRegisterModal] = useState(false);
+
 	const totalQuantity = useSelector((state) => state.cart.totalQuantity);
 	const dispatch = useDispatch();
 	const visibleCart = useSelector((state) => state.cartUI.cartIsVisible);
@@ -31,6 +33,23 @@ export default function HeaderNavbar() {
 	const handleHideModal = () => {
 		setShowLoginModal(false);
 		setShowRegisterModal(false);
+	};
+
+	const [tokenRemoved, setTokenRemoved] = useState(false);
+
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+	useEffect(() => {
+		const valueFromLS = localStorage.getItem("access_token");
+		if (valueFromLS) setIsAuthenticated(true);
+		else setIsAuthenticated(false);
+	}, [localStorage.getItem("access_token"), tokenRemoved]);
+
+	const handleLogOutClick = () => {
+		if (localStorage.getItem("access_token")) {
+			localStorage.removeItem("access_token");
+			setTokenRemoved(!tokenRemoved);
+		}
 	};
 
 	return (
@@ -70,9 +89,21 @@ export default function HeaderNavbar() {
 									<i className="bi bi-cart-plus"></i>
 									<span className="cart__badge">{totalQuantity}</span>
 								</Nav.Link>
-								<Nav.Link onClick={handleLoginClick}>
-									<i className="bi bi-person-circle"></i>
-								</Nav.Link>
+								{isAuthenticated ? (
+									<>
+										<Nav.Link onClick={handleLogOutClick}>
+											<i className="bi bi-box-arrow-right"></i>
+										</Nav.Link>
+										<Nav.Link>User</Nav.Link>
+									</>
+								) : (
+									<>
+										<Nav.Link onClick={handleLoginClick}>
+											<i className="bi bi-person-circle"></i>
+										</Nav.Link>
+										<Nav.Link>Guest</Nav.Link>
+									</>
+								)}
 							</Nav>
 						</Navbar.Collapse>
 					</Container>

@@ -1,6 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-export const useFormValidation = () => {
+export const useValidationAuthForms = () => {
+	const [firstName, setFirstName] = useState("");
+	const [lastName, setLastName] = useState("");
+
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
@@ -18,11 +21,6 @@ export const useFormValidation = () => {
 	);
 
 	const [formValid, setFormValid] = useState(false);
-
-	useEffect(() => {
-		if (emailError || passwordError) setFormValid(false);
-		else setFormValid(true);
-	}, [emailError, passwordError]);
 
 	const emailHandler = (e) => {
 		if (e.target.value !== 0) {
@@ -53,6 +51,11 @@ export const useFormValidation = () => {
 				}
 			} else {
 				setPasswordError("");
+			}
+			if (currentPass !== confirmPassword) {
+				setConfirmPasswordError("Confirm password and password isn't equals!");
+			} else {
+				setConfirmPasswordError("");
 			}
 		}
 		setPasswordDirty(true);
@@ -96,5 +99,9 @@ export const useFormValidation = () => {
 		confirmPasswordHandler,
 		setConfirmPasswordDirty,
 		setConfirmPassword,
+		firstName,
+		setFirstName,
+		lastName,
+		setLastName,
 	};
 };

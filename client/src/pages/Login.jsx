@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Modal, Button } from "react-bootstrap";
+import axios from "axios";
+import Cookies from "js-cookie";
 
-import { useFormValidation } from "../hooks/validationForms";
+import { useValidationAuthForms } from "../hooks/useValidationAuthForms";
 import AlertText from "../components/alerts/alert-text/AlertText";
 
 const Login = (props) => {
@@ -20,7 +22,7 @@ const Login = (props) => {
 		setFormValid,
 		emailHandler,
 		passwordHandler,
-	} = useFormValidation();
+	} = useValidationAuthForms();
 
 	const handleRegisterClick = () => {
 		setEmailDirty(false);
@@ -31,6 +33,33 @@ const Login = (props) => {
 		props.onRegisterClick();
 		setFormValid(false);
 	};
+
+	const handleSignInClick = async () => {
+		try {
+			const response = await axios.post(
+				`${process.env.REACT_APP_SERVER_API_URL}api/v1/auth/login`,
+				{ email, password },
+				{ headers: { "Content-Type": "application/json" } }
+			);
+			console.log("Logged in:", response.data);
+
+			// сохранение активного токена в LocalStorage
+			localStorage.setItem("access_token", response.data.access_token);
+			// сохранение рефреш токена в httpOnly cookie
+			Cookies.set("refreshToken", response.data.refresh_token, {
+				httpOnly: true,
+			});
+			props.onHide();
+		} catch (error) {
+			console.error("Failed to log in");
+			// вы можете установить здесь состояние ошибки и отображать его с помощью AlertText
+		}
+	};
+
+	useEffect(() => {
+		if (emailError || passwordError) setFormValid(false);
+		else setFormValid(true);
+	}, [emailError, passwordError]);
 
 	return (
 		<>
@@ -100,6 +129,7 @@ const Login = (props) => {
 									backgroundColor: "orangered",
 									borderColor: "orangered",
 								}}
+								onClick={handleSignInClick}
 							>
 								Sign In
 							</Button>

@@ -11,7 +11,7 @@ import {
 import { Link } from "react-router-dom";
 
 import "./Footer.css";
-import { useFormValidation } from "../../hooks/validationForms";
+import { useValidationAuthForms } from "../../hooks/useValidationAuthForms";
 
 const Footer = () => {
 	const {
@@ -23,7 +23,7 @@ const Footer = () => {
 		formValid,
 		emailHandler,
 		blurHandler,
-	} = useFormValidation();
+	} = useValidationAuthForms();
 
 	const handleRegisterClick = () => {
 		setEmailDirty(false);

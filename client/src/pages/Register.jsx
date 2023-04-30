@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Modal, Button } from "react-bootstrap";
+import axios from "axios";
 
-import { useFormValidation } from "../hooks/validationForms";
+import { useValidationAuthForms } from "../hooks/useValidationAuthForms";
 import AlertText from "../components/alerts/alert-text/AlertText";
 
 const Register = (props) => {
@@ -26,18 +27,66 @@ const Register = (props) => {
 		confirmPasswordHandler,
 		setConfirmPasswordDirty,
 		setConfirmPassword,
-	} = useFormValidation();
+		firstName,
+		setFirstName,
+		lastName,
+		setLastName,
+	} = useValidationAuthForms();
+
+	useEffect(() => {
+		setFormValid(
+			!(!email || !password || !firstName || !lastName) &&
+				!(emailError || passwordError || confirmPasswordError)
+		);
+	}, [
+		emailError,
+		passwordError,
+		firstName,
+		lastName,
+		email,
+		password,
+		confirmPasswordError,
+	]);
 
 	const handleLoginClick = () => {
 		setEmailDirty(false);
 		setPasswordDirty(false);
 		setConfirmPasswordDirty(false);
+		setFirstName("");
+		setLastName("");
 		setEmail("");
 		setPassword("");
 		setConfirmPassword("");
 		props.onHide();
 		props.onLoginClick();
 		setFormValid(false);
+	};
+
+	const handleRegisterClick = async () => {
+		const userData = {
+			first_name: firstName,
+			last_name: lastName,
+			email: email,
+			password: password,
+		};
+
+		try {
+			const response = await axios.post(
+				`${process.env.REACT_APP_SERVER_API_URL}api/v1/auth/registration`,
+				userData
+			);
+
+			if (response.status === 200) {
+				console.log(userData);
+				console.log("Register in:", response.data);
+				handleLoginClick();
+			} else {
+				throw new Error("Registration failed");
+			}
+		} catch (error) {
+			console.error(error);
+			alert("Registration failed. Please try again later.");
+		}
 	};
 
 	return (
@@ -57,14 +106,30 @@ const Register = (props) => {
 							<div className="d-flex justify-content-between">
 								<Form.Label>First Name</Form.Label>
 							</div>
-							<Form.Control type="text" placeholder="Enter first name" />
+							<Form.Control
+								onChange={(e) => {
+									setFirstName(e.target.value);
+								}}
+								value={firstName}
+								name="firstName"
+								type="text"
+								placeholder="Enter first name"
+							/>
 						</Form.Group>
 
 						<Form.Group controlId="fromBasicLastName">
 							<div className="d-flex justify-content-between">
 								<Form.Label>Last Name</Form.Label>
 							</div>
-							<Form.Control type="text" placeholder="Enter last name" />
+							<Form.Control
+								onChange={(e) => {
+									setLastName(e.target.value);
+								}}
+								value={lastName}
+								name="lastName"
+								type="text"
+								placeholder="Enter last name"
+							/>
 						</Form.Group>
 
 						<Form.Group controlId="fromBasicEmail">
@@ -133,6 +198,7 @@ const Register = (props) => {
 									backgroundColor: "orangered",
 									borderColor: "orangered",
 								}}
+								onClick={handleRegisterClick}
 							>
 								Sign Up
 							</Button>

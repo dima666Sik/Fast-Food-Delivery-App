@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col } from "react-bootstrap";
-
-import products from "../../../assets/fake-data/products.js";
+import { Container, Row, Col, Spinner } from "react-bootstrap";
+import axios from "axios";
+// import products from "../../../assets/fake-data/products.js";
 
 import foodCategoryImg1 from "../../../assets/images/menu-products/product_1_pizza.png";
 
@@ -11,11 +11,14 @@ import foodCategoryImg3 from "../../../assets/images/menu-products/product_3_sus
 
 import GalleryProductCards from "../gallery-product-cards/GalleryProductCards";
 import "./MenuProduct.css";
+import { useGetAllProducts } from "../../../hooks/useGetAllProducts";
 
 const MenuProducts = () => {
+	const { products, isLoading } = useGetAllProducts();
+
 	const [category, setCategory] = useState("ALL");
 	const [allProducts, setAllProducts] = useState(products);
-
+	console.log(products);
 	useEffect(() => {
 		if (category === "ALL") {
 			setAllProducts(products);
@@ -44,7 +47,7 @@ const MenuProducts = () => {
 
 			setAllProducts(filteredProducts);
 		}
-	}, [category]);
+	}, [category, products]);
 
 	return (
 		<Container>
@@ -94,7 +97,13 @@ const MenuProducts = () => {
 						</button>
 					</div>
 				</Col>
-				<GalleryProductCards products={allProducts} />
+				{isLoading || !allProducts ? (
+					<div className="text-center">
+						<Spinner />
+					</div>
+				) : (
+					<GalleryProductCards products={allProducts} />
+				)}
 			</Row>
 		</Container>
 	);

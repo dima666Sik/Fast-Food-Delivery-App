@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { cartActions } from "../../../redux/store/shopping-cart/cartSlice";
-import imgLike from "../../../assets/images/products/like.png";
+import imgLike from "../../../assets/images/like.png";
 import "./ProductCard.css";
 
 const ProductCard = (props) => {

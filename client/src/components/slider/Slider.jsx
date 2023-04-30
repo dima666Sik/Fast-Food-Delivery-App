@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Carousel } from "react-bootstrap";
+import axios from "axios";
+
 import "./Slider.css";
 
 const SliderCaption = ({ title, description }) => {
@@ -20,20 +22,24 @@ const Slider = () => {
 	const [images, setImages] = useState([]);
 
 	useEffect(() => {
-		Promise.all([
-			import("../../assets/images/slider/first_pizza_slide.png"),
-			import("../../assets/images/slider/second_img_for_slider.png"),
-			import("../../assets/images/slider/third_img_for_slider.png"),
-		]).then(([first, second, third]) => {
-			setImages([first.default, second.default, third.default]);
-		});
+		axios
+			.get(`${process.env.REACT_APP_SERVER_API_URL}api/v1/slider/images`)
+			.then((response) => {
+				const imageUrls = response.data.map((image) => image.urlImg);
+				setImages(imageUrls);
+			})
+			.catch((error) => console.log(error));
 	}, []);
 
 	return (
 		<Carousel>
 			{images.map((img, index) => (
 				<Carousel.Item key={index} style={{ height: "50%" }}>
-					<img className="d-block w-100" src={img} alt={`Slide ${index + 1}`} />
+					<img
+						className="d-block w-100"
+						src={`${process.env.REACT_APP_SERVER_API_URL}public/images/slider/${img}`}
+						alt={`Slide ${index + 1}`}
+					/>
 					<SliderCaption
 						title={`Do you want ${
 							index === 0 ? "pizza" : index === 1 ? "burger" : "sushi"
