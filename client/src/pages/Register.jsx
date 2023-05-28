@@ -4,6 +4,7 @@ import axios from "axios";
 
 import { useValidationAuthForms } from "../hooks/useValidationAuthForms";
 import AlertText from "../components/alerts/alert-text/AlertText";
+import { useValidFormsBtn } from "../hooks/useValidFormsBtn";
 
 const Register = (props) => {
 	const {
@@ -17,8 +18,6 @@ const Register = (props) => {
 		setPasswordDirty,
 		emailError,
 		passwordError,
-		formValid,
-		setFormValid,
 		emailHandler,
 		passwordHandler,
 		confirmPassword,
@@ -32,6 +31,8 @@ const Register = (props) => {
 		lastName,
 		setLastName,
 	} = useValidationAuthForms();
+
+	const { formValid, setFormValid } = useValidFormsBtn();
 
 	useEffect(() => {
 		setFormValid(

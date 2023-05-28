@@ -7,8 +7,9 @@ import Login from "../../pages/Login";
 import Register from "../../pages/Register";
 import "./HeaderNavbar.css";
 import { cartUIActions } from "../../redux/store/shopping-cart/cartUISlice";
+import { cartActionsLiked } from "../../redux/store/shopping-cart/cartsLikedSlice";
 import Carts from "../ui/carts/cart/Carts";
-// import { useCheckIsAuthenticated } from "../../auth/checkIsAuthenticated";
+import { clearUser } from "../../redux/store/user/userSlice";
 
 export default function HeaderNavbar() {
 	const [showLoginModal, setShowLoginModal] = useState(false);
@@ -35,21 +36,14 @@ export default function HeaderNavbar() {
 		setShowRegisterModal(false);
 	};
 
-	const [tokenRemoved, setTokenRemoved] = useState(false);
+	const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+	const accessToken = useSelector((state) => state.user.accessToken);
 
-	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const userFirstName = useSelector((state) => state.user.firstName);
 
-	useEffect(() => {
-		const valueFromLS = localStorage.getItem("access_token");
-		if (valueFromLS) setIsAuthenticated(true);
-		else setIsAuthenticated(false);
-	}, [localStorage.getItem("access_token"), tokenRemoved]);
-
-	const handleLogOutClick = () => {
-		if (localStorage.getItem("access_token")) {
-			localStorage.removeItem("access_token");
-			setTokenRemoved(!tokenRemoved);
-		}
+	const onSubmit = () => {
+		dispatch(clearUser());
+		dispatch(cartActionsLiked.clearCartsLiked());
 	};
 
 	return (
@@ -91,10 +85,10 @@ export default function HeaderNavbar() {
 								</Nav.Link>
 								{isAuthenticated ? (
 									<>
-										<Nav.Link onClick={handleLogOutClick}>
+										<Nav.Link onClick={onSubmit}>
 											<i className="bi bi-box-arrow-right"></i>
 										</Nav.Link>
-										<Nav.Link>User</Nav.Link>
+										<Nav.Link>{userFirstName}</Nav.Link>
 									</>
 								) : (
 									<>

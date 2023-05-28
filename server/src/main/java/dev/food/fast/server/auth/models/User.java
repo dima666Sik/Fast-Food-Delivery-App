@@ -1,5 +1,6 @@
 package dev.food.fast.server.auth.models;
 
+import dev.food.fast.server.general.models.product.ProductLikes;
 import jakarta.persistence.*;
 
 import java.util.Collection;
@@ -33,9 +34,6 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    @OneToMany(mappedBy = "user")
-    private List<AccessToken> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -52,6 +52,7 @@ public class AuthenticationService {
     var refreshToken = jwtService.generateRefreshToken(user);
     changeStatusTokensService.saveUserToken(savedUser, jwtToken);
     changeStatusTokensService.saveUserRefreshToken(user, refreshToken);
+
     return ResponseEntity.ok().body(AuthenticationResponse.builder()
         .accessToken(jwtToken)
             .refreshToken(refreshToken)
@@ -101,38 +102,8 @@ public class AuthenticationService {
     System.out.println("authenticate++++++");
     return ResponseEntity.ok().body(AuthenticationResponse.builder()
             .accessToken(jwtToken)
-            .refreshToken(refreshToken)
             .messageResponse(new MessageResponse("User authorization " + request.getEmail() + " is successful", true))
             .build());
   }
 
-  public void refreshToken(
-          HttpServletRequest request,
-          HttpServletResponse response
-  ) throws IOException {
-    final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-    final String refreshToken;
-    final String userEmail;
-    if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-      return;
-    }
-    refreshToken = authHeader.substring(7);
-    userEmail = jwtService.extractUsername(refreshToken);
-    if (userEmail != null) {
-      var user = this.repository.findByEmail(userEmail)
-              .orElseThrow();
-      if (jwtService.isTokenValid(refreshToken, user)) {
-        var accessToken = jwtService.generateToken(user);
-        changeStatusTokensService.revokeAllUserTokens(user);
-        changeStatusTokensService.revokeAllUserRefreshTokens(user);
-        changeStatusTokensService.saveUserToken(user, accessToken);
-        changeStatusTokensService.saveUserRefreshToken(user, refreshToken);
-        var authResponse = AuthenticationResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
-        new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
-      }
-    }
-  }
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Carousel } from "react-bootstrap";
+import { Button, Carousel, Spinner } from "react-bootstrap";
 import axios from "axios";
 
 import "./Slider.css";
@@ -20,18 +20,25 @@ const SliderCaption = ({ title, description }) => {
 
 const Slider = () => {
 	const [images, setImages] = useState([]);
+	const [isLoadingSlider, setIsLoadingSlider] = useState(false);
 
 	useEffect(() => {
+		setIsLoadingSlider(true);
 		axios
 			.get(`${process.env.REACT_APP_SERVER_API_URL}api/v1/slider/images`)
 			.then((response) => {
 				const imageUrls = response.data.map((image) => image.urlImg);
 				setImages(imageUrls);
+				setIsLoadingSlider(false);
 			})
 			.catch((error) => console.log(error));
 	}, []);
 
-	return (
+	return isLoadingSlider ? (
+		<div className="text-center">
+			<Spinner />
+		</div>
+	) : (
 		<Carousel>
 			{images.map((img, index) => (
 				<Carousel.Item key={index} style={{ height: "50%" }}>

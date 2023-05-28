@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 
 import "./Footer.css";
 import { useValidationAuthForms } from "../../hooks/useValidationAuthForms";
+import { useValidFormsBtn } from "../../hooks/useValidFormsBtn";
 
 const Footer = () => {
 	const {
@@ -20,10 +21,11 @@ const Footer = () => {
 		emailDirty,
 		setEmailDirty,
 		emailError,
-		formValid,
 		emailHandler,
 		blurHandler,
 	} = useValidationAuthForms();
+
+	const { formValid } = useValidFormsBtn();
 
 	const handleRegisterClick = () => {
 		setEmailDirty(false);
@@ -75,7 +77,7 @@ const Footer = () => {
 							</ListGroupItem>
 
 							<ListGroupItem className="delivery__time__item border-0 ps-0">
-								<span>fastfooddev@gmail.com</span>
+								<span>leniviy.demon.1@gmail.com</span>
 							</ListGroupItem>
 						</ListGroup>
 					</Col>

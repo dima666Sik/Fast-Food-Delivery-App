@@ -1,9 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 export const useGetAllProducts = () => {
 	const [products, setProducts] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
+
+	const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -22,12 +25,15 @@ export const useGetAllProducts = () => {
 					};
 				});
 				setProducts(updatedProducts);
+				setIsLoading(false);
 				// }, 4000);
 			})
 			.catch((error) => {
+				if (error.code === "ERR_NETWORK") {
+					console.log("Error network, please try again...");
+				}
 				console.log(error);
-			})
-			.finally(() => setIsLoading(false));
+			});
 	}, []);
 
 	return { products, setProducts, isLoading, setIsLoading };

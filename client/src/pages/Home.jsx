@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import AboutUs from "../components/ui/about/AboutUs";
 import Helmet from "../components/helmet/Helmet";
@@ -7,10 +8,27 @@ import Category from "../components/ui/category/Category";
 import MenuProducts from "../components/ui/menu-products/MenuProducts";
 import WhyWe from "../components/ui/why-we/WhyWe";
 import HotFood from "../components/ui/hot-food/HotFood";
+import { axiosGetStatusLikes } from "../redux/store/shopping-cart/cartsLikedSlice";
+
 const Home = () => {
+	const dispatch = useDispatch();
+	const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+	const accessToken = useSelector((state) => state.user.accessToken);
+
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
+
+	useEffect(() => {
+		console.log("памагити");
+		if (isAuthenticated) {
+			dispatch(
+				axiosGetStatusLikes({
+					accessToken: accessToken,
+				})
+			);
+		}
+	}, [accessToken]);
 
 	return (
 		<>

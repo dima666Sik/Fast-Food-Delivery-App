@@ -1,10 +1,16 @@
 import React, { useEffect } from "react";
 import { Form, Modal, Button } from "react-bootstrap";
 import axios from "axios";
-import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useValidationAuthForms } from "../hooks/useValidationAuthForms";
 import AlertText from "../components/alerts/alert-text/AlertText";
+import { useValidFormsBtn } from "../hooks/useValidFormsBtn";
+import { clearUser, setInfoUser, setUser } from "../redux/store/user/userSlice";
+import {
+	axiosGetStatusLikes,
+	cartActionsLiked,
+} from "../redux/store/shopping-cart/cartsLikedSlice.js";
 
 const Login = (props) => {
 	const {
@@ -18,11 +24,11 @@ const Login = (props) => {
 		setPasswordDirty,
 		emailError,
 		passwordError,
-		formValid,
-		setFormValid,
 		emailHandler,
 		passwordHandler,
 	} = useValidationAuthForms();
+
+	const { formValid, setFormValid } = useValidFormsBtn();
 
 	const handleRegisterClick = () => {
 		setEmailDirty(false);
@@ -34,6 +40,11 @@ const Login = (props) => {
 		setFormValid(false);
 	};
 
+	const dispatch = useDispatch();
+
+	const accessToken = useSelector((state) => state.user.accessToken);
+	const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
 	const handleSignInClick = async () => {
 		try {
 			const response = await axios.post(
@@ -43,13 +54,10 @@ const Login = (props) => {
 			);
 			console.log("Logged in:", response.data);
 
-			// сохранение активного токена в LocalStorage
-			localStorage.setItem("access_token", response.data.access_token);
-			// сохранение рефреш токена в httpOnly cookie
-			Cookies.set("refreshToken", response.data.refresh_token, {
-				httpOnly: true,
-			});
-			props.onHide();
+			if (response.data.message_response.status_response) {
+				dispatch(setUser({ accessToken: response.data.access_token }));
+				props.onHide();
+			}
 		} catch (error) {
 			console.error("Failed to log in");
 			// вы можете установить здесь состояние ошибки и отображать его с помощью AlertText
@@ -60,6 +68,49 @@ const Login = (props) => {
 		if (emailError || passwordError) setFormValid(false);
 		else setFormValid(true);
 	}, [emailError, passwordError]);
+
+	useEffect(() => {
+		if (accessToken) {
+			axios
+				.get(
+					`${process.env.REACT_APP_SERVER_API_URL}api/v1/user/get-access-data`,
+					{
+						headers: {
+							Authorization: "Bearer " + accessToken,
+						},
+					}
+				)
+				.then((response) => {
+					dispatch(
+						setInfoUser({
+							firstName: response.data.first_name,
+							lastName: response.data.last_name,
+							email: response.data.email,
+						})
+					);
+				})
+				.catch((error) => {
+					console.log(error.response);
+					if (error.response.data.access_token) {
+						// Dispatch the setUser action
+						dispatch(
+							setUser({
+								accessToken: error.response.data.access_token,
+							})
+						);
+					}
+
+					if (
+						error.response.data ===
+							"You need to reauthorize! Tokens all were expired. You will be much to authorization!" ||
+						error.response.data === "Valid Refresh token was expired..."
+					) {
+						dispatch(clearUser());
+						dispatch(cartActionsLiked.clearCartsLiked());
+					}
+				});
+		}
+	}, [accessToken]);
 
 	return (
 		<>

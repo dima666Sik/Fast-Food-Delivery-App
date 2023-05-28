@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Spinner } from "react-bootstrap";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 
 import Helmet from "../../components/helmet/Helmet";
 import ProductCard from "../../components/ui/product-card/ProductCard";
@@ -9,6 +10,7 @@ import CommonAd from "../../components/ui/common-ad/CommonAd";
 import "./AllFoods.css";
 import Pagination from "../../components/pagination/Pagination";
 import { useGetAllProducts } from "../../hooks/useGetAllProducts";
+import { axiosGetStatusLikes } from "../../redux/store/shopping-cart/cartsLikedSlice";
 
 const AllFoods = () => {
 	const { products, isLoading } = useGetAllProducts();
@@ -18,6 +20,10 @@ const AllFoods = () => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [productsPerPage] = useState(8);
 	const [sortedChoice, setSortedChoice] = useState("default");
+	const dispatch = useDispatch();
+
+	const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+	const accessToken = useSelector((state) => state.user.accessToken);
 
 	useEffect(() => {
 		if (!isLoading) {
@@ -64,6 +70,17 @@ const AllFoods = () => {
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
+
+	useEffect(() => {
+		console.log(isAuthenticated);
+		if (isAuthenticated) {
+			dispatch(
+				axiosGetStatusLikes({
+					accessToken: accessToken,
+				})
+			);
+		}
+	}, [accessToken]);
 
 	return (
 		<Helmet title="All-Foods">

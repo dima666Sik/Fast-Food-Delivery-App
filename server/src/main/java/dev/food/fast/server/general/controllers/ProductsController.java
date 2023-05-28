@@ -1,7 +1,8 @@
 package dev.food.fast.server.general.controllers;
 
-import dev.food.fast.server.general.models.Product;
+import dev.food.fast.server.general.models.product.Product;
 import dev.food.fast.server.general.pojo.ProductRequest;
+import dev.food.fast.server.general.service.ProductReviewService;
 import dev.food.fast.server.general.service.ProductsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductsController {
     private final ProductsService service;
+    private final ProductReviewService productReviewService;
 
     @PostMapping("/add-product")
     public ResponseEntity<?> addProduct(@RequestBody ProductRequest request) {
@@ -182,5 +184,11 @@ public class ProductsController {
     public ResponseEntity<?> getAllProducts(
     ) {
         return service.getAllProducts();
+    }
+
+    @GetMapping("/get-all-reviews-to-product")
+    public ResponseEntity<?> getAllProductReview(@RequestParam("product_id") Integer productId
+    ) {
+        return productReviewService.getAllProductReview(productId);
     }
 }

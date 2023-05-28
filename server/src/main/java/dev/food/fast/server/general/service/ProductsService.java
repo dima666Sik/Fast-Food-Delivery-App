@@ -1,11 +1,8 @@
 package dev.food.fast.server.general.service;
 
-import dev.food.fast.server.auth.pojo.RegisterRequest;
-import dev.food.fast.server.general.models.Product;
-import dev.food.fast.server.general.models.SliderImage;
+import dev.food.fast.server.general.models.product.Product;
 import dev.food.fast.server.general.pojo.ProductRequest;
 import dev.food.fast.server.general.repository.ProductsRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;

@@ -20,8 +20,6 @@ export const useValidationAuthForms = () => {
 		"Confirm password field cannot be empty!"
 	);
 
-	const [formValid, setFormValid] = useState(false);
-
 	const emailHandler = (e) => {
 		if (e.target.value !== 0) {
 			const rgx =
@@ -89,8 +87,6 @@ export const useValidationAuthForms = () => {
 		setEmailError,
 		passwordError,
 		setPasswordError,
-		formValid,
-		setFormValid,
 		emailHandler,
 		passwordHandler,
 		confirmPassword,

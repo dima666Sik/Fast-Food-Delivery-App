@@ -82,7 +82,7 @@ const Tr = (props) => {
 			<td className="text-center">${price}</td>
 			<td className="text-center">{quantity}x</td>
 			<td className="text-center cart__item__del">
-				<i class="bi bi-trash3-fill" onClick={deleteItem}></i>
+				<i className="bi bi-trash3-fill" onClick={deleteItem}></i>
 			</td>
 		</tr>
 	);

@@ -14,7 +14,7 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Inte
       on t.user.id = u.id\s
       where u.id = :id and (t.expired = false or t.revoked = false)\s
       """)
-    List<RefreshToken> findAllValidRefreshTokenByUser(Integer id);
+    Optional<RefreshToken> findValidRefreshTokenByUser(Integer id);
 
     Optional<RefreshToken> findByRefreshToken(String refreshToken);
 
@@ -24,4 +24,6 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Inte
       where u.id = :id and (t.expired = true or t.revoked = true)\s
       """)
     List<RefreshToken> deleteAllExpiredAndRevokedRefreshTokensByUser(Integer id);
+
+
 }

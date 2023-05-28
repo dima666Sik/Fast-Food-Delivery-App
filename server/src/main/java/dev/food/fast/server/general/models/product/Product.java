@@ -1,10 +1,12 @@
-package dev.food.fast.server.general.models;
+package dev.food.fast.server.general.models.product;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -41,5 +43,6 @@ public class Product {
     @Lob
     @Column(name="description", length=100000)
     private String description;
+
 
 }

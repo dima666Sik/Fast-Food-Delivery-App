@@ -1,10 +1,14 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { cartActions } from "../../../redux/store/shopping-cart/cartSlice";
-import imgLike from "../../../assets/images/like.png";
+import { cartActions } from "../../../redux/store/shopping-cart/cartSlice.js";
+
+import imgUpLike from "../../../assets/images/up_like.png";
+import imgLowLike from "../../../assets/images/low_like.png";
 import "./ProductCard.css";
+import ModalAlert from "../../alerts/ModalAlert";
+import { axiosSetLikeAndStatus } from "../../../redux/store/shopping-cart/cartsLikedSlice.js";
 
 const ProductCard = (props) => {
 	const { id, title, image01, likes, price } = props.item;
@@ -19,15 +23,33 @@ const ProductCard = (props) => {
 			})
 		);
 	};
+	const [showModal, setShowModal] = useState(false);
+	const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
+	const listCartsLiked = useSelector(
+		(state) => state.cartsLiked.listCartsLiked
+	);
+
+	const accessToken = useSelector((state) => state.user.accessToken);
 
 	const changeLike = () => {
-		// dispatch(
-		// 	cartActions.changeLike({
-		// 		id,
-		// 		likes,
-		// 	})
-		// );
+		if (isAuthenticated) {
+			dispatch(
+				axiosSetLikeAndStatus({
+					id,
+					likes,
+					accessToken,
+				})
+			);
+		} else {
+			setShowModal(true);
+		}
 	};
+
+	const existItem = listCartsLiked.find((item) => item.id === id);
+	const status = existItem ? existItem.status : false;
+	let updatedLikes = existItem ? existItem.likes : likes;
+
 	return (
 		<div className="product__item">
 			<Link to={`/foods/${id}`}>
@@ -41,9 +63,9 @@ const ProductCard = (props) => {
 					<Link to={`/foods/${id}`}>{title}</Link>
 				</h5>
 				<div className="likes pb-4 d-flex justify-content-center align-items-center">
-					{likes}{" "}
+					{updatedLikes}
 					<img
-						src={imgLike}
+						src={status ? imgUpLike : imgLowLike}
 						alt="product-img"
 						className="like"
 						onClick={changeLike}
@@ -56,6 +78,16 @@ const ProductCard = (props) => {
 					</button>
 				</div>
 			</div>
+			{showModal && (
+				<ModalAlert
+					paramTitle={"Error Authenticated"}
+					paramBody={
+						"You don't have rights to like. Please Authorization/Registration in this Application..."
+					}
+					onShow={showModal}
+					onHide={() => setShowModal(false)}
+				/>
+			)}
 		</div>
 	);
 };

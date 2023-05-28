@@ -1,26 +1,39 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Navigate, useParams } from "react-router-dom";
 import { Col, Container, Row, Spinner } from "react-bootstrap";
+import axios from "axios";
 
 import { cartActions } from "../../redux/store/shopping-cart/cartSlice";
 import Helmet from "../../components/helmet/Helmet";
 import CommonAd from "../../components/ui/common-ad/CommonAd";
 import ProductCard from "../../components/ui/product-card/ProductCard";
 import "./FoodDetails.css";
-import AlertText from "../../components/alerts/alert-text/AlertText";
-import { useValidationAuthForms } from "../../hooks/useValidationAuthForms";
 import { useGetAllProducts } from "../../hooks/useGetAllProducts";
+import { useValidFormsBtn } from "../../hooks/useValidFormsBtn";
+import ModalAlert from "../../components/alerts/ModalAlert";
+import { clearUser, setUser } from "../../redux/store/user/userSlice";
+import {
+	axiosGetStatusLikes,
+	cartActionsLiked,
+} from "../../redux/store/shopping-cart/cartsLikedSlice";
 
 const FoodDetails = () => {
 	const [tab, setTab] = useState("desc");
-	const [enteredName, setEnteredName] = useState("");
 	const [reviewMsg, setReviewMsg] = useState("");
 	const { id } = useParams();
 	const { products, isLoading } = useGetAllProducts();
 	const [product, setProduct] = useState({});
 	const [relatedProduct, setRelatedProduct] = useState([]);
+	const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+	const [reviews, setReviews] = useState([]);
+	const [isLoadingComments, setIsLoadingComments] = useState(false);
+	const [isFetchingComments, setIsFetchingComments] = useState(false);
+	const accessToken = useSelector((state) => state.user.accessToken);
 	const dispatch = useDispatch();
+	const [showModal, setShowModal] = useState(false);
+	const reviewContainerRef = useRef(null);
+	const [showTextModal, setShowTextModal] = useState("");
 
 	useEffect(() => {
 		if (!isLoading && products) {
@@ -37,7 +50,7 @@ const FoodDetails = () => {
 				}
 			}
 		}
-	}, [id, products, product, isLoading]);
+	}, [id, product, isLoading]);
 
 	const { title, price, category, description, image01 } = product;
 
@@ -58,24 +71,119 @@ const FoodDetails = () => {
 
 	useEffect(() => {
 		setPreviewImg(product.image01);
-	}, [product]);
-
-	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, [product]);
 
-	const { email, emailDirty, emailError, formValid, emailHandler } =
-		useValidationAuthForms();
+	const { formValid, setFormValid } = useValidFormsBtn();
 
-	const submitHandler = (e) => {
+	useEffect(() => {
+		if (!reviewMsg) setFormValid(false);
+		else setFormValid(true);
+	}, [reviewMsg]);
+
+	useEffect(() => {
+		console.log(isAuthenticated);
+		if (isAuthenticated) {
+			dispatch(
+				axiosGetStatusLikes({
+					accessToken: accessToken,
+				})
+			);
+		}
+	}, [accessToken]);
+
+	const submitHandler = async (e) => {
 		e.preventDefault();
+		console.log(accessToken, reviewMsg, product.id);
+		if (product?.id) {
+			console.log("+");
+			const dataProductReview = {
+				product_id: product.id,
+				review: reviewMsg,
+			};
 
-		console.log(enteredName, emailHandler, reviewMsg);
+			try {
+				setIsFetchingComments(true); // Установка состояния перед началом загрузки комментариев
+				const response = await axios.post(
+					`${process.env.REACT_APP_SERVER_API_URL}api/v1/private/food-reviews/add-review-for-product`,
+					dataProductReview,
+					{
+						headers: {
+							Authorization: "Bearer " + accessToken,
+						},
+					}
+				);
+				setReviewMsg("");
+				console.log(response.data);
+			} catch (error) {
+				if (error.response.data.access_token) {
+					// Dispatch the setUser action
+					dispatch(
+						setUser({
+							accessToken: error.response.data.access_token,
+							isAuthenticated: true,
+						})
+					);
+					setShowTextModal("Tokens was Updated, please continue use site.");
+					setShowModal(true);
+				}
+				if (
+					error.response.data ===
+						"You need to reauthorize! Tokens all were expired. You will be much to authorization!" ||
+					error.response.data === "Valid Refresh token was expired..."
+				) {
+					setShowTextModal(
+						"You don't have rights to review, refresh token was expired. Please Authorization in this Application..."
+					);
+					setShowModal(true);
+					dispatch(clearUser());
+					dispatch(cartActionsLiked.clearCartsLiked());
+					setReviewMsg("");
+				}
+				console.error(error.response);
+				console.error(error.response.data);
+				console.error(error.response.data.access_token);
+			} finally {
+				setIsFetchingComments(false);
+			}
+		} else {
+			console.error("This product is undefined!");
+		}
 	};
+
+	useEffect(() => {
+		if (product?.id) {
+			setIsLoadingComments(true);
+
+			axios
+				.get(
+					`${process.env.REACT_APP_SERVER_API_URL}api/v1/foods/get-all-reviews-to-product?product_id=${product.id}`
+				)
+				.then((response) => {
+					const getReviews = response.data;
+					setReviews(getReviews);
+					setIsLoadingComments(false);
+					console.log(getReviews);
+				})
+				.catch((error) => {
+					if (error.code === "ERR_NETWORK") {
+						console.log("Error network, please try again...");
+					}
+					console.log(error);
+				});
+		}
+	}, [product, isFetchingComments]);
+
+	useEffect(() => {
+		if (reviewContainerRef.current) {
+			reviewContainerRef.current.scrollTop =
+				reviewContainerRef.current.scrollHeight;
+		}
+	}, [reviews, isFetchingComments, tab]);
 
 	return (
 		<>
-			{isLoading || !product ? (
+			{isLoading && !product ? (
 				<div className="text-center">
 					<Spinner />
 				</div>
@@ -162,70 +270,63 @@ const FoodDetails = () => {
 											<div className="tab__content">
 												<p>{description}</p>
 											</div>
+										) : isFetchingComments ? (
+											<div className="text-center">
+												<Spinner />
+											</div>
 										) : (
 											<div className="tab__form mb-3">
-												<div className="review pt-5">
-													<p className="user__name mb-0">Jhon Doe</p>
-													<p className="user__email">jhon1@gmail.com</p>
-													<p className="feedback__text">great product</p>
-												</div>
-
-												<div className="review">
-													<p className="user__name mb-0">Jhon Doe</p>
-													<p className="user__email">jhon1@gmail.com</p>
-													<p className="feedback__text">great product</p>
-												</div>
-
-												<div className="review">
-													<p className="user__name mb-0">Jhon Doe</p>
-													<p className="user__email">jhon1@gmail.com</p>
-													<p className="feedback__text">great product</p>
-												</div>
-
-												<form className="form" onSubmit={submitHandler}>
-													<div className="form__group">
-														<input
-															type="text"
-															placeholder="Enter your name"
-															onChange={(e) => setEnteredName(e.target.value)}
-															required
-														/>
+												{reviews.message_response ? (
+													<div className="review pt-5 mb-5 pb-5">
+														<p className="user__name text-center my-0">
+															Review is absent
+														</p>
 													</div>
-
-													<div className="form__group">
-														<AlertText
-															paramDirty={emailDirty}
-															paramError={emailError}
-															paramSuccess="E-mail is good!"
-														/>
-														<input
-															value={email}
-															name="email"
-															type="email"
-															placeholder="Enter your email"
-															onChange={(e) => emailHandler(e)}
-															required
-														/>
-													</div>
-
-													<div className="form__group">
-														<textarea
-															rows={5}
-															type="text"
-															placeholder="Write your review"
-															onChange={(e) => setReviewMsg(e.target.value)}
-															required
-														/>
-													</div>
-
-													<button
-														type="submit"
-														className="addToCart__btn"
-														disabled={!formValid}
+												) : (
+													<div
+														className="review-container pb-5"
+														ref={reviewContainerRef}
 													>
-														Submit
-													</button>
-												</form>
+														{reviews.map((review) => (
+															<div
+																className="review-wrap pt-5 px-5"
+																key={review.id}
+															>
+																<div className="review">
+																	<p className="user__name mb-0">
+																		{review.first_name} {review.last_name}
+																	</p>
+																	<p className="user__email">{review.email}</p>
+																	<p className="feedback__text">
+																		{review.review}
+																	</p>
+																</div>
+															</div>
+														))}
+													</div>
+												)}
+												{isAuthenticated && (
+													<form className="form mt-5" onSubmit={submitHandler}>
+														<div className="form__group">
+															<textarea
+																rows={5}
+																type="text"
+																placeholder="Write your review"
+																onChange={(e) => setReviewMsg(e.target.value)}
+																value={reviewMsg}
+																required
+															/>
+														</div>
+
+														<button
+															type="submit"
+															className="addToCart__btn"
+															disabled={!formValid}
+														>
+															Submit
+														</button>
+													</form>
+												)}
 											</div>
 										)}
 									</Col>
@@ -252,6 +353,15 @@ const FoodDetails = () => {
 						</section>
 					</Helmet>
 				</>
+			)}
+
+			{showModal && (
+				<ModalAlert
+					paramTitle={"Error Authenticated"}
+					paramBody={showTextModal}
+					onShow={showModal}
+					onHide={() => setShowModal(false)}
+				/>
 			)}
 		</>
 	);
