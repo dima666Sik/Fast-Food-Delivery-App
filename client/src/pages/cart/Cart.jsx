@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -7,10 +7,12 @@ import CommonAd from "../../components/ui/common-ad/CommonAd";
 import Helmet from "../../components/helmet/Helmet";
 import { cartActions } from "../../redux/store/shopping-cart/cartSlice";
 import "./Cart.css";
+import ModalAlert from "../../components/alerts/ModalAlert";
 
 const Cart = () => {
 	const cartItems = useSelector((state) => state.cart.cartItems);
 	const totalAmount = useSelector((state) => state.cart.totalAmount);
+
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
@@ -67,7 +69,7 @@ const Cart = () => {
 };
 
 const Tr = (props) => {
-	const { id, image01, title, price, quantity } = props.item;
+	const { id, image01, title, price, quantity, totalPrice } = props.item;
 	const dispatch = useDispatch();
 
 	const deleteItem = () => {
@@ -79,7 +81,7 @@ const Tr = (props) => {
 				<img src={image01} alt="" />
 			</td>
 			<td className="text-center">{title}</td>
-			<td className="text-center">${price}</td>
+			<td className="text-center">${totalPrice}</td>
 			<td className="text-center">{quantity}x</td>
 			<td className="text-center cart__item__del">
 				<i className="bi bi-trash3-fill" onClick={deleteItem}></i>

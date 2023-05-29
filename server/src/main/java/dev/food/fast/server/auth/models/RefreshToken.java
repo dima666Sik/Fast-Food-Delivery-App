@@ -22,8 +22,10 @@ public class RefreshToken {
     @Enumerated(EnumType.STRING)
     public TokenType tokenType = TokenType.BEARER;
 
+    @Column
     public boolean revoked;
 
+    @Column
     public boolean expired;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -137,6 +137,7 @@ const FoodDetails = () => {
 					);
 					setShowModal(true);
 					dispatch(clearUser());
+					dispatch(cartActions.clearCart());
 					dispatch(cartActionsLiked.clearCartsLiked());
 					setReviewMsg("");
 				}

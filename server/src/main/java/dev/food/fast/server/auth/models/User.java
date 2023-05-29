@@ -1,6 +1,5 @@
 package dev.food.fast.server.auth.models;
 
-import dev.food.fast.server.general.models.product.ProductLikes;
 import jakarta.persistence.*;
 
 import java.util.Collection;
@@ -29,7 +28,9 @@ public class User implements UserDetails {
     private String firstname;
     @Column(name = "last_name")
     private String lastname;
+    @Column
     private String email;
+    @Column
     private String password;
 
     @Enumerated(EnumType.STRING)

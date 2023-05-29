@@ -7,10 +7,8 @@ import { useValidationAuthForms } from "../hooks/useValidationAuthForms";
 import AlertText from "../components/alerts/alert-text/AlertText";
 import { useValidFormsBtn } from "../hooks/useValidFormsBtn";
 import { clearUser, setInfoUser, setUser } from "../redux/store/user/userSlice";
-import {
-	axiosGetStatusLikes,
-	cartActionsLiked,
-} from "../redux/store/shopping-cart/cartsLikedSlice.js";
+import { cartActionsLiked } from "../redux/store/shopping-cart/cartsLikedSlice.js";
+import { cartActions } from "../redux/store/shopping-cart/cartSlice";
 
 const Login = (props) => {
 	const {
@@ -43,7 +41,6 @@ const Login = (props) => {
 	const dispatch = useDispatch();
 
 	const accessToken = useSelector((state) => state.user.accessToken);
-	const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
 	const handleSignInClick = async () => {
 		try {
@@ -56,6 +53,7 @@ const Login = (props) => {
 
 			if (response.data.message_response.status_response) {
 				dispatch(setUser({ accessToken: response.data.access_token }));
+				dispatch(cartActions.clearCart());
 				props.onHide();
 			}
 		} catch (error) {
@@ -106,6 +104,7 @@ const Login = (props) => {
 						error.response.data === "Valid Refresh token was expired..."
 					) {
 						dispatch(clearUser());
+						dispatch(cartActions.clearCart());
 						dispatch(cartActionsLiked.clearCartsLiked());
 					}
 				});

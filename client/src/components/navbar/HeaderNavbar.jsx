@@ -10,6 +10,7 @@ import { cartUIActions } from "../../redux/store/shopping-cart/cartUISlice";
 import { cartActionsLiked } from "../../redux/store/shopping-cart/cartsLikedSlice";
 import Carts from "../ui/carts/cart/Carts";
 import { clearUser } from "../../redux/store/user/userSlice";
+import { cartActions } from "../../redux/store/shopping-cart/cartSlice";
 
 export default function HeaderNavbar() {
 	const [showLoginModal, setShowLoginModal] = useState(false);
@@ -43,6 +44,7 @@ export default function HeaderNavbar() {
 
 	const onSubmit = () => {
 		dispatch(clearUser());
+		dispatch(cartActions.clearCart());
 		dispatch(cartActionsLiked.clearCartsLiked());
 	};
 

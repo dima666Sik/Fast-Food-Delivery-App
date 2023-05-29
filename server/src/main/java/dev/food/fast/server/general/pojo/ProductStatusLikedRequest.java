@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class ProductLikedRequest {
+public class ProductStatusLikedRequest {
     @JsonProperty("product_id")
     private Integer idProduct;
     private Integer likes;

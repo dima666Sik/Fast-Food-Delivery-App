@@ -5,7 +5,6 @@ import dev.food.fast.server.auth.pojo.MessageResponse;
 import dev.food.fast.server.auth.repository.UserRepository;
 import dev.food.fast.server.auth.service.JwtService;
 import dev.food.fast.server.general.models.product.Product;
-import dev.food.fast.server.general.models.product.ProductLikes;
 import dev.food.fast.server.general.models.product.ProductReview;
 import dev.food.fast.server.general.pojo.ProductReviewRequest;
 import dev.food.fast.server.general.repository.ProductReviewRepository;
@@ -56,6 +55,7 @@ public class ProductReviewService {
                                 .build());
             }
             Product product = productOptional.get();
+
             var productReview = ProductReview.builder()
                     .review(productReviewRequest.getReview())
                     .product(product)

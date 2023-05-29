@@ -1,30 +1,54 @@
 import { createSlice } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
+import CryptoJS from "crypto-js";
 
-const items =
-	localStorage.getItem("cartItems") !== null
-		? JSON.parse(localStorage.getItem("cartItems"))
-		: [];
+const encryptData = (data) => {
+	const encryptedData = CryptoJS.AES.encrypt(
+		JSON.stringify(data),
+		process.env.REACT_APP_SECRET_KEY_CRYPTO_JS
+	).toString();
+	return encryptedData;
+};
 
-const totalAmount =
-	localStorage.getItem("totalAmount") !== null
-		? JSON.parse(localStorage.getItem("totalAmount"))
-		: 0;
+const decryptData = (encryptedData) => {
+	try {
+		const bytes = CryptoJS.AES.decrypt(
+			encryptedData,
+			process.env.REACT_APP_SECRET_KEY_CRYPTO_JS
+		);
+		const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+		return decryptedData;
+	} catch (error) {
+		clearCookie("cartItems");
+		clearCookie("totalAmount");
+		clearCookie("totalQuantity");
+		console.log("Error decrypt data...");
+		// Дополнительные действия при ошибке расшифровки
+	}
+};
 
-const totalQuantity =
-	localStorage.getItem("totalQuantity") !== null
-		? JSON.parse(localStorage.getItem("totalQuantity"))
-		: 0;
+const getCookie = (name) => {
+	const encryptedCookie = Cookies.get(name);
+	if (encryptedCookie) {
+		const decryptedCookie = decryptData(encryptedCookie);
+		return decryptedCookie;
+	}
+	return null;
+};
 
-const setItemFunc = (item, totalAmount, totalQuantity) => {
-	localStorage.setItem("cartItems", JSON.stringify(item));
-	localStorage.setItem("totalAmount", JSON.stringify(totalAmount));
-	localStorage.setItem("totalQuantity", JSON.stringify(totalQuantity));
+const setCookie = (name, value) => {
+	const encryptedValue = encryptData(value);
+	Cookies.set(name, encryptedValue, { expires: 7 });
+};
+
+const clearCookie = (name) => {
+	Cookies.remove(name);
 };
 
 const initialState = {
-	cartItems: items,
-	totalQuantity: totalQuantity,
-	totalAmount: totalAmount,
+	cartItems: getCookie("cartItems") || [],
+	totalQuantity: getCookie("totalQuantity") || 0,
+	totalAmount: getCookie("totalAmount") || 0,
 };
 
 const cartSlice = createSlice({
@@ -53,11 +77,9 @@ const cartSlice = createSlice({
 				0
 			);
 
-			setItemFunc(
-				state.cartItems.map((item) => item),
-				state.totalAmount,
-				state.totalQuantity
-			);
+			setCookie("cartItems", state.cartItems);
+			setCookie("totalAmount", state.totalAmount);
+			setCookie("totalQuantity", state.totalQuantity);
 		},
 
 		removeItem(state, action) {
@@ -78,11 +100,9 @@ const cartSlice = createSlice({
 				0
 			);
 
-			setItemFunc(
-				state.cartItems.map((item) => item),
-				state.totalAmount,
-				state.totalQuantity
-			);
+			setCookie("cartItems", state.cartItems);
+			setCookie("totalAmount", state.totalAmount);
+			setCookie("totalQuantity", state.totalQuantity);
 		},
 
 		deleteItem(state, action) {
@@ -98,11 +118,20 @@ const cartSlice = createSlice({
 				(total, item) => total + Number(item.price) * Number(item.quantity),
 				0
 			);
-			setItemFunc(
-				state.cartItems.map((item) => item),
-				state.totalAmount,
-				state.totalQuantity
-			);
+
+			setCookie("cartItems", state.cartItems);
+			setCookie("totalAmount", state.totalAmount);
+			setCookie("totalQuantity", state.totalQuantity);
+		},
+
+		clearCart(state) {
+			state.cartItems = [];
+			state.totalQuantity = 0;
+			state.totalAmount = 0;
+
+			clearCookie("cartItems");
+			clearCookie("totalAmount");
+			clearCookie("totalQuantity");
 		},
 	},
 });

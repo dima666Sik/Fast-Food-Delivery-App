@@ -12,12 +12,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class ProductLikes {
+@Table(name = "product_status_likes")
+public class ProductStatusLikes {
 
     @Id
     @GeneratedValue
     public Integer id;
 
+    @Column
     public Boolean status;
 
     @ManyToOne(fetch = FetchType.LAZY)

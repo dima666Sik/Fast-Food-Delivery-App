@@ -7,6 +7,26 @@
 	border-top: 1px solid #ddd;
 	padding-top: 30px;
 }
+.form__group.individual_email_phone {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+}
+
+.f_g_container_email_phone {
+	display: flex;
+	flex-direction: column;
+}
+
+@media only screen and (max-width: 992px) {
+	.form__group.individual_email_phone {
+		display: flex;
+		flex-direction: column;
+	}
+	.f_g_container_email_phone {
+		margin-bottom: 30px;
+	}
+}
 
 @media only screen and (max-width: 768px) {
 	.checkout__bill h6 {
@@ -16,3 +36,9 @@
 		margin-top: 40px;
 	}
 }
+
+/* @media only screen and (max-width: 576px) {
+	.cart {
+		width: 300px !important;
+	}
+} */

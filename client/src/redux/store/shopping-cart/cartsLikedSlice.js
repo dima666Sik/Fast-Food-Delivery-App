@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { setLike, setStatus } from "../../../actions/post/setLikes";
 import { getListStatusForUser } from "../../../actions/get/getLikes";
 import { clearUser, setUser } from "../user/userSlice";
+import { cartActions } from "./cartSlice";
 
 const initialState = {
 	listCartsLiked: [],
@@ -70,6 +71,7 @@ export const axiosSetLikeAndStatus = createAsyncThunk(
 				error.response.data === "Valid Refresh token was expired..."
 			) {
 				dispatch(clearUser());
+				dispatch(cartActions.clearCart());
 				dispatch(cartActionsLiked.clearCartsLiked());
 			}
 
@@ -110,6 +112,7 @@ export const axiosGetStatusLikes = createAsyncThunk(
 				error.response.data === "Valid Refresh token was expired..."
 			) {
 				dispatch(clearUser());
+				dispatch(cartActions.clearCart());
 				dispatch(cartActionsLiked.clearCartsLiked());
 			}
 

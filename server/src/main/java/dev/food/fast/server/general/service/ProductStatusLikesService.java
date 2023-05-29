@@ -1,16 +1,14 @@
 package dev.food.fast.server.general.service;
 
-import dev.food.fast.server.auth.models.Role;
 import dev.food.fast.server.auth.models.User;
 import dev.food.fast.server.auth.pojo.MessageResponse;
-import dev.food.fast.server.auth.pojo.RegisterRequest;
 import dev.food.fast.server.auth.repository.UserRepository;
 import dev.food.fast.server.auth.service.JwtService;
 import dev.food.fast.server.general.models.product.Product;
-import dev.food.fast.server.general.models.product.ProductLikes;
-import dev.food.fast.server.general.pojo.ProductLikedRequest;
+import dev.food.fast.server.general.models.product.ProductStatusLikes;
+import dev.food.fast.server.general.pojo.ProductStatusLikedRequest;
 import dev.food.fast.server.general.pojo.ProductStatusRequest;
-import dev.food.fast.server.general.repository.ProductLikesRepository;
+import dev.food.fast.server.general.repository.ProductStatusLikesRepository;
 import dev.food.fast.server.general.repository.ProductsRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -18,20 +16,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ProductLikesService {
+public class ProductStatusLikesService {
     private final JwtService jwtService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private ProductsRepository productsRepository;
     @Autowired
-    private ProductLikesRepository productLikesRepository;
+    private ProductStatusLikesRepository productLikesRepository;
 
     public ResponseEntity<?> setStatusOnProduct(
             @NonNull HttpServletRequest request,
@@ -69,13 +64,13 @@ public class ProductLikesService {
             var productLikesOptional = productLikesRepository.findByProduct_IdAndUser_Id(statusRequest.getIdProduct(),
                     user.getId());
             if (productLikesOptional.isPresent()) {
-                ProductLikes productLikes = productLikesOptional.get();
+                ProductStatusLikes productLikes = productLikesOptional.get();
                 productLikes.setStatus(statusRequest.getStatus());
                 productLikesRepository.save(productLikes);
 
                 return ResponseEntity.ok("Status updated successfully");
             } else {
-                var productLikes = ProductLikes.builder()
+                var productLikes = ProductStatusLikes.builder()
                         .status(statusRequest.getStatus())
                         .user(user)
                         .product(product)
@@ -92,7 +87,7 @@ public class ProductLikesService {
         }
     }
 
-    public ResponseEntity<?> updateLikeOnProduct(ProductLikedRequest likedRequest) {
+    public ResponseEntity<?> updateLikeOnProduct(ProductStatusLikedRequest likedRequest) {
         System.out.println("likedRequest.getIdProduct(): " + likedRequest.getIdProduct());
         var productOptional = productsRepository.findById(likedRequest.getIdProduct());
 

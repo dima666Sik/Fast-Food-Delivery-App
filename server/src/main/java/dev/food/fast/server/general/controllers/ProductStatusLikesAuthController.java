@@ -1,8 +1,8 @@
 package dev.food.fast.server.general.controllers;
 
-import dev.food.fast.server.general.pojo.ProductLikedRequest;
+import dev.food.fast.server.general.pojo.ProductStatusLikedRequest;
 import dev.food.fast.server.general.pojo.ProductStatusRequest;
-import dev.food.fast.server.general.service.ProductLikesService;
+import dev.food.fast.server.general.service.ProductStatusLikesService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/private/product-like")
 @RequiredArgsConstructor
-public class ProductLikesAuthController {
-    private final ProductLikesService productLikesService;
+public class ProductStatusLikesAuthController {
+    private final ProductStatusLikesService productLikesService;
 
     @PostMapping("/set-like-product")
     public ResponseEntity<?> updateLikeOnProduct(
-            @RequestBody ProductLikedRequest likedRequest
+            @RequestBody ProductStatusLikedRequest likedRequest
     ) {
         return productLikesService.updateLikeOnProduct(likedRequest);
     }
