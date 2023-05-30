@@ -10,7 +10,6 @@ import lombok.*;
 @Getter
 @Setter
 @Table(name = "address_order")
-//@ToString(exclude = "basicOrder")
 public class AddressOrder {
     @Id
     @GeneratedValue

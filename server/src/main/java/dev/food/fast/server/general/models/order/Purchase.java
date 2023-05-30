@@ -30,7 +30,7 @@ public class Purchase {
     public BasicOrderGuest basicOrderGuest;
 
     @Column(name = "total_price")
-    private Double total_price;
+    private Double totalPrice;
 
     @Column(name = "quantity")
     private Integer quantity;

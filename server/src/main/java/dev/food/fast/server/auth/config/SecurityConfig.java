@@ -29,7 +29,7 @@ public class SecurityConfig {
         .csrf()
         .disable()
         .authorizeHttpRequests()
-        .requestMatchers("/api/v1/auth/**","/api/v1/slider/**","/public/**","/api/v1/foods/**","/api/v1/email/**")
+        .requestMatchers("/api/v1/auth/**","/api/v1/slider/**","/public/**","/api/v1/foods/**","/api/v1/email/**","/api/v1/private/order-purchase/add-order-with-purchase-guest")
           .permitAll()
         .anyRequest()
           .authenticated()

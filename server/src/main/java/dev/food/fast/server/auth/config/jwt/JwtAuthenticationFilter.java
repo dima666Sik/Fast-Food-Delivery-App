@@ -44,7 +44,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         if (request.getServletPath().contains("/api/v1/auth") || request.getServletPath().contains("/api/v1/slider") ||
                 request.getServletPath().contains("/public/images") || request.getServletPath().contains("/api/v1/foods") ||
-                request.getServletPath().contains("/api/v1/email/")) {
+                request.getServletPath().contains("/api/v1/email/") ||
+                request.getServletPath().contains("/api/v1/private/order-purchase/add-order-with-purchase-guest")) {
             filterChain.doFilter(request, response);
             return;
         }

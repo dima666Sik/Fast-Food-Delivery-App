@@ -23,13 +23,13 @@ public class BasicOrder {
     private String phone;
 
     @Column(name = "order_date")
-    private Date orderDate;
+    private String orderDate;
 
     @Column(name = "order_time")
-    private Time orderTime;
+    private String orderTime;
 
     @Column(name = "total_amount")
-    private Double total_amount;
+    private Double totalAmount;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_order_id", referencedColumnName = "id")

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Col, Container, Row } from "react-bootstrap";
 import PhoneInput from "react-phone-input-2";
 // import { Link } from "react-router-dom";
@@ -11,6 +11,11 @@ import ModalAlert from "../../components/alerts/ModalAlert";
 import AlertText from "../../components/alerts/alert-text/AlertText";
 import { useValidationAuthForms } from "../../hooks/useValidationAuthForms";
 import "./Checkout.css";
+import axios from "axios";
+import { clearUser, setUser } from "../../redux/store/user/userSlice";
+import { cartActions } from "../../redux/store/shopping-cart/cartSlice";
+import { cartActionsLiked } from "../../redux/store/shopping-cart/cartsLikedSlice";
+import { useValidFormsBtn } from "../../hooks/useValidFormsBtn";
 
 const Checkout = () => {
 	const [delivery, setDelivery] = useState(true);
@@ -26,7 +31,6 @@ const Checkout = () => {
 	const [date, setDate] = useState("");
 	const [time, setTime] = useState("");
 
-	const shippingInfo = [];
 	const cartTotalAmount = useSelector((state) => state.cart.totalAmount);
 	const [shippingCost, setShippingCost] = useState("40");
 	const totalAmount = cartTotalAmount + Number(shippingCost);
@@ -35,8 +39,13 @@ const Checkout = () => {
 	const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 	const userName = useSelector((state) => state.user.firstName);
 	const userEmail = useSelector((state) => state.user.email);
+	const accessToken = useSelector((state) => state.user.accessToken);
 
 	const cartItems = useSelector((state) => state.cart.cartItems);
+	const dispatch = useDispatch();
+	const [showTextModal, setShowTextModal] = useState("");
+
+	const { formValid, setFormValid } = useValidFormsBtn();
 
 	const {
 		email,
@@ -46,44 +55,193 @@ const Checkout = () => {
 		emailHandler,
 		firstName,
 		setFirstName,
+		setEmailError,
+		setEmailDirty,
 	} = useValidationAuthForms();
+
+	useEffect(() => {
+		console.log(
+			emailError,
+			!enterNumber,
+			!enterCity,
+			!enterStreet,
+			!houseNumber,
+			!flatNumber,
+			!floor,
+			!date,
+			!time
+		);
+		if (isAuthenticated) {
+			if (
+				!enterNumber ||
+				!enterCity ||
+				!enterStreet ||
+				!houseNumber ||
+				!flatNumber ||
+				!floor ||
+				!date ||
+				!time
+			)
+				setFormValid(false);
+			else setFormValid(true);
+		} else {
+			if (
+				emailError ||
+				!firstName ||
+				!enterNumber ||
+				!enterCity ||
+				!enterStreet ||
+				!houseNumber ||
+				!flatNumber ||
+				!floor ||
+				!date ||
+				!time
+			)
+				setFormValid(false);
+			else setFormValid(true);
+		}
+	}, [
+		emailError,
+		firstName,
+		enterNumber,
+		enterCity,
+		enterStreet,
+		houseNumber,
+		flatNumber,
+		floor,
+		date,
+		time,
+	]);
 
 	useEffect(() => {
 		if (isAuthenticated && userEmail !== null) setEmail(userEmail);
 		if (isAuthenticated && userName !== null) setFirstName(userName);
 	}, [userEmail]);
 
-	const submitHandler = (e) => {
+	const handleDoOrder = async (e) => {
 		e.preventDefault();
 		console.log(cartTotalAmount, enterNumber);
 		console.log(email, firstName);
 		if (cartTotalAmount === 0) {
+			setShowTextModal(
+				"You have not selected any products, please select products."
+			);
 			setShowModal(true);
 		} else {
+			const newList = cartItems.map(({ id, totalPrice, quantity }) => ({
+				id,
+				totalPrice,
+				quantity,
+			}));
+
 			const userShippingAddress = {
 				name: firstName,
-				email: email,
+				contact_email: email,
 				phone: enterNumber,
 
 				city: enterCity,
 				street: enterStreet,
 				house_number: houseNumber,
 				flat_number: flatNumber,
-				floor: floor,
+				floor_number: floor,
 
-				date: date,
-				time: time,
+				order_date: date,
+				order_time: time,
+
+				total_amount: totalAmount,
+
+				purchaseItems: newList,
 			};
 
-			shippingInfo.push(userShippingAddress);
-			console.log(shippingInfo);
-
-			const newList = cartItems.map(({ id, totalPrice, quantity }) => ({
-				id,
-				totalPrice,
-				quantity,
-			}));
+			console.log(userShippingAddress);
 			console.log(newList);
+
+			if (isAuthenticated) {
+				try {
+					const response = await axios.post(
+						`${process.env.REACT_APP_SERVER_API_URL}api/v1/private/order-purchase/add-order-with-purchase-user`,
+						userShippingAddress,
+						{
+							headers: {
+								Authorization: "Bearer " + accessToken,
+							},
+						}
+					);
+					if (response.status === 200) {
+						console.log("Order put in db:", response.data);
+						setShowTextModal("Order is successful!");
+						setShowModal(true);
+						if (!isAuthenticated) {
+							setEmail("");
+							setEmailDirty(false);
+							setEmailError("");
+							setFirstName("");
+						}
+						setEnterNumber("");
+						setEnterCity("");
+						setEnterStreet("");
+						setHouseNumber("");
+						setFlatNumber("");
+						setFloor("");
+						setDate("");
+						setTime("");
+					}
+				} catch (error) {
+					console.log(error);
+					if (error.response.data.access_token) {
+						// Dispatch the setUser action
+						dispatch(
+							setUser({
+								accessToken: error.response.data.access_token,
+								isAuthenticated: true,
+							})
+						);
+						setShowTextModal("Tokens was Updated, please continue use site.");
+						setShowModal(true);
+					}
+					if (
+						error.response.data ===
+							"You need to reauthorize! Tokens all were expired. You will be much to authorization!" ||
+						error.response.data === "Valid Refresh token was expired..."
+					) {
+						setShowTextModal(
+							"You don't have rights to review, refresh token was expired. Please Authorization in this Application..."
+						);
+						setShowModal(true);
+						dispatch(clearUser());
+						dispatch(cartActions.clearCart());
+						dispatch(cartActionsLiked.clearCartsLiked());
+					}
+					console.error(error.response);
+					console.error(error.response.data);
+					console.error(error.response.data.access_token);
+				}
+			} else {
+				try {
+					const response = await axios.post(
+						`${process.env.REACT_APP_SERVER_API_URL}api/v1/private/order-purchase/add-order-with-purchase-guest`,
+						userShippingAddress
+					);
+					if (response.status === 200) {
+						console.log("Order put in db:", response.data);
+						setShowTextModal("Order is successful!");
+						setShowModal(true);
+						setEnterNumber("");
+						setEnterCity("");
+						setEnterStreet("");
+						setHouseNumber("");
+						setFlatNumber("");
+						setFloor("");
+						setDate("");
+						setTime("");
+					}
+				} catch (error) {
+					console.log(error);
+					console.error(error.response);
+					console.error(error.response.data);
+					console.error(error.response.data.access_token);
+				}
+			}
 		}
 	};
 
@@ -131,7 +289,7 @@ const Checkout = () => {
 							</button>
 							<h4 className="mb-4">Shipping Address</h4>
 							<h6 className="mb-4">Basic Info:</h6>
-							<form className="checkout__form" onSubmit={submitHandler}>
+							<form className="checkout__form">
 								<div className="form__group">
 									<label htmlFor="firstName">Name:</label>
 									<input
@@ -185,6 +343,7 @@ const Checkout = () => {
 											<input
 												id="city"
 												type="text"
+												value={enterCity}
 												placeholder="Enter your City"
 												required
 												onChange={(e) => setEnterCity(e.target.value)}
@@ -195,6 +354,7 @@ const Checkout = () => {
 											<input
 												id="street"
 												type="text"
+												value={enterStreet}
 												placeholder="Enter your Street"
 												required
 												onChange={(e) => setEnterStreet(e.target.value)}
@@ -205,6 +365,7 @@ const Checkout = () => {
 											<input
 												id="houseNumber"
 												type="number"
+												value={houseNumber}
 												placeholder="Enter your House number"
 												required
 												onChange={(e) => setHouseNumber(e.target.value)}
@@ -215,6 +376,7 @@ const Checkout = () => {
 											<input
 												id="flatNumber"
 												type="number"
+												value={flatNumber}
 												placeholder="Enter your Flat number"
 												required
 												onChange={(e) => setFlatNumber(e.target.value)}
@@ -225,6 +387,7 @@ const Checkout = () => {
 											<input
 												id="floorNumber"
 												type="number"
+												value={floor}
 												placeholder="Enter your Floor number"
 												required
 												onChange={(e) => setFloor(e.target.value)}
@@ -239,6 +402,7 @@ const Checkout = () => {
 									<input
 										id="date"
 										type="date"
+										value={date}
 										placeholder="Enter your Date"
 										required
 										min={getCurrentDate()}
@@ -253,6 +417,7 @@ const Checkout = () => {
 											list="time-list"
 											id="time"
 											type="time"
+											value={time}
 											placeholder="Enter your Time"
 											required
 											onChange={(e) => setTime(e.target.value)}
@@ -271,7 +436,11 @@ const Checkout = () => {
 									</fieldset>
 								</div>
 
-								<button type="submit" className="addToCart__btn">
+								<button
+									disabled={!formValid}
+									onClick={handleDoOrder}
+									className="addToCart__btn"
+								>
 									Payment
 								</button>
 							</form>
@@ -298,9 +467,7 @@ const Checkout = () => {
 			{showModal && (
 				<ModalAlert
 					paramTitle={"General Message"}
-					paramBody={
-						"You have not selected any products, please select products."
-					}
+					paramBody={showTextModal}
 					onShow={showModal}
 					onHide={() => setShowModal(false)}
 				/>

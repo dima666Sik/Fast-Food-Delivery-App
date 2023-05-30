@@ -11,11 +11,17 @@ import AlertText from "../../components/alerts/alert-text/AlertText";
 import { useReview } from "../../hooks/useReview";
 import ModalAlert from "../../components/alerts/ModalAlert";
 
+import { useSelector } from "react-redux";
+
 const Contact = () => {
 	const { formValid, setFormValid } = useValidFormsBtn();
 	const [isLoadingSender, setIsLoadingSender] = useState(false);
 	const [showModal, setShowModal] = useState(false);
 	const [showTextModal, setShowTextModal] = useState("");
+
+	const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+	const userName = useSelector((state) => state.user.firstName);
+	const userEmail = useSelector((state) => state.user.email);
 
 	const {
 		email,
@@ -63,10 +69,12 @@ const Contact = () => {
 			if (response.status === 200) {
 				console.log(userData);
 				console.log("Review: ", response.data);
-				setEmail("");
-				setEmailDirty(false);
-				setEmailError("");
-				setFirstName("");
+				if (!isAuthenticated) {
+					setEmail("");
+					setEmailDirty(false);
+					setEmailError("");
+					setFirstName("");
+				}
 				setReview("");
 				setReviewDirty(false);
 				setReviewError("");
@@ -84,8 +92,19 @@ const Contact = () => {
 	};
 
 	useEffect(() => {
-		if (emailError || !firstName || !review) setFormValid(false);
-		else setFormValid(true);
+		if (isAuthenticated && userEmail !== null) setEmail(userEmail);
+		if (isAuthenticated && userName !== null) setFirstName(userName);
+	}, [userEmail]);
+
+	useEffect(() => {
+		console.log(emailError, !firstName, !review);
+		if (isAuthenticated) {
+			if (!review) setFormValid(false);
+			else setFormValid(true);
+		} else {
+			if (emailError || !firstName || !review) setFormValid(false);
+			else setFormValid(true);
+		}
 	}, [emailError, firstName, review]);
 
 	return (
@@ -118,6 +137,7 @@ const Contact = () => {
 										name="firstName"
 										type="text"
 										required
+										disabled={isAuthenticated}
 									/>
 								</div>
 								<div className="form__group">
@@ -128,6 +148,7 @@ const Contact = () => {
 										name="email"
 										type="email"
 										required
+										disabled={isAuthenticated}
 									/>
 									<AlertText
 										paramDirty={emailDirty}
