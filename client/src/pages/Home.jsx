@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import AboutUs from "../components/ui/about/AboutUs";
+import AboutUs from "../components/ui/home-ui-components/about/AboutUs";
 import Helmet from "../components/helmet/Helmet";
-import Slider from "../components/slider/Slider";
-import Category from "../components/ui/category/Category";
-import MenuProducts from "../components/ui/menu-products/MenuProducts";
-import WhyWe from "../components/ui/why-we/WhyWe";
-import HotFood from "../components/ui/hot-food/HotFood";
+import Slider from "../components/ui/home-ui-components/slider/Slider";
+import Category from "../components/ui/home-ui-components/category/Category";
+import MenuProducts from "../components/ui/home-ui-components/menu-products/MenuProducts";
+import WhyWe from "../components/ui/home-ui-components/why-we/WhyWe";
+import HotFood from "../components/ui/home-ui-components/hot-food/HotFood";
+
 import { axiosGetStatusLikes } from "../redux/store/shopping-cart/cartsLikedSlice";
 
 const Home = () => {

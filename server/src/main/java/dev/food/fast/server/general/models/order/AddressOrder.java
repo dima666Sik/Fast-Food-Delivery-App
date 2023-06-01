@@ -30,7 +30,7 @@ public class AddressOrder {
     @Column(name = "floor_number")
     private String floorNumber;
 
-    @OneToOne(mappedBy = "addressOrder")
-    private BasicOrder basicOrder;
+//    @OneToOne(mappedBy = "addressOrder")
+//    private BasicOrder basicOrder;
 
 }

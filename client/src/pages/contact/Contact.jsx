@@ -7,7 +7,7 @@ import CommonAd from "../../components/ui/common-ad/CommonAd";
 import "./Contact.css";
 import { useValidFormsBtn } from "../../hooks/useValidFormsBtn";
 import { useValidationAuthForms } from "../../hooks/useValidationAuthForms";
-import AlertText from "../../components/alerts/alert-text/AlertText";
+import AlertText from "../../components/alerts/AlertText";
 import { useReview } from "../../hooks/useReview";
 import ModalAlert from "../../components/alerts/ModalAlert";
 
@@ -93,8 +93,11 @@ const Contact = () => {
 
 	useEffect(() => {
 		if (isAuthenticated && userEmail !== null) setEmail(userEmail);
+		else setEmail("");
 		if (isAuthenticated && userName !== null) setFirstName(userName);
-	}, [userEmail]);
+		else setFirstName("");
+		console.log(isAuthenticated, userEmail, userName);
+	}, [isAuthenticated, userEmail, userName]);
 
 	useEffect(() => {
 		console.log(emailError, !firstName, !review);

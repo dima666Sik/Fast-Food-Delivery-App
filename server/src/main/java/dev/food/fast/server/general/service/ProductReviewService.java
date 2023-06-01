@@ -1,12 +1,12 @@
 package dev.food.fast.server.general.service;
 
 import dev.food.fast.server.auth.models.User;
-import dev.food.fast.server.auth.pojo.MessageResponse;
+import dev.food.fast.server.auth.dto.response.MessageResponse;
 import dev.food.fast.server.auth.repository.UserRepository;
 import dev.food.fast.server.auth.service.JwtService;
 import dev.food.fast.server.general.models.product.Product;
 import dev.food.fast.server.general.models.product.ProductReview;
-import dev.food.fast.server.general.pojo.ProductReviewRequest;
+import dev.food.fast.server.general.dto.request.ProductReviewRequest;
 import dev.food.fast.server.general.repository.ProductReviewRepository;
 import dev.food.fast.server.general.repository.ProductsRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,12 +19,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ProductReviewService {
     private final JwtService jwtService;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ProductsRepository productsRepository;
-    @Autowired
-    private ProductReviewRepository productReviewRepository;
+    private final UserRepository userRepository;
+    private final ProductsRepository productsRepository;
+    private final ProductReviewRepository productReviewRepository;
 
     public ResponseEntity<?> addProductReview(HttpServletRequest request, ProductReviewRequest productReviewRequest) {
         final String authHeader = request.getHeader("Authorization");
@@ -72,9 +69,9 @@ public class ProductReviewService {
     }
 
     public ResponseEntity<?> getAllProductReview(Integer productId) {
-        var productLikesDTOList = productReviewRepository.findDTOByProduct_Id(productId);
+        var productLikesResponseList = productReviewRepository.findProductReviewByProduct_Id(productId);
 
-        if (productLikesDTOList.isEmpty()) {
+        if (productLikesResponseList.isEmpty()) {
             return ResponseEntity.ok()
                     .body(MessageResponse.builder()
                             .message("Products not found...")
@@ -82,6 +79,6 @@ public class ProductReviewService {
                             .build());
         }
 
-        return ResponseEntity.ok(productLikesDTOList);
+        return ResponseEntity.ok(productLikesResponseList);
     }
 }

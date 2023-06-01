@@ -1,8 +1,8 @@
 package dev.food.fast.server.auth.service;
 
-import dev.food.fast.server.auth.dto.UserDTO;
+import dev.food.fast.server.auth.dto.response.UserResponse;
 import dev.food.fast.server.auth.models.User;
-import dev.food.fast.server.auth.pojo.MessageResponse;
+import dev.food.fast.server.auth.dto.response.MessageResponse;
 import dev.food.fast.server.auth.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.NonNull;
@@ -11,14 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final JwtService jwtService;
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public ResponseEntity<?> getData(@NonNull HttpServletRequest request) {
         final String authHeader = request.getHeader("Authorization");
@@ -39,7 +36,7 @@ public class UserService {
             }
             User user = userOptional.get();
 
-            UserDTO userDto = UserDTO.builder()
+            UserResponse userDto = UserResponse.builder()
                     .firstname(user.getFirstname())
                     .lastname(user.getLastname())
                     .email(user.getEmail())

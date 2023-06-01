@@ -1,13 +1,13 @@
 package dev.food.fast.server.general.service;
 
 import dev.food.fast.server.auth.models.User;
-import dev.food.fast.server.auth.pojo.MessageResponse;
+import dev.food.fast.server.auth.dto.response.MessageResponse;
 import dev.food.fast.server.auth.repository.UserRepository;
 import dev.food.fast.server.auth.service.JwtService;
 import dev.food.fast.server.general.models.order.*;
 import dev.food.fast.server.general.models.product.Product;
-import dev.food.fast.server.general.pojo.PurchaseItemRequest;
-import dev.food.fast.server.general.pojo.OrderPurchaseRequest;
+import dev.food.fast.server.general.dto.request.PurchaseItemRequest;
+import dev.food.fast.server.general.dto.request.OrderPurchaseRequest;
 import dev.food.fast.server.general.repository.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -22,20 +22,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderPurchaseService {
     private final JwtService jwtService;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ProductsRepository productsRepository;
-    @Autowired
-    private AddressOrderRepository addressOrderRepository;
-    @Autowired
-    private BasicOrderRepository basicOrderRepository;
-    @Autowired
-    private BasicOrderUserRepository basicOrderUserRepository;
-    @Autowired
-    private BasicOrderGuestRepository basicOrderGuestRepository;
-    @Autowired
-    private PurchaseRepository purchaseRepository;
+    private final UserRepository userRepository;
+    private final ProductsRepository productsRepository;
+    private final AddressOrderRepository addressOrderRepository;
+    private final BasicOrderRepository basicOrderRepository;
+    private final BasicOrderUserRepository basicOrderUserRepository;
+    private final BasicOrderGuestRepository basicOrderGuestRepository;
+    private final PurchaseRepository purchaseRepository;
 
     public ResponseEntity<?> addOrderWithPurchaseUser(HttpServletRequest request, OrderPurchaseRequest orderPurchaseRequest) {
         final String authHeader = request.getHeader("Authorization");
@@ -56,21 +49,8 @@ public class OrderPurchaseService {
             }
             User user = userOptional.get();
 
-            AddressOrder addressOrder = AddressOrder.builder()
-                    .city(orderPurchaseRequest.getCity())
-                    .street(orderPurchaseRequest.getStreet())
-                    .houseNumber(orderPurchaseRequest.getHouseNumber())
-                    .flatNumber(orderPurchaseRequest.getFlatNumber())
-                    .floorNumber(orderPurchaseRequest.getFloorNumber())
-                    .build();
-
-            BasicOrder basicOrder = BasicOrder.builder()
-                    .phone(orderPurchaseRequest.getPhone())
-                    .orderDate(orderPurchaseRequest.getDate())
-                    .orderTime(orderPurchaseRequest.getTime())
-                    .totalAmount(orderPurchaseRequest.getTotalAmount())
-                    .addressOrder(addressOrder)
-                    .build();
+            AddressOrder addressOrder = createAddressOrder(orderPurchaseRequest);
+            BasicOrder basicOrder = createBasicOrder(orderPurchaseRequest, addressOrder);
 
             BasicOrderUser basicOrderUser = BasicOrderUser.builder()
                     .user(user)
@@ -117,21 +97,8 @@ public class OrderPurchaseService {
 
     public ResponseEntity<?> addOrderWithPurchaseGuest(OrderPurchaseRequest orderPurchaseRequest) {
 
-        AddressOrder addressOrder = AddressOrder.builder()
-                .city(orderPurchaseRequest.getCity())
-                .street(orderPurchaseRequest.getStreet())
-                .houseNumber(orderPurchaseRequest.getHouseNumber())
-                .flatNumber(orderPurchaseRequest.getFlatNumber())
-                .floorNumber(orderPurchaseRequest.getFloorNumber())
-                .build();
-
-        BasicOrder basicOrder = BasicOrder.builder()
-                .phone(orderPurchaseRequest.getPhone())
-                .orderDate(orderPurchaseRequest.getDate())
-                .orderTime(orderPurchaseRequest.getTime())
-                .totalAmount(orderPurchaseRequest.getTotalAmount())
-                .addressOrder(addressOrder)
-                .build();
+        AddressOrder addressOrder = createAddressOrder(orderPurchaseRequest);
+        BasicOrder basicOrder = createBasicOrder(orderPurchaseRequest, addressOrder);
 
         BasicOrderGuest basicOrderGuest = BasicOrderGuest.builder()
                 .name(orderPurchaseRequest.getName())
@@ -169,6 +136,26 @@ public class OrderPurchaseService {
         purchaseRepository.saveAll(purchaseList);
 
         return ResponseEntity.ok("Order was add successfully");
+    }
+
+    private AddressOrder createAddressOrder(OrderPurchaseRequest orderPurchaseRequest) {
+        return AddressOrder.builder()
+                .city(orderPurchaseRequest.getCity())
+                .street(orderPurchaseRequest.getStreet())
+                .houseNumber(orderPurchaseRequest.getHouseNumber())
+                .flatNumber(orderPurchaseRequest.getFlatNumber())
+                .floorNumber(orderPurchaseRequest.getFloorNumber())
+                .build();
+    }
+
+    private BasicOrder createBasicOrder(OrderPurchaseRequest orderPurchaseRequest, AddressOrder addressOrder) {
+        return BasicOrder.builder()
+                .phone(orderPurchaseRequest.getPhone())
+                .orderDate(orderPurchaseRequest.getDate())
+                .orderTime(orderPurchaseRequest.getTime())
+                .totalAmount(orderPurchaseRequest.getTotalAmount())
+                .addressOrder(addressOrder)
+                .build();
     }
 
 }

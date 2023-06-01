@@ -1,6 +1,6 @@
 package dev.food.fast.server.general.controllers;
 
-import dev.food.fast.server.general.pojo.ProductReviewRequest;
+import dev.food.fast.server.general.dto.request.ProductReviewRequest;
 import dev.food.fast.server.general.service.ProductReviewService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

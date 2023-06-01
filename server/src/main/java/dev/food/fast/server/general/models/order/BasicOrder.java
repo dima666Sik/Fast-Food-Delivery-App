@@ -35,10 +35,10 @@ public class BasicOrder {
     @JoinColumn(name = "address_order_id", referencedColumnName = "id")
     private AddressOrder addressOrder;
 
-    @OneToOne(mappedBy = "basicOrder", cascade = CascadeType.ALL)
-    private BasicOrderGuest basicOrderGuest;
-
-    @OneToOne(mappedBy = "basicOrder", cascade = CascadeType.ALL)
-    private BasicOrderUser basicOrderUser;
+//    @OneToOne(mappedBy = "basicOrder", cascade = CascadeType.ALL)
+//    private BasicOrderGuest basicOrderGuest;
+//
+//    @OneToOne(mappedBy = "basicOrder", cascade = CascadeType.ALL)
+//    private BasicOrderUser basicOrderUser;
 
 }

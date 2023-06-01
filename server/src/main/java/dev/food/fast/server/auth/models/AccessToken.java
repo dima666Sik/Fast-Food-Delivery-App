@@ -1,15 +1,13 @@
 package dev.food.fast.server.auth.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Entity
 public class AccessToken {
 
@@ -32,4 +30,5 @@ public class AccessToken {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
   public User user;
+
 }

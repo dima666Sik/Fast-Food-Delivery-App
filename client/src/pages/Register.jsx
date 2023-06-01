@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Modal, Button } from "react-bootstrap";
 import axios from "axios";
 
 import { useValidationAuthForms } from "../hooks/useValidationAuthForms";
-import AlertText from "../components/alerts/alert-text/AlertText";
+import AlertText from "../components/alerts/AlertText";
 import { useValidFormsBtn } from "../hooks/useValidFormsBtn";
+import ModalAlert from "../components/alerts/ModalAlert";
 
 const Register = (props) => {
 	const {
@@ -33,6 +34,8 @@ const Register = (props) => {
 	} = useValidationAuthForms();
 
 	const { formValid, setFormValid } = useValidFormsBtn();
+	const [showTextModal, setShowTextModal] = useState("");
+	const [showModal, setShowModal] = useState(false);
 
 	useEffect(() => {
 		setFormValid(
@@ -81,12 +84,12 @@ const Register = (props) => {
 				console.log(userData);
 				console.log("Register in:", response.data);
 				handleLoginClick();
-			} else {
-				throw new Error("Registration failed");
 			}
 		} catch (error) {
 			console.error(error);
-			alert("Registration failed. Please try again later.");
+			setShowTextModal(error.response.data.message_response);
+			setShowModal(true);
+			// alert("Registration failed. Please try again later.");
 		}
 	};
 
@@ -210,6 +213,14 @@ const Register = (props) => {
 					</Form>
 				</Modal.Body>
 			</Modal>
+			{showModal && (
+				<ModalAlert
+					paramTitle={"Error Authenticated"}
+					paramBody={showTextModal}
+					onShow={showModal}
+					onHide={() => setShowModal(false)}
+				/>
+			)}
 		</>
 	);
 };

@@ -116,21 +116,48 @@ const FoodDetails = () => {
 				setReviewMsg("");
 				console.log(response.data);
 			} catch (error) {
-				if (error.response.data.access_token) {
-					// Dispatch the setUser action
-					dispatch(
-						setUser({
-							accessToken: error.response.data.access_token,
-							isAuthenticated: true,
-						})
-					);
-					setShowTextModal("Tokens was Updated, please continue use site.");
-					setShowModal(true);
+				console.log(error, accessToken);
+				if (
+					error.response.data === "Access token was expired! Refresh is valid!"
+				) {
+					try {
+						const response = await axios.post(
+							`${process.env.REACT_APP_SERVER_API_URL}api/v1/auth/refresh-tokens`,
+							{},
+							{
+								headers: {
+									Authorization: "Bearer " + accessToken,
+								},
+							}
+						);
+
+						if (response.status === 200) {
+							if (response.data.access_token) {
+								// Dispatch the setUser action
+								dispatch(
+									setUser({
+										accessToken: response.data.access_token,
+									})
+								);
+								setShowTextModal(
+									"Tokens was Updated, please continue use site."
+								);
+								setShowModal(true);
+							}
+						}
+					} catch (error) {
+						console.log(error);
+						throw error; // пробрасываем ошибку выше для обработки в setLikes
+					}
 				}
+
 				if (
 					error.response.data ===
 						"You need to reauthorize! Tokens all were expired. You will be much to authorization!" ||
-					error.response.data === "Valid Refresh token was expired..."
+					error.response.data ===
+						"All Tokens (access & refresh) were expired! Please generate news tokens!" ||
+					error.response.data === "Valid Refresh token was expired..." ||
+					error.response.data === "Tokens from client is bad!"
 				) {
 					setShowTextModal(
 						"You don't have rights to review, refresh token was expired. Please Authorization in this Application..."
@@ -141,9 +168,6 @@ const FoodDetails = () => {
 					dispatch(cartActionsLiked.clearCartsLiked());
 					setReviewMsg("");
 				}
-				console.error(error.response);
-				console.error(error.response.data);
-				console.error(error.response.data.access_token);
 			} finally {
 				setIsFetchingComments(false);
 			}

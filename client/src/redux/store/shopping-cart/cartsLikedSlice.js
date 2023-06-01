@@ -4,6 +4,7 @@ import { setLike, setStatus } from "../../../actions/post/setLikes";
 import { getListStatusForUser } from "../../../actions/get/getLikes";
 import { clearUser, setUser } from "../user/userSlice";
 import { cartActions } from "./cartSlice";
+import axios from "axios";
 
 const initialState = {
 	listCartsLiked: [],
@@ -56,19 +57,44 @@ export const axiosSetLikeAndStatus = createAsyncThunk(
 				return { id, newStatus, likes };
 			}
 		} catch (error) {
-			if (error.response.data.access_token) {
-				// Dispatch the setUser action
-				dispatch(
-					setUser({
-						accessToken: error.response.data.access_token,
-					})
-				);
+			console.log(error, accessToken);
+			if (
+				error.response.data === "Access token was expired! Refresh is valid!"
+			) {
+				try {
+					const response = await axios.post(
+						`${process.env.REACT_APP_SERVER_API_URL}api/v1/auth/refresh-tokens`,
+						{},
+						{
+							headers: {
+								Authorization: "Bearer " + accessToken,
+							},
+						}
+					);
+
+					if (response.status === 200) {
+						if (response.data.access_token) {
+							// Dispatch the setUser action
+							dispatch(
+								setUser({
+									accessToken: response.data.access_token,
+								})
+							);
+						}
+					}
+				} catch (error) {
+					console.log(error);
+					throw error; // пробрасываем ошибку выше для обработки в setLikes
+				}
 			}
 
 			if (
 				error.response.data ===
 					"You need to reauthorize! Tokens all were expired. You will be much to authorization!" ||
-				error.response.data === "Valid Refresh token was expired..."
+				error.response.data ===
+					"All Tokens (access & refresh) were expired! Please generate news tokens!" ||
+				error.response.data === "Valid Refresh token was expired..." ||
+				error.response.data === "Tokens from client is bad!"
 			) {
 				dispatch(clearUser());
 				dispatch(cartActions.clearCart());
@@ -96,26 +122,18 @@ export const axiosGetStatusLikes = createAsyncThunk(
 				})
 			); // Обновляем состояние Redux
 		} catch (error) {
-			if (error.response.data.access_token) {
-				console.log("+=+");
-				// Dispatch the setUser action
-				dispatch(
-					setUser({
-						accessToken: error.response.data.access_token,
-					})
-				);
-			}
-			console.log(error.response.data);
 			if (
 				error.response.data ===
 					"You need to reauthorize! Tokens all were expired. You will be much to authorization!" ||
-				error.response.data === "Valid Refresh token was expired..."
+				error.response.data ===
+					"All Tokens (access & refresh) were expired! Please generate news tokens!" ||
+				error.response.data === "Valid Refresh token was expired..." ||
+				error.response.data === "Tokens from client is bad!"
 			) {
 				dispatch(clearUser());
 				dispatch(cartActions.clearCart());
 				dispatch(cartActionsLiked.clearCartsLiked());
 			}
-
 			return rejectWithValue({
 				message: error.message,
 				code: error.code,

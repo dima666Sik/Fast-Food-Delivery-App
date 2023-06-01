@@ -33,24 +33,26 @@ const AllFoods = () => {
 			}
 
 			setIsLoadingSort(true);
-
-			axios
-				.get(`http://localhost:8086/api/v1/foods/sorted/${sortedChoice}`)
-				.then((response) => {
-					const updatedProducts = response.data.map((product) => {
-						return {
-							...product,
-							image01: `${process.env.REACT_APP_SERVER_API_URL}public/images/products/${product.image01}`,
-							image02: `${process.env.REACT_APP_SERVER_API_URL}public/images/products/${product.image02}`,
-							image03: `${process.env.REACT_APP_SERVER_API_URL}public/images/products/${product.image03}`,
-						};
-					});
-					setProductData(updatedProducts);
-				})
-				.catch((error) => {
-					console.log(error);
-				})
-				.finally(() => setIsLoadingSort(false));
+			const fetchData = async () => {
+				axios
+					.get(`http://localhost:8086/api/v1/foods/sorted/${sortedChoice}`)
+					.then((response) => {
+						const updatedProducts = response.data.map((product) => {
+							return {
+								...product,
+								image01: `${process.env.REACT_APP_SERVER_API_URL}public/images/products/${product.image01}`,
+								image02: `${process.env.REACT_APP_SERVER_API_URL}public/images/products/${product.image02}`,
+								image03: `${process.env.REACT_APP_SERVER_API_URL}public/images/products/${product.image03}`,
+							};
+						});
+						setProductData(updatedProducts);
+					})
+					.catch((error) => {
+						console.log(error);
+					})
+					.finally(() => setIsLoadingSort(false));
+			};
+			fetchData();
 		}
 	}, [sortedChoice, isLoading]);
 
@@ -64,7 +66,7 @@ const AllFoods = () => {
 		firstProductIndex,
 		lastProductIndex
 	);
-
+	console.log(currentProducts);
 	const pagination = (paginationNumber) => setCurrentPage(paginationNumber);
 
 	useEffect(() => {
@@ -123,6 +125,10 @@ const AllFoods = () => {
 						{isLoading || isLoadingSort || !currentProducts ? (
 							<div className="text-center">
 								<Spinner />
+							</div>
+						) : currentProducts.length === 0 ? (
+							<div className="review pt-5 mb-5 pb-5">
+								<p className="user__name text-center my-0">Foods is absent</p>
 							</div>
 						) : (
 							currentProducts.map((item) => (

@@ -1,7 +1,7 @@
 package dev.food.fast.server.general.controllers;
 
-import dev.food.fast.server.general.pojo.ProductStatusLikedRequest;
-import dev.food.fast.server.general.pojo.ProductStatusRequest;
+import dev.food.fast.server.general.dto.request.ProductStatusLikedRequest;
+import dev.food.fast.server.general.dto.request.ProductStatusRequest;
 import dev.food.fast.server.general.service.ProductStatusLikesService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

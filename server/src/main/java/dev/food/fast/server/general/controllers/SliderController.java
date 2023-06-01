@@ -23,9 +23,9 @@ public class SliderController {
 
     @PostMapping("/add-slider-images")
     public ResponseEntity<?> addImagesToSlider() {
-        List<String> urlImgs = List.of("first_pizza_slide.png",
-                "second_img_for_slider.png",
-                "third_img_for_slider.png");
+        List<String> urlImgs = List.of("first_slide.png",
+                "second_slide.png",
+                "third_slide.png");
 
         for (String urlImg : urlImgs) {
             ResponseEntity<?> response = service.addImageToSlider(urlImg);

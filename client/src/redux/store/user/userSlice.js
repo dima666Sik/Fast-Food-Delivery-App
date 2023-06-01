@@ -28,11 +28,11 @@ const userSlice = createSlice({
 			console.log("setInfoUser", state.accessToken, state.isAuthenticated);
 		},
 		setUser: (state, action) => {
-			console.log(action.payload);
+			// console.log(action.payload);
 			state.accessToken = action.payload.accessToken;
 			state.isAuthenticated = true;
 			setUserAccessTokenFunc(state.accessToken);
-			console.log("setUser", state.accessToken, state.isAuthenticated);
+			// console.log("setUser", state.accessToken, state.isAuthenticated);
 		},
 		clearUser: (state) => {
 			console.log("P");

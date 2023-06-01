@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
-//@CrossOrigin(allowedHeaders = {"Authorization", "X-Refresh-Token"},exposedHeaders = {"Authorization", "X-Refresh-Token"})
 @RestController
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor

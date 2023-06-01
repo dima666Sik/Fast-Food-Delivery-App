@@ -1,6 +1,6 @@
 package dev.food.fast.server.general.controllers;
 
-import dev.food.fast.server.general.pojo.OrderPurchaseRequest;
+import dev.food.fast.server.general.dto.request.OrderPurchaseRequest;
 import dev.food.fast.server.general.service.OrderPurchaseService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

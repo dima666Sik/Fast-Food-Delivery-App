@@ -1,13 +1,13 @@
 package dev.food.fast.server.general.service;
 
 import dev.food.fast.server.auth.models.User;
-import dev.food.fast.server.auth.pojo.MessageResponse;
+import dev.food.fast.server.auth.dto.response.MessageResponse;
 import dev.food.fast.server.auth.repository.UserRepository;
 import dev.food.fast.server.auth.service.JwtService;
 import dev.food.fast.server.general.models.product.Product;
 import dev.food.fast.server.general.models.product.ProductStatusLikes;
-import dev.food.fast.server.general.pojo.ProductStatusLikedRequest;
-import dev.food.fast.server.general.pojo.ProductStatusRequest;
+import dev.food.fast.server.general.dto.request.ProductStatusLikedRequest;
+import dev.food.fast.server.general.dto.request.ProductStatusRequest;
 import dev.food.fast.server.general.repository.ProductStatusLikesRepository;
 import dev.food.fast.server.general.repository.ProductsRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,12 +21,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ProductStatusLikesService {
     private final JwtService jwtService;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ProductsRepository productsRepository;
-    @Autowired
-    private ProductStatusLikesRepository productLikesRepository;
+    private final UserRepository userRepository;
+    private final ProductsRepository productsRepository;
+    private final ProductStatusLikesRepository productLikesRepository;
 
     public ResponseEntity<?> setStatusOnProduct(
             @NonNull HttpServletRequest request,
@@ -108,72 +105,6 @@ public class ProductStatusLikesService {
         return ResponseEntity.ok("Likes added successfully");
     }
 
-//    public ResponseEntity<?> getLikeOnProduct(
-//                 Integer productId
-//    ) {
-//        var productOptional = productsRepository.findById(
-//                productId
-//        );
-//
-//        if (productOptional.isEmpty()) {
-//            return ResponseEntity.ok()
-//                    .body(MessageResponse.builder()
-//                            .message("Product not found...")
-//                            .status(false)
-//                            .build());
-//        }
-//
-//        Product product = productOptional.get();
-//
-//        return ResponseEntity.ok(product.getLikes());
-//    }
-
-//    public ResponseEntity<?> getStatusProduct(HttpServletRequest request, Integer productId) {
-//        final String authHeader = request.getHeader("Authorization");
-//        System.out.println("----getStatusProduct: "+authHeader);
-//        final String jwt = authHeader.substring(7);
-//
-//        final String userEmail;
-//
-//        try {
-//            userEmail = jwtService.extractUsername(jwt);
-//            var userOptional = userRepository.findByEmail(userEmail);
-//            if (userOptional.isEmpty()) {
-//                return ResponseEntity.ok()
-//                        .body(MessageResponse.builder()
-//                                .message("User not found...")
-//                                .status(false)
-//                                .build());
-//            }
-//            User user = userOptional.get();
-//
-//            var productOptional = productsRepository.findById(productId);
-//
-//            if (productOptional.isEmpty()) {
-//                return ResponseEntity.ok()
-//                        .body(MessageResponse.builder()
-//                                .message("Product not found...")
-//                                .status(false)
-//                                .build());
-//            }
-//            Product product = productOptional.get();
-//
-//            var productLikesOptional = productLikesRepository
-//                    .findByProduct_IdAndUser_Id(productId, user.getId());
-//
-//            if (productLikesOptional.isPresent()) {
-//                ProductLikes productLikes = productLikesOptional.get();
-//                return ResponseEntity.ok(productLikes.getStatus());
-//            } else {
-//                return ResponseEntity.ok("Status was not found");
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return ResponseEntity.ok("Status get unsuccessfully");
-//    }
-
     public ResponseEntity<?> getListStatusProducts(HttpServletRequest request) {
         final String authHeader = request.getHeader("Authorization");
         final String jwt = authHeader.substring(7);
@@ -192,7 +123,7 @@ public class ProductStatusLikesService {
             }
             User user = userOptional.get();
 
-            var productLikesDTOList = productLikesRepository.findDTOByUser_Id(user.getId());
+            var productLikesDTOList = productLikesRepository.findResponseStatusLikedByUser_Id(user.getId());
 
             if (productLikesDTOList.isEmpty()) {
                 return ResponseEntity.ok()

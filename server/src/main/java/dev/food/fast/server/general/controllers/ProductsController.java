@@ -1,7 +1,7 @@
 package dev.food.fast.server.general.controllers;
 
 import dev.food.fast.server.general.models.product.Product;
-import dev.food.fast.server.general.pojo.ProductRequest;
+import dev.food.fast.server.general.dto.request.ProductRequest;
 import dev.food.fast.server.general.service.ProductReviewService;
 import dev.food.fast.server.general.service.ProductsService;
 import lombok.RequiredArgsConstructor;

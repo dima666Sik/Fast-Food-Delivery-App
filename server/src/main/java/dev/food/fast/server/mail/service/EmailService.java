@@ -14,9 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class EmailService {
-
-    @Autowired
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
     @Value("${spring.mail.email}")
     private String email;
@@ -28,19 +26,37 @@ public class EmailService {
             helper.setTo(email);
             helper.setSubject("Fast Food Review");
 
-            // HTML-code mail message body
             String htmlContent = "<html>" +
                     "<head><style>" +
-                    "    body { font-family: Arial, sans-serif; font-size: 16px; }" +
+                    "    body { font-family: Arial, sans-serif; font-size: 16px; color: #333; }" +
                     "    h1 { color: orangered; }" +
+                    "    table { border-collapse: collapse; }" +
+                    "    th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #ddd; }" +
+                    "    th { background-color: #f2f2f2; font-weight: bold; }" +
+                    "    td { font-style: italic; }" +
+                    "    td.email { font-weight: bold; color: orangered; }" +
+                    "    td.username { font-weight: bold; }" +
                     "</style></head>" +
                     "<body>" +
                     "  <section>" +
                     "    <h1>Hello!</h1>" +
-                    "    <p>This email was sent by a client, please read any comments or suggestions! :)</p>" +
-                    "    <p>Email content: <strong><i>" + body + "</i></strong></p>" +
-                    "    <p>Email sender: <strong>" + from + "</strong></p>" +
-                    "    <p>Best regards, <i><b>" + username + "</b></i></p>" +
+                    "    <p>This email was sent by a client. Please read any comments or suggestions! :)</p>" +
+                    "    <div class='table-container'>" +
+                    "      <table>" +
+                    "        <tr>" +
+                    "          <th>Email content:</th>" +
+                    "          <td>" + body + "</td>" +
+                    "        </tr>" +
+                    "        <tr>" +
+                    "          <th>Email sender:</th>" +
+                    "          <td class='email'>" + from + "</td>" +
+                    "        </tr>" +
+                    "        <tr>" +
+                    "          <th>Best regards:</th>" +
+                    "          <td class='username'>" + username + "</td>" +
+                    "        </tr>" +
+                    "      </table>" +
+                    "    </div>" +
                     "  </section>" +
                     "</body>" +
                     "</html>";

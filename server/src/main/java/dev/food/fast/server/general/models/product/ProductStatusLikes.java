@@ -2,16 +2,14 @@ package dev.food.fast.server.general.models.product;
 
 import dev.food.fast.server.auth.models.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Getter
+@Setter
 @Table(name = "product_status_likes")
 public class ProductStatusLikes {
 

@@ -1,7 +1,7 @@
 package dev.food.fast.server.general.service;
 
 import dev.food.fast.server.general.models.product.Product;
-import dev.food.fast.server.general.pojo.ProductRequest;
+import dev.food.fast.server.general.dto.request.ProductRequest;
 import dev.food.fast.server.general.repository.ProductsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;

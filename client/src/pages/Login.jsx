@@ -1,14 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Modal, Button } from "react-bootstrap";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useValidationAuthForms } from "../hooks/useValidationAuthForms";
-import AlertText from "../components/alerts/alert-text/AlertText";
+import AlertText from "../components/alerts/AlertText";
 import { useValidFormsBtn } from "../hooks/useValidFormsBtn";
 import { clearUser, setInfoUser, setUser } from "../redux/store/user/userSlice";
 import { cartActionsLiked } from "../redux/store/shopping-cart/cartsLikedSlice.js";
 import { cartActions } from "../redux/store/shopping-cart/cartSlice";
+import ModalAlert from "../components/alerts/ModalAlert";
 
 const Login = (props) => {
 	const {
@@ -25,7 +26,8 @@ const Login = (props) => {
 		emailHandler,
 		passwordHandler,
 	} = useValidationAuthForms();
-
+	const [showTextModal, setShowTextModal] = useState("");
+	const [showModal, setShowModal] = useState(false);
 	const { formValid, setFormValid } = useValidFormsBtn();
 
 	const handleRegisterClick = () => {
@@ -44,6 +46,7 @@ const Login = (props) => {
 
 	const handleSignInClick = async () => {
 		try {
+			console.log("hi");
 			const response = await axios.post(
 				`${process.env.REACT_APP_SERVER_API_URL}api/v1/auth/login`,
 				{ email, password },
@@ -57,8 +60,10 @@ const Login = (props) => {
 				props.onHide();
 			}
 		} catch (error) {
-			console.error("Failed to log in");
-			// вы можете установить здесь состояние ошибки и отображать его с помощью AlertText
+			console.log(error);
+			// console.error("Failed to log in");
+			setShowTextModal(error.response.data.message_response);
+			setShowModal(true);
 		}
 	};
 
@@ -66,50 +71,6 @@ const Login = (props) => {
 		if (emailError || passwordError) setFormValid(false);
 		else setFormValid(true);
 	}, [emailError, passwordError]);
-
-	useEffect(() => {
-		if (accessToken) {
-			axios
-				.get(
-					`${process.env.REACT_APP_SERVER_API_URL}api/v1/user/get-access-data`,
-					{
-						headers: {
-							Authorization: "Bearer " + accessToken,
-						},
-					}
-				)
-				.then((response) => {
-					dispatch(
-						setInfoUser({
-							firstName: response.data.first_name,
-							lastName: response.data.last_name,
-							email: response.data.email,
-						})
-					);
-				})
-				.catch((error) => {
-					console.log(error.response);
-					if (error.response.data.access_token) {
-						// Dispatch the setUser action
-						dispatch(
-							setUser({
-								accessToken: error.response.data.access_token,
-							})
-						);
-					}
-
-					if (
-						error.response.data ===
-							"You need to reauthorize! Tokens all were expired. You will be much to authorization!" ||
-						error.response.data === "Valid Refresh token was expired..."
-					) {
-						dispatch(clearUser());
-						dispatch(cartActions.clearCart());
-						dispatch(cartActionsLiked.clearCartsLiked());
-					}
-				});
-		}
-	}, [accessToken]);
 
 	return (
 		<>
@@ -190,6 +151,14 @@ const Login = (props) => {
 					</Form>
 				</Modal.Body>
 			</Modal>
+			{showModal && (
+				<ModalAlert
+					paramTitle={"Error Authenticated"}
+					paramBody={showTextModal}
+					onShow={showModal}
+					onHide={() => setShowModal(false)}
+				/>
+			)}
 		</>
 	);
 };
