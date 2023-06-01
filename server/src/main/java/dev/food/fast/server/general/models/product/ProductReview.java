@@ -14,7 +14,7 @@ import lombok.*;
 public class ProductReview {
     @Id
     @GeneratedValue
-    public Integer id;
+    public Long id;
 
     @Lob
     @Column(name="review", length=100000)

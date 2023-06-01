@@ -15,7 +15,7 @@ import lombok.*;
 public class BasicOrderGuest {
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
 
     @Column(name = "name")
     private String name;

@@ -7,14 +7,14 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
-public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Integer> {
+public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
 
     @Query(value = """
       select t from RefreshToken t inner join User u\s
       on t.user.id = u.id\s
       where u.id = :id and (t.expired = false or t.revoked = false)\s
       """)
-    Optional<RefreshToken> findValidRefreshTokenByUser(Integer id);
+    Optional<RefreshToken> findValidRefreshTokenByUser(Long id);
 
     Optional<RefreshToken> findByRefreshToken(String refreshToken);
 
@@ -23,7 +23,7 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Inte
       on t.user.id = u.id\s
       where u.id = :id and (t.expired = true or t.revoked = true)\s
       """)
-    List<RefreshToken> deleteAllExpiredAndRevokedRefreshTokensByUser(Integer id);
+    List<RefreshToken> deleteAllExpiredAndRevokedRefreshTokensByUser(Long id);
 
 
 }

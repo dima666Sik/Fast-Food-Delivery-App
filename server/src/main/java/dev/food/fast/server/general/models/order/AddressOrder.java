@@ -13,7 +13,7 @@ import lombok.*;
 public class AddressOrder {
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
 
     @Column(name = "city")
     private String city;

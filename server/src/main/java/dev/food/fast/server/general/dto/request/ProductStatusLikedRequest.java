@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 
 public class ProductStatusLikedRequest {
     @JsonProperty("product_id")
-    private Integer idProduct;
+    private Long idProduct;
     private Integer likes;
 
 }

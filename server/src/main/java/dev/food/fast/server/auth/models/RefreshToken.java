@@ -13,7 +13,7 @@ import lombok.*;
 public class RefreshToken {
     @Id
     @GeneratedValue
-    public Integer id;
+    public Long id;
 
     @Column(unique = true)
     public String refreshToken;

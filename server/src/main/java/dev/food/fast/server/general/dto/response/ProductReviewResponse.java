@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductReviewResponse {
-    private Integer id;
+    private Long id;
     @JsonProperty("product_id")
-    private Integer idProduct;
+    private Long idProduct;
     @JsonProperty("user_id")
-    private Integer idUser;
+    private Long idUser;
     @JsonProperty("first_name")
     private String firstname;
     @JsonProperty("last_name")

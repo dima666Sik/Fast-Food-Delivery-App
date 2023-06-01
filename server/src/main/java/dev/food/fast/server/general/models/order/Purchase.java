@@ -15,7 +15,7 @@ import lombok.*;
 public class Purchase {
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")

@@ -68,7 +68,7 @@ public class ProductReviewService {
         }
     }
 
-    public ResponseEntity<?> getAllProductReview(Integer productId) {
+    public ResponseEntity<?> getAllProductReview(Long productId) {
         var productLikesResponseList = productReviewRepository.findProductReviewByProduct_Id(productId);
 
         if (productLikesResponseList.isEmpty()) {

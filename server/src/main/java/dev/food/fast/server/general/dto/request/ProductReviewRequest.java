@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductReviewRequest {
     @JsonProperty("product_id")
-    private Integer idProduct;
+    private Long idProduct;
     private String review;
 }

@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductStatusRequest {
     @JsonProperty("product_id")
-    private Integer idProduct;
+    private Long idProduct;
     private Boolean status;
 }

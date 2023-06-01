@@ -15,7 +15,7 @@ public class ProductStatusLikes {
 
     @Id
     @GeneratedValue
-    public Integer id;
+    public Long id;
 
     @Column
     public Boolean status;

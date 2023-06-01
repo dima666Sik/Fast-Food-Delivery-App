@@ -17,7 +17,7 @@ import java.sql.Time;
 public class BasicOrder {
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
 
     @Column(name = "phone")
     private String phone;

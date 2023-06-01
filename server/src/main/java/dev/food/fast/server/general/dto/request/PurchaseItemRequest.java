@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PurchaseItemRequest {
-    private Integer id;
+    private Long id;
     private Double totalPrice;
     private Integer quantity;
 }

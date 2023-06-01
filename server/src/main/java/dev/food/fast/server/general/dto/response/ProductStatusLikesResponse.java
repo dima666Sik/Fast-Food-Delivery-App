@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductStatusLikesResponse {
-    private Integer id;
+    private Long id;
     private Boolean status;
     private Integer likes;
 }

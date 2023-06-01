@@ -13,7 +13,7 @@ public class AccessToken {
 
   @Id
   @GeneratedValue
-  public Integer id;
+  public Long id;
 
   @Column(unique = true)
   public String token;

@@ -187,7 +187,7 @@ public class ProductsController {
     }
 
     @GetMapping("/get-all-reviews-to-product")
-    public ResponseEntity<?> getAllProductReview(@RequestParam("product_id") Integer productId
+    public ResponseEntity<?> getAllProductReview(@RequestParam("product_id") Long productId
     ) {
         return productReviewService.getAllProductReview(productId);
     }
