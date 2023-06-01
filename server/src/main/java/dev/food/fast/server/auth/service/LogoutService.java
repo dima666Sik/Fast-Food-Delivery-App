@@ -5,6 +5,8 @@ import dev.food.fast.server.auth.repository.RefreshTokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
@@ -14,7 +16,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LogoutService implements LogoutHandler {
 
-    private final AccessTokenRepository tokenRepository;
+    private final AccessTokenRepository accessTokenRepository;
 
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -29,20 +31,34 @@ public class LogoutService implements LogoutHandler {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return;
         }
+
         jwt = authHeader.substring(7);
-        var storedToken = tokenRepository.findByToken(jwt)
-                .orElse(null);
-        var storedRefreshToken = refreshTokenRepository.findByRefreshToken(jwt)
-                .orElse(null);
-        if (storedToken != null && storedRefreshToken != null) {
-            storedToken.setExpired(true);
-            storedToken.setRevoked(true);
 
-            storedRefreshToken.setExpired(true);
-            storedRefreshToken.setRevoked(true);
+        var accessTokenOptional = accessTokenRepository.findByToken(jwt);
 
-            tokenRepository.save(storedToken);
-            refreshTokenRepository.save(storedRefreshToken);
+        System.out.println(accessTokenOptional);
+        if (accessTokenOptional.isEmpty()) {
+            return;
+        }
+
+        var accessToken = accessTokenOptional.get();
+
+        var validRefreshUserTokensOptional = refreshTokenRepository
+                .findValidRefreshTokenByUser(accessToken.getUser().getId());
+        if (validRefreshUserTokensOptional.isEmpty()) {
+            return;
+        }
+        var refreshToken = validRefreshUserTokensOptional.get();
+
+        if (accessToken.getToken() != null && refreshToken.getRefreshToken() != null) {
+            accessToken.setExpired(true);
+            accessToken.setRevoked(true);
+
+            refreshToken.setExpired(true);
+            refreshToken.setRevoked(true);
+
+            accessTokenRepository.save(accessToken);
+            refreshTokenRepository.save(refreshToken);
 
             SecurityContextHolder.clearContext();
         }

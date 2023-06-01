@@ -2,9 +2,10 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { setLike, setStatus } from "../../../actions/post/setLikes";
 import { getListStatusForUser } from "../../../actions/get/getLikes";
-import { clearUser, setUser } from "../user/userSlice";
+import { axiosLogout, clearUser, setUser } from "../user/userSlice";
+
 import { cartActions } from "./cartSlice";
-import axios from "axios";
+import { refresh } from "../../../actions/post/refresh";
 
 const initialState = {
 	listCartsLiked: [],
@@ -62,15 +63,7 @@ export const axiosSetLikeAndStatus = createAsyncThunk(
 				error.response.data === "Access token was expired! Refresh is valid!"
 			) {
 				try {
-					const response = await axios.post(
-						`${process.env.REACT_APP_SERVER_API_URL}api/v1/auth/refresh-tokens`,
-						{},
-						{
-							headers: {
-								Authorization: "Bearer " + accessToken,
-							},
-						}
-					);
+					const response = await refresh(accessToken);
 
 					if (response.status === 200) {
 						if (response.data.access_token) {
@@ -84,7 +77,7 @@ export const axiosSetLikeAndStatus = createAsyncThunk(
 					}
 				} catch (error) {
 					console.log(error);
-					throw error; // пробрасываем ошибку выше для обработки в setLikes
+					throw error; // пробрасываем ошибку выше для обработки
 				}
 			}
 
@@ -96,9 +89,11 @@ export const axiosSetLikeAndStatus = createAsyncThunk(
 				error.response.data === "Valid Refresh token was expired..." ||
 				error.response.data === "Tokens from client is bad!"
 			) {
-				dispatch(clearUser());
-				dispatch(cartActions.clearCart());
-				dispatch(cartActionsLiked.clearCartsLiked());
+				dispatch(
+					axiosLogout({
+						accessToken,
+					})
+				);
 			}
 
 			return rejectWithValue({
@@ -130,9 +125,11 @@ export const axiosGetStatusLikes = createAsyncThunk(
 				error.response.data === "Valid Refresh token was expired..." ||
 				error.response.data === "Tokens from client is bad!"
 			) {
-				dispatch(clearUser());
-				dispatch(cartActions.clearCart());
-				dispatch(cartActionsLiked.clearCartsLiked());
+				dispatch(
+					axiosLogout({
+						accessToken,
+					})
+				);
 			}
 			return rejectWithValue({
 				message: error.message,

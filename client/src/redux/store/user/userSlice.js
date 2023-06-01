@@ -1,4 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { logout } from "../../../actions/post/logout";
+import { cartActions } from "../shopping-cart/cartSlice";
+import { cartActionsLiked } from "../shopping-cart/cartsLikedSlice";
 
 const accessToken =
 	localStorage.getItem("accessToken") !== null
@@ -16,6 +19,29 @@ const initialState = {
 	lastName: null,
 	email: null,
 };
+
+export const axiosLogout = createAsyncThunk(
+	"user/axiosLogout",
+	async ({ accessToken }, { rejectWithValue, dispatch }) => {
+		try {
+			const response = await logout(accessToken);
+
+			console.log(response);
+			if (response.status === 200) {
+				dispatch(clearUser());
+				dispatch(cartActions.clearCart());
+				dispatch(cartActionsLiked.clearCartsLiked());
+			}
+		} catch (error) {
+			return rejectWithValue({
+				message: error.message,
+				code: error.code,
+				response_data: error.response?.data,
+				response_status: error.response?.status,
+			});
+		}
+	}
+);
 
 const userSlice = createSlice({
 	name: "user",
@@ -44,6 +70,14 @@ const userSlice = createSlice({
 			setUserAccessTokenFunc(state.accessToken);
 			console.log("clearUser", state.accessToken, state.isAuthenticated);
 		},
+	},
+	extraReducers: (builder) => {
+		builder.addCase(axiosLogout.fulfilled, (state, action) => {
+			console.log(state, action);
+		});
+		builder.addCase(axiosLogout.rejected, (state, action) => {
+			console.log(action.payload); // Handle the error
+		});
 	},
 });
 

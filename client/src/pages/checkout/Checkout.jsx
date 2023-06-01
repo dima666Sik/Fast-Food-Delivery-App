@@ -12,10 +12,15 @@ import AlertText from "../../components/alerts/AlertText";
 import { useValidationAuthForms } from "../../hooks/useValidationAuthForms";
 import "./Checkout.css";
 import axios from "axios";
-import { clearUser, setUser } from "../../redux/store/user/userSlice";
+import {
+	axiosLogout,
+	clearUser,
+	setUser,
+} from "../../redux/store/user/userSlice";
 import { cartActions } from "../../redux/store/shopping-cart/cartSlice";
 import { cartActionsLiked } from "../../redux/store/shopping-cart/cartsLikedSlice";
 import { useValidFormsBtn } from "../../hooks/useValidFormsBtn";
+import { refresh } from "../../actions/post/refresh";
 
 const Checkout = () => {
 	const [delivery, setDelivery] = useState(true);
@@ -206,15 +211,7 @@ const Checkout = () => {
 						"Access token was expired! Refresh is valid!"
 					) {
 						try {
-							const response = await axios.post(
-								`${process.env.REACT_APP_SERVER_API_URL}api/v1/auth/refresh-tokens`,
-								{},
-								{
-									headers: {
-										Authorization: "Bearer " + accessToken,
-									},
-								}
-							);
+							const response = await refresh(accessToken);
 
 							if (response.status === 200) {
 								if (response.data.access_token) {
@@ -248,9 +245,11 @@ const Checkout = () => {
 							"You don't have rights to review, refresh token was expired. Please Authorization in this Application..."
 						);
 						setShowModal(true);
-						dispatch(clearUser());
-						dispatch(cartActions.clearCart());
-						dispatch(cartActionsLiked.clearCartsLiked());
+						dispatch(
+							axiosLogout({
+								accessToken,
+							})
+						);
 					}
 				}
 			} else {

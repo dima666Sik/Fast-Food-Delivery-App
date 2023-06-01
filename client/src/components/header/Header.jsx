@@ -9,7 +9,7 @@ import "./Header.css";
 import { cartUIActions } from "../../redux/store/shopping-cart/cartUISlice";
 import { cartActionsLiked } from "../../redux/store/shopping-cart/cartsLikedSlice";
 import Carts from "../ui/carts/cart/Carts";
-import { clearUser } from "../../redux/store/user/userSlice";
+import { axiosLogout, clearUser } from "../../redux/store/user/userSlice";
 import { cartActions } from "../../redux/store/shopping-cart/cartSlice";
 
 export default function Header() {
@@ -42,10 +42,12 @@ export default function Header() {
 
 	const userFirstName = useSelector((state) => state.user.firstName);
 
-	const onSubmit = () => {
-		dispatch(clearUser());
-		dispatch(cartActions.clearCart());
-		dispatch(cartActionsLiked.clearCartsLiked());
+	const onLogout = () => {
+		dispatch(
+			axiosLogout({
+				accessToken,
+			})
+		);
 	};
 
 	return (
@@ -87,7 +89,7 @@ export default function Header() {
 								</Nav.Link>
 								{isAuthenticated ? (
 									<>
-										<Nav.Link onClick={onSubmit}>
+										<Nav.Link onClick={onLogout}>
 											<i className="bi bi-box-arrow-right"></i>
 										</Nav.Link>
 										<Nav.Link>{userFirstName}</Nav.Link>

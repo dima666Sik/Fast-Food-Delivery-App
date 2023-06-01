@@ -6,12 +6,14 @@ import Routers from "../../routes/Routers";
 import Footer from "../footer/Footer";
 import Header from "../header/Header";
 import {
+	axiosLogout,
 	clearUser,
 	setInfoUser,
 	setUser,
 } from "../../redux/store/user/userSlice";
 import { cartActions } from "../../redux/store/shopping-cart/cartSlice";
 import { cartActionsLiked } from "../../redux/store/shopping-cart/cartsLikedSlice";
+import { refresh } from "../../actions/post/refresh";
 
 const Layout = () => {
 	const dispatch = useDispatch();
@@ -40,29 +42,17 @@ const Layout = () => {
 						);
 					})
 					.catch(async (error) => {
-						//////////////
 						console.log(error.response, accessToken);
 						if (
 							error.response.data ===
 							"Access token was expired! Refresh is valid!"
 						) {
-							console.log("----");
 							try {
-								const responseToken = await axios.post(
-									`${process.env.REACT_APP_SERVER_API_URL}api/v1/auth/refresh-tokens`,
-									{},
-									{
-										headers: {
-											Authorization: "Bearer " + accessToken,
-										},
-									}
-								);
-								console.log("----++");
+								const responseToken = await refresh(accessToken);
+
 								if (responseToken.status === 200) {
-									console.log("----+++");
 									console.log(responseToken);
 									if (responseToken.data.access_token) {
-										console.log("----++++");
 										// Dispatch the setUser action
 										dispatch(
 											setUser({
@@ -71,10 +61,9 @@ const Layout = () => {
 										);
 									}
 								}
-							} catch (error1) {
-								console.log("---+");
-								console.log(error1);
-								throw error1; // пробрасываем ошибку выше для обработки в setLikes
+							} catch (error) {
+								console.log(error);
+								throw error; // пробрасываем ошибку выше для обработки в setLikes
 							}
 						}
 
@@ -86,33 +75,12 @@ const Layout = () => {
 							error.response.data === "Valid Refresh token was expired..." ||
 							error.response.data === "Tokens from client is bad!"
 						) {
-							dispatch(clearUser());
-							dispatch(cartActions.clearCart());
-							dispatch(cartActionsLiked.clearCartsLiked());
+							dispatch(
+								axiosLogout({
+									accessToken,
+								})
+							);
 						}
-
-						//////////////
-
-						// console.log(error.response);
-						// if (error.response.data.access_token) {
-						// 	// Dispatch the setUser action
-						// 	dispatch(
-						// 		setUser({
-						// 			accessToken: error.response.data.access_token,
-						// 		})
-						// 	);
-						// }
-
-						// if (
-						// 	error.response.data ===
-						// 		"You need to reauthorize! Tokens all were expired. You will be much to authorization!" ||
-						// 	error.response.data === "Valid Refresh token was expired..." ||
-						// 	error.response.data === "Tokens from client is bad!"
-						// ) {
-						// 	dispatch(clearUser());
-						// 	dispatch(cartActions.clearCart());
-						// 	dispatch(cartActionsLiked.clearCartsLiked());
-						// }
 					});
 			}
 		};
