@@ -15,3 +15,4 @@ public interface ProductStatusLikesRepository extends JpaRepository<ProductStatu
     @Query("SELECT new dev.food.fast.server.general.dto.response.ProductStatusLikesResponse(pl.product.id, pl.status, p.likes) FROM ProductStatusLikes pl JOIN pl.product p WHERE pl.user.id = :userId")
     List<ProductStatusLikesResponse> findResponseStatusLikedByUser_Id(@Param("userId") Long userId);
 }
+

@@ -54,7 +54,7 @@ public class TokensStatusChangeService {
     }
 
     public void deleteUserTokens(User user) {
-        var tokens = accessTokenRepository.deleteAllExpiredAndRevokedTokensByUser(user.getId());
+        var tokens = accessTokenRepository.findAllExpiredAndRevokedTokensByUser(user.getId());
         if (tokens.isEmpty()) {
             return;
         }
@@ -62,7 +62,7 @@ public class TokensStatusChangeService {
     }
 
     public void deleteUserRefreshTokens(User user) {
-        var refreshTokens = refreshTokenRepository.deleteAllExpiredAndRevokedRefreshTokensByUser(user.getId());
+        var refreshTokens = refreshTokenRepository.findAllExpiredAndRevokedRefreshTokensByUser(user.getId());
         if (refreshTokens.isEmpty()) {
             return;
         }

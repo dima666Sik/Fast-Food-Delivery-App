@@ -1,5 +1,6 @@
 package dev.food.fast.server.mail.service;
 
+import dev.food.fast.server.mail.dto.request.EmailRequest;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,14 @@ public class EmailService {
     @Value("${spring.mail.email}")
     private String email;
 
-    public ResponseEntity<String> sendReviewEmail(String from, String username, String body) {
+    public ResponseEntity<String> sendReviewEmail(EmailRequest emailMessage) {
+
+        String from = emailMessage.getFrom();
+        String username = emailMessage.getUsername();
+        String body = emailMessage.getMessage();
+
         MimeMessage message = mailSender.createMimeMessage();
+
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setTo(email);

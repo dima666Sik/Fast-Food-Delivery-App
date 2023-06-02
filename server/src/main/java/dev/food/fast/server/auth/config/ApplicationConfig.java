@@ -21,12 +21,14 @@ public class ApplicationConfig {
 
   @Bean
   public UserDetailsService userDetailsService() {
+    System.out.println("0000000000000000000000000000000000000000000000000000000000000000000000000ApplicationConfig|userDetailsService");
     return username -> repository.findByEmail(username)
         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
   }
 
   @Bean
   public AuthenticationProvider authenticationProvider() {
+    System.out.println("0000000000000000000000000000000000000000000000000000000000000000000000000ApplicationConfig|authenticationProvider");
     DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
     authProvider.setUserDetailsService(userDetailsService());
     authProvider.setPasswordEncoder(passwordEncoder());
@@ -35,6 +37,7 @@ public class ApplicationConfig {
 
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    System.out.println("0000000000000000000000000000000000000000000000000000000000000000000000000ApplicationConfig|authenticationManager");
     return config.getAuthenticationManager();
   }
 

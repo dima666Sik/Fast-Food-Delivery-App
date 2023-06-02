@@ -29,7 +29,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final TokensStatusChangeService changeStatusTokensService;
-    private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -39,7 +38,7 @@ public class AuthenticationService {
 
     public ResponseEntity<?> register(RegisterRequest request) {
         System.out.println(request);
-        if (repository.findByEmail(request.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
 
             return ResponseEntity.badRequest()
                     .body(MessageResponse.builder()
@@ -55,7 +54,7 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
                 .build();
-        var savedUser = repository.save(user);
+        var savedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         changeStatusTokensService.saveUserToken(savedUser, jwtToken);
@@ -69,7 +68,7 @@ public class AuthenticationService {
     }
 
     public ResponseEntity<?> authenticate(AuthenticationRequest request) {
-        var userOptional = repository.findByEmail(request.getEmail());
+        var userOptional = userRepository.findByEmail(request.getEmail());
         System.out.println("authenticate+");
         if (userOptional.isEmpty()) {
             return ResponseEntity.badRequest()
@@ -88,7 +87,7 @@ public class AuthenticationService {
                             .status(false)
                             .build());
         }
-
+        System.out.println("authenticate++-");
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),

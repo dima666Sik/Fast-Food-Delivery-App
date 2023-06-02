@@ -166,6 +166,7 @@ const Checkout = () => {
 				order_time: time,
 
 				total_amount: totalAmount,
+				delivery: delivery,
 
 				purchaseItems: newList,
 			};

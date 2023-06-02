@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,15 +31,9 @@ public class OrderPurchaseService {
     private final BasicOrderGuestRepository basicOrderGuestRepository;
     private final PurchaseRepository purchaseRepository;
 
-    public ResponseEntity<?> addOrderWithPurchaseUser(HttpServletRequest request, OrderPurchaseRequest orderPurchaseRequest) {
-        final String authHeader = request.getHeader("Authorization");
-
-        final String jwt = authHeader.substring(7);
-
-        final String userEmail;
-
+    public ResponseEntity<?> addOrderWithPurchaseUser(Authentication authentication, OrderPurchaseRequest orderPurchaseRequest) {
         try {
-            userEmail = jwtService.extractUsername(jwt);
+            String userEmail = authentication.getName();
             var userOptional = userRepository.findByEmail(userEmail);
             if (userOptional.isEmpty()) {
                 return ResponseEntity.ok()
@@ -81,7 +76,7 @@ public class OrderPurchaseService {
                 purchaseList.add(purchase);
             }
 
-            addressOrderRepository.save(addressOrder);
+            if (orderPurchaseRequest.getDelivery()) addressOrderRepository.save(addressOrder);
             basicOrderRepository.save(basicOrder);
             basicOrderUserRepository.save(basicOrderUser);
             purchaseRepository.saveAll(purchaseList);
@@ -130,7 +125,7 @@ public class OrderPurchaseService {
             purchaseList.add(purchase);
         }
 
-        addressOrderRepository.save(addressOrder);
+        if (orderPurchaseRequest.getDelivery()) addressOrderRepository.save(addressOrder);
         basicOrderRepository.save(basicOrder);
         basicOrderGuestRepository.save(basicOrderGuest);
         purchaseRepository.saveAll(purchaseList);
@@ -149,13 +144,23 @@ public class OrderPurchaseService {
     }
 
     private BasicOrder createBasicOrder(OrderPurchaseRequest orderPurchaseRequest, AddressOrder addressOrder) {
-        return BasicOrder.builder()
-                .phone(orderPurchaseRequest.getPhone())
-                .orderDate(orderPurchaseRequest.getDate())
-                .orderTime(orderPurchaseRequest.getTime())
-                .totalAmount(orderPurchaseRequest.getTotalAmount())
-                .addressOrder(addressOrder)
-                .build();
+        if (orderPurchaseRequest.getDelivery()) {
+            return BasicOrder.builder()
+                    .phone(orderPurchaseRequest.getPhone())
+                    .orderDate(orderPurchaseRequest.getDate())
+                    .orderTime(orderPurchaseRequest.getTime())
+                    .totalAmount(orderPurchaseRequest.getTotalAmount())
+                    .addressOrder(addressOrder)
+                    .build();
+        }
+        else {
+            return BasicOrder.builder()
+                    .phone(orderPurchaseRequest.getPhone())
+                    .orderDate(orderPurchaseRequest.getDate())
+                    .orderTime(orderPurchaseRequest.getTime())
+                    .totalAmount(orderPurchaseRequest.getTotalAmount())
+                    .build();
+        }
     }
 
 }

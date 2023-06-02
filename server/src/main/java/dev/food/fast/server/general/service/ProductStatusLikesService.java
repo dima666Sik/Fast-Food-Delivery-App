@@ -15,28 +15,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class ProductStatusLikesService {
-    private final JwtService jwtService;
     private final UserRepository userRepository;
     private final ProductsRepository productsRepository;
     private final ProductStatusLikesRepository productLikesRepository;
 
     public ResponseEntity<?> setStatusOnProduct(
-            @NonNull HttpServletRequest request,
+            Authentication authentication,
             ProductStatusRequest statusRequest
     ) {
-        final String authHeader = request.getHeader("Authorization");
-
-        final String jwt = authHeader.substring(7);
-
-        final String userEmail;
-
         try {
-            userEmail = jwtService.extractUsername(jwt);
+            String userEmail = authentication.getName();
             var userOptional = userRepository.findByEmail(userEmail);
             if (userOptional.isEmpty()) {
                 return ResponseEntity.ok()
@@ -105,14 +99,11 @@ public class ProductStatusLikesService {
         return ResponseEntity.ok("Likes added successfully");
     }
 
-    public ResponseEntity<?> getListStatusProducts(HttpServletRequest request) {
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt = authHeader.substring(7);
+    public ResponseEntity<?> getListStatusProducts(Authentication authentication) {
 
-        final String userEmail;
+        String userEmail = authentication.getName();
 
         try {
-            userEmail = jwtService.extractUsername(jwt);
             var userOptional = userRepository.findByEmail(userEmail);
             if (userOptional.isEmpty()) {
                 return ResponseEntity.ok()

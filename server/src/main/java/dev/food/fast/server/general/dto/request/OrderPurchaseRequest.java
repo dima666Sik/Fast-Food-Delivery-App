@@ -38,6 +38,8 @@ public class OrderPurchaseRequest {
 
     @JsonProperty("total_amount")
     private Double totalAmount;
+    @JsonProperty("delivery")
+    private Boolean delivery;
 
     private List<PurchaseItemRequest> purchaseItems;
 }

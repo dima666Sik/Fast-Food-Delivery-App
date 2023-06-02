@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,11 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import Login from "../../pages/Login";
 import Register from "../../pages/Register";
 import "./Header.css";
-import { cartUIActions } from "../../redux/store/shopping-cart/cartUISlice";
-import { cartActionsLiked } from "../../redux/store/shopping-cart/cartsLikedSlice";
-import Carts from "../ui/carts/cart/Carts";
-import { axiosLogout, clearUser } from "../../redux/store/user/userSlice";
-import { cartActions } from "../../redux/store/shopping-cart/cartSlice";
+import { basketUIActions } from "../../redux/store/shopping-cart/basketUISlice";
+import Basket from "../ui/carts/basket/Basket";
+import { axiosLogout } from "../../redux/store/user/userSlice";
 
 export default function Header() {
 	const [showLoginModal, setShowLoginModal] = useState(false);
@@ -18,10 +16,10 @@ export default function Header() {
 
 	const totalQuantity = useSelector((state) => state.cart.totalQuantity);
 	const dispatch = useDispatch();
-	const visibleCart = useSelector((state) => state.cartUI.cartIsVisible);
+	const visibleBasket = useSelector((state) => state.basketUI.basketIsVisible);
 
-	const toggleVisibleCart = () => {
-		dispatch(cartUIActions.toggleVisible());
+	const toggleVisibleBasket = () => {
+		dispatch(basketUIActions.toggleVisible());
 	};
 
 	const handleLoginClick = () => {
@@ -82,7 +80,7 @@ export default function Header() {
 							<Nav>
 								<Nav.Link
 									className="cart__plus__container"
-									onClick={toggleVisibleCart}
+									onClick={toggleVisibleBasket}
 								>
 									<i className="bi bi-cart-plus"></i>
 									<span className="cart__badge">{totalQuantity}</span>
@@ -117,7 +115,7 @@ export default function Header() {
 				onHide={handleHideModal}
 				onLoginClick={handleLoginClick}
 			/>
-			{visibleCart && <Carts />}
+			{visibleBasket && <Basket />}
 		</>
 	);
 }

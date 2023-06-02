@@ -23,7 +23,7 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
       on t.user.id = u.id\s
       where u.id = :id and (t.expired = true or t.revoked = true)\s
       """)
-    List<RefreshToken> deleteAllExpiredAndRevokedRefreshTokensByUser(Long id);
+    List<RefreshToken> findAllExpiredAndRevokedRefreshTokensByUser(Long id);
 
 
 }

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponse {
+public class DataUserResponse {
     @JsonProperty("first_name")
     private String firstname;
     @JsonProperty("last_name")

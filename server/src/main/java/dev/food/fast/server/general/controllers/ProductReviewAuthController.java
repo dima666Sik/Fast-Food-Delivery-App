@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,9 +16,9 @@ public class ProductReviewAuthController {
     private final ProductReviewService productReviewService;
 
     @PostMapping("/add-review-for-product")
-    public ResponseEntity<?> addProductReview(@NonNull HttpServletRequest request,
-                                        @RequestBody ProductReviewRequest productReviewRequest) {
-        return productReviewService.addProductReview(request, productReviewRequest);
+    public ResponseEntity<?> addProductReview(Authentication authentication,
+                                              @RequestBody ProductReviewRequest productReviewRequest) {
+        return productReviewService.addProductReview(authentication, productReviewRequest);
     }
 
 }

@@ -37,7 +37,7 @@ export const useGetAllProducts = () => {
 				});
 		};
 		fetchData();
-	}, []);
+	}, [isAuthenticated]);
 
 	return { products, setProducts, isLoading, setIsLoading };
 };

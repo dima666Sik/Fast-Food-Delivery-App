@@ -3,16 +3,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-import "./Carts.css";
+import "./Basket.css";
 import CartItem from "../cart-item/CartItem";
 
-import { cartUIActions } from "../../../../redux/store/shopping-cart/cartUISlice";
-const Carts = () => {
+import { basketUIActions } from "../../../../redux/store/shopping-cart/basketUISlice";
+
+const Basket = () => {
 	const dispatch = useDispatch();
 	const cartProducts = useSelector((state) => state.cart.cartItems);
 
 	const handleToggleVisibleCart = () => {
-		dispatch(cartUIActions.toggleVisible());
+		dispatch(basketUIActions.toggleVisible());
 	};
 
 	const toggleVisibleCart = handleToggleVisibleCart;
@@ -57,4 +58,4 @@ const Carts = () => {
 	);
 };
 
-export default Carts;
+export default Basket;

@@ -23,5 +23,5 @@ public interface AccessTokenRepository extends JpaRepository<AccessToken, Long> 
       on t.user.id = u.id\s
       where u.id = :id and (t.expired = true or t.revoked = true)\s
       """)
-  List<AccessToken> deleteAllExpiredAndRevokedTokensByUser(Long id);
+  List<AccessToken> findAllExpiredAndRevokedTokensByUser(Long id);
 }

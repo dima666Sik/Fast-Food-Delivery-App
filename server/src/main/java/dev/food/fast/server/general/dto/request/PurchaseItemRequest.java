@@ -14,3 +14,4 @@ public class PurchaseItemRequest {
     private Double totalPrice;
     private Integer quantity;
 }
+

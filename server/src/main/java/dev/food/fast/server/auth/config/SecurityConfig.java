@@ -24,6 +24,7 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    System.out.println("0000000000000000000000000000000000000000000000000000000000000000000000000SecurityConfig|securityFilterChain");
     http.cors();
     http
         .csrf()

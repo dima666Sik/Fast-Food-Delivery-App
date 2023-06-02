@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProductStatusLikesAuthController {
     private final ProductStatusLikesService productLikesService;
 
-    @PostMapping("/set-like-product")
+    @PutMapping("/set-like-product")
     public ResponseEntity<?> updateLikeOnProduct(
             @RequestBody ProductStatusLikedRequest likedRequest
     ) {
@@ -24,33 +25,16 @@ public class ProductStatusLikesAuthController {
 
     @PostMapping("/set-status-product")
     public ResponseEntity<?> setStatusProduct(
-            @NonNull HttpServletRequest request,
+            Authentication authentication,
             @RequestBody ProductStatusRequest statusRequest
     ) {
-        return productLikesService.setStatusOnProduct(request, statusRequest);
+        return productLikesService.setStatusOnProduct(authentication, statusRequest);
     }
-
-//    @GetMapping("/get-like-product")
-//    public ResponseEntity<?> getLikeOnProduct(
-//            @RequestParam("product_id") Integer productId
-//    ) {
-//        return productLikesService.getLikeOnProduct(
-//                productId
-//        );
-//    }
-//
-//    @GetMapping("/get-status-product")
-//    public ResponseEntity<?> getStatusProduct(
-//            @NonNull HttpServletRequest request,
-//            @RequestParam("product_id") Integer productId
-//    ) {
-//        return productLikesService.getStatusProduct(request, productId);
-//    }
 
     @GetMapping("/get-status-products")
     public ResponseEntity<?> getStatusProducts(
-            @NonNull HttpServletRequest request
+            Authentication authentication
     ) {
-        return productLikesService.getListStatusProducts(request);
+        return productLikesService.getListStatusProducts(authentication);
     }
 }

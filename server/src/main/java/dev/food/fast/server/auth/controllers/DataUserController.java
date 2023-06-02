@@ -1,23 +1,24 @@
 package dev.food.fast.server.auth.controllers;
 
-import dev.food.fast.server.auth.service.UserService;
+import dev.food.fast.server.auth.service.DataUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
-public class UserController {
+public class DataUserController {
 
-    private final UserService service;
+    private final DataUserService service;
 
     @GetMapping("/get-access-data")
-    public ResponseEntity<?> getAccessData(@NonNull HttpServletRequest request
+    public ResponseEntity<?> getAccessData(Authentication authentication
     ) {
-        return service.getData(request);
+        return service.getData(authentication);
     }
 
 }

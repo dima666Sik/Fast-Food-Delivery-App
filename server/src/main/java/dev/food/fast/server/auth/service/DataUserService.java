@@ -1,31 +1,24 @@
 package dev.food.fast.server.auth.service;
 
-import dev.food.fast.server.auth.dto.response.UserResponse;
+import dev.food.fast.server.auth.dto.response.DataUserResponse;
 import dev.food.fast.server.auth.models.User;
 import dev.food.fast.server.auth.dto.response.MessageResponse;
 import dev.food.fast.server.auth.repository.UserRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
-    private final JwtService jwtService;
+public class DataUserService {
     private final UserRepository userRepository;
 
-    public ResponseEntity<?> getData(@NonNull HttpServletRequest request) {
-        final String authHeader = request.getHeader("Authorization");
+    public ResponseEntity<?> getData(Authentication authentication) {
 
-        final String jwt = authHeader.substring(7);
-
-        final String userEmail;
+        String userEmail = authentication.getName();
 
         try {
-            userEmail = jwtService.extractUsername(jwt);
             var userOptional = userRepository.findByEmail(userEmail);
             if (userOptional.isEmpty()) {
                 return ResponseEntity.ok()
@@ -36,17 +29,19 @@ public class UserService {
             }
             User user = userOptional.get();
 
-            UserResponse userDto = UserResponse.builder()
+            DataUserResponse userDto = DataUserResponse.builder()
                     .firstname(user.getFirstname())
                     .lastname(user.getLastname())
                     .email(user.getEmail())
                     .build();
-
             return ResponseEntity.ok(userDto);
 
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.ok("Get User is unsuccessfully");
+            return ResponseEntity.badRequest()
+                    .body(MessageResponse.builder()
+                            .message("Failed to get user: " + e.getMessage())
+                            .status(false)
+                            .build());
         }
     }
 }

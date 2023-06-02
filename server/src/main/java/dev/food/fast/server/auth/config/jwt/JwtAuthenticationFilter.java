@@ -26,11 +26,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    @Autowired
     private final AccessTokenRepository accessTokenRepository;
-    @Autowired
     private final RefreshTokenRepository refreshTokenRepository;
-
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final TokensStatusChangeService tokensStatusChangeService;
@@ -41,6 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
+        System.out.println("0000000000000000000000000000000000000000000000000000000000000000000000000JwtAuthenticationFilter|doFilterInternal");
         if (request.getServletPath().contains("/api/v1/auth") || request.getServletPath().contains("/api/v1/slider") ||
                 request.getServletPath().contains("/public/images") || request.getServletPath().contains("/api/v1/foods") ||
                 request.getServletPath().contains("/api/v1/email/") ||

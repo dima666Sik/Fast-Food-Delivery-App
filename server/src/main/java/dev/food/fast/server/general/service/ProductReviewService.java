@@ -13,25 +13,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class ProductReviewService {
-    private final JwtService jwtService;
     private final UserRepository userRepository;
     private final ProductsRepository productsRepository;
     private final ProductReviewRepository productReviewRepository;
 
-    public ResponseEntity<?> addProductReview(HttpServletRequest request, ProductReviewRequest productReviewRequest) {
-        final String authHeader = request.getHeader("Authorization");
-
-        final String jwt = authHeader.substring(7);
-
-        final String userEmail;
-
+    public ResponseEntity<?> addProductReview(Authentication authentication, ProductReviewRequest productReviewRequest) {
         try {
-            userEmail = jwtService.extractUsername(jwt);
+            String userEmail = authentication.getName();
             var userOptional = userRepository.findByEmail(userEmail);
             if (userOptional.isEmpty()) {
                 return ResponseEntity.ok()
@@ -69,9 +63,9 @@ public class ProductReviewService {
     }
 
     public ResponseEntity<?> getAllProductReview(Long productId) {
-        var productLikesResponseList = productReviewRepository.findProductReviewByProduct_Id(productId);
+        var productReviewResponsesList = productReviewRepository.findProductReviewByProduct_Id(productId);
 
-        if (productLikesResponseList.isEmpty()) {
+        if (productReviewResponsesList.isEmpty()) {
             return ResponseEntity.ok()
                     .body(MessageResponse.builder()
                             .message("Products not found...")
@@ -79,6 +73,6 @@ public class ProductReviewService {
                             .build());
         }
 
-        return ResponseEntity.ok(productLikesResponseList);
+        return ResponseEntity.ok(productReviewResponsesList);
     }
 }
