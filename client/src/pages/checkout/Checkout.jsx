@@ -162,8 +162,8 @@ const Checkout = () => {
 				flat_number: flatNumber,
 				floor_number: floor,
 
-				order_date: date,
-				order_time: time,
+				order_date_arrived: date,
+				order_time_arrived: time,
 
 				total_amount: totalAmount,
 				delivery: delivery,

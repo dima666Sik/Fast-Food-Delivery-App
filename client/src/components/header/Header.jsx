@@ -39,6 +39,7 @@ export default function Header() {
 	const accessToken = useSelector((state) => state.user.accessToken);
 
 	const userFirstName = useSelector((state) => state.user.firstName);
+	const roleUser = useSelector((state) => state.user.role);
 
 	const onLogout = () => {
 		dispatch(
@@ -90,7 +91,11 @@ export default function Header() {
 										<Nav.Link onClick={onLogout}>
 											<i className="bi bi-box-arrow-right"></i>
 										</Nav.Link>
-										<Nav.Link>{userFirstName}</Nav.Link>
+										{roleUser === "USER" && (
+											<Nav.Link as={Link} to="/profile">
+												{userFirstName}
+											</Nav.Link>
+										)}
 									</>
 								) : (
 									<>

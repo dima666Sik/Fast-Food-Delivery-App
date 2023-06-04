@@ -189,11 +189,53 @@ const FoodDetails = () => {
 					setIsLoadingComments(false);
 					console.log(getReviews);
 				})
-				.catch((error) => {
-					if (error.code === "ERR_NETWORK") {
-						console.log("Error network, please try again...");
+				.catch(async (error) => {
+					if (
+						error.response.data ===
+						"Access token was expired! Refresh is valid!"
+					) {
+						try {
+							const response = await refresh(accessToken);
+
+							if (response.status === 200) {
+								if (response.data.access_token) {
+									// Dispatch the setUser action
+									dispatch(
+										setUser({
+											accessToken: response.data.access_token,
+										})
+									);
+									setShowTextModal(
+										"Tokens was Updated, please continue use site."
+									);
+									setShowModal(true);
+								}
+							}
+						} catch (error) {
+							console.log(error);
+							throw error; // пробрасываем ошибку выше для обработки в setLikes
+						}
 					}
-					console.log(error);
+
+					if (
+						error.response.data ===
+							"You need to reauthorize! Tokens all were expired. You will be much to authorization!" ||
+						error.response.data ===
+							"All Tokens (access & refresh) were expired! Please generate news tokens!" ||
+						error.response.data === "Valid Refresh token was expired..." ||
+						error.response.data === "Tokens from client is bad!"
+					) {
+						setShowTextModal(
+							"You don't have rights to review, refresh token was expired. Please Authorization in this Application..."
+						);
+						setShowModal(true);
+						dispatch(
+							axiosLogout({
+								accessToken,
+							})
+						);
+						setReviewMsg("");
+					}
 				});
 		}
 	}, [product, isFetchingComments]);

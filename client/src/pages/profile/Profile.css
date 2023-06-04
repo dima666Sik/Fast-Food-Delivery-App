@@ -1,0 +1,36 @@
+.profile-container {
+	max-width: 600px;
+	margin: 0 auto;
+	padding: 20px;
+}
+
+.tab-content {
+	padding: 10px;
+	text-align: center;
+	background-color: #f5f5f5;
+}
+
+.order-details {
+	margin-bottom: 20px;
+	background: white;
+}
+
+.order-id {
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.order-info {
+	margin-bottom: 5px;
+}
+
+.delivery-details {
+	margin-top: 10px;
+	margin-left: 20px;
+}
+
+.purchase-items-title {
+	margin-top: 20px;
+	font-size: 16px;
+	font-weight: bold;
+}

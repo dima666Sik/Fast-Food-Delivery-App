@@ -8,6 +8,7 @@ import Helmet from "../../components/helmet/Helmet";
 import { cartActions } from "../../redux/store/shopping-cart/cartSlice";
 import "./Cart.css";
 import ModalAlert from "../../components/alerts/ModalAlert";
+import CartTable from "../../components/ui/cart-table/CartTable";
 
 const Cart = () => {
 	const cartItems = useSelector((state) => state.cart.cartItems);
@@ -27,22 +28,7 @@ const Cart = () => {
 							{cartItems.length === 0 ? (
 								<h5 className="text-center">Your cart is empty</h5>
 							) : (
-								<table className="table table-bordered">
-									<thead>
-										<tr>
-											<th>Image</th>
-											<th>Product Title</th>
-											<th>Price</th>
-											<th>Quantity</th>
-											<th>Delete</th>
-										</tr>
-									</thead>
-									<tbody>
-										{cartItems.map((item) => (
-											<Tr item={item} key={item.id} />
-										))}
-									</tbody>
-								</table>
+								<CartTable cartItems={cartItems} showDelete={true} />
 							)}
 
 							<div className="mt-4">
@@ -65,28 +51,6 @@ const Cart = () => {
 				</Container>
 			</section>
 		</Helmet>
-	);
-};
-
-const Tr = (props) => {
-	const { id, image01, title, price, quantity, totalPrice } = props.item;
-	const dispatch = useDispatch();
-
-	const deleteItem = () => {
-		dispatch(cartActions.deleteItem(id));
-	};
-	return (
-		<tr>
-			<td className="text-center cart__img__box">
-				<img src={image01} alt="" />
-			</td>
-			<td className="text-center">{title}</td>
-			<td className="text-center">${totalPrice}</td>
-			<td className="text-center">{quantity}x</td>
-			<td className="text-center cart__item__del">
-				<i className="bi bi-trash3-fill" onClick={deleteItem}></i>
-			</td>
-		</tr>
 	);
 };
 

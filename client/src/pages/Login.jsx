@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useValidationAuthForms } from "../hooks/useValidationAuthForms";
 import AlertText from "../components/alerts/AlertText";
 import { useValidFormsBtn } from "../hooks/useValidFormsBtn";
-import { clearUser, setInfoUser, setUser } from "../redux/store/user/userSlice";
+import { clearUser, setUser } from "../redux/store/user/userSlice";
 import { cartActionsLiked } from "../redux/store/shopping-cart/cartsLikedSlice.js";
 import { cartActions } from "../redux/store/shopping-cart/cartSlice";
 import ModalAlert from "../components/alerts/ModalAlert";

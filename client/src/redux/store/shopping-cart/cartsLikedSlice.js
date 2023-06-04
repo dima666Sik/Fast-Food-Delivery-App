@@ -117,6 +117,30 @@ export const axiosGetStatusLikes = createAsyncThunk(
 				})
 			); // Обновляем состояние Redux
 		} catch (error) {
+			console.log(error.response, accessToken);
+			if (
+				error.response.data === "Access token was expired! Refresh is valid!"
+			) {
+				try {
+					const responseToken = await refresh(accessToken);
+
+					if (responseToken.status === 200) {
+						console.log(responseToken);
+						if (responseToken.data.access_token) {
+							// Dispatch the setUser action
+							dispatch(
+								setUser({
+									accessToken: responseToken.data.access_token,
+								})
+							);
+						}
+					}
+				} catch (error) {
+					console.log(error);
+					throw error; // пробрасываем ошибку выше для обработки в setLikes
+				}
+			}
+
 			if (
 				error.response.data ===
 					"You need to reauthorize! Tokens all were expired. You will be much to authorization!" ||

@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { logout } from "../../../actions/post/logout";
 import { cartActions } from "../shopping-cart/cartSlice";
 import { cartActionsLiked } from "../shopping-cart/cartsLikedSlice";
+import { decodeToken } from "react-jwt";
 
 const accessToken =
 	localStorage.getItem("accessToken") !== null
@@ -18,6 +19,7 @@ const initialState = {
 	firstName: null,
 	lastName: null,
 	email: null,
+	role: null,
 };
 
 export const axiosLogout = createAsyncThunk(
@@ -26,7 +28,6 @@ export const axiosLogout = createAsyncThunk(
 		try {
 			const response = await logout(accessToken);
 
-			console.log(response);
 			if (response.status === 200) {
 				dispatch(clearUser());
 				dispatch(cartActions.clearCart());
@@ -47,25 +48,28 @@ const userSlice = createSlice({
 	name: "user",
 	initialState,
 	reducers: {
-		setInfoUser: (state, action) => {
-			state.firstName = action.payload.firstName;
-			state.lastName = action.payload.lastName;
-			state.email = action.payload.email;
-			console.log("setInfoUser", state.accessToken, state.isAuthenticated);
-		},
 		setUser: (state, action) => {
 			// console.log(action.payload);
 			state.accessToken = action.payload.accessToken;
 			state.isAuthenticated = true;
+			const decodedToken = decodeToken(action.payload.accessToken);
+			if (decodedToken) {
+				state.firstName = decodedToken.first_name;
+				state.lastName = decodedToken.last_name;
+				state.email = decodedToken.sub;
+				state.role = decodedToken.role;
+			}
 			setUserAccessTokenFunc(state.accessToken);
-			// console.log("setUser", state.accessToken, state.isAuthenticated);
+			console.log("setUser: ", { ...state });
 		},
+
 		clearUser: (state) => {
 			console.log("P");
 			state.accessToken = null;
 			state.firstName = null;
 			state.lastName = null;
 			state.email = null;
+			state.role = null;
 			state.isAuthenticated = false;
 			setUserAccessTokenFunc(state.accessToken);
 			console.log("clearUser", state.accessToken, state.isAuthenticated);
@@ -81,5 +85,5 @@ const userSlice = createSlice({
 	},
 });
 
-export const { setUser, clearUser, setInfoUser } = userSlice.actions;
+export const { setUser, clearUser } = userSlice.actions;
 export default userSlice.reducer;
