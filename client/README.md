@@ -43,6 +43,10 @@ However, the components "Basket", "CartItem", "CartTable", "cartsLikedSlice", an
 
 Finally, custom hooks such as "useGetAllProducts", "useReview", "useValidationAuthForms", and "useValidFormsBtn" help to simplify and optimize the component logic, providing the required functionality and user interaction.
 
+### Diagram of the functional components
+
+![Diagram of the functional components](github-files/functional-components-diagram.png)
+
 ## Usage
 
 #### To run this app, you will need to have Node.js and npm installed on your computer. After cloning the repository, navigate to the root directory and run the following command to install the dependencies:
