@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row, Spinner } from "react-bootstrap";
 import PhoneInput from "react-phone-input-2";
 // import { Link } from "react-router-dom";
 
@@ -21,6 +21,10 @@ import { cartActions } from "../../redux/store/shopping-cart/cartSlice";
 import { cartActionsLiked } from "../../redux/store/shopping-cart/cartsLikedSlice";
 import { useValidFormsBtn } from "../../hooks/useValidFormsBtn";
 import { refresh } from "../../actions/post/refresh";
+import {
+	addOrderPurchaseGuest,
+	addOrderPurchaseUser,
+} from "../../actions/post/addOrderPurchase";
 
 const Checkout = () => {
 	const [delivery, setDelivery] = useState(true);
@@ -51,6 +55,7 @@ const Checkout = () => {
 	const [showTextModal, setShowTextModal] = useState("");
 
 	const { formValid, setFormValid } = useValidFormsBtn();
+	const [isLoadingSender, setIsLoadingSender] = useState(false);
 
 	const {
 		email,
@@ -168,6 +173,8 @@ const Checkout = () => {
 				total_amount: totalAmount,
 				delivery: delivery,
 
+				cash_payment: true,
+
 				purchaseItems: newList,
 			};
 
@@ -176,14 +183,10 @@ const Checkout = () => {
 
 			if (isAuthenticated) {
 				try {
-					const response = await axios.post(
-						`${process.env.REACT_APP_SERVER_API_URL}api/v1/private/order-purchase/add-order-with-purchase-user`,
-						userShippingAddress,
-						{
-							headers: {
-								Authorization: "Bearer " + accessToken,
-							},
-						}
+					setIsLoadingSender(true);
+					const response = await addOrderPurchaseUser(
+						accessToken,
+						userShippingAddress
 					);
 					if (response.status === 200) {
 						console.log("Order put in db:", response.data);
@@ -203,6 +206,7 @@ const Checkout = () => {
 						setFloor("");
 						setDate("");
 						setTime("");
+						setIsLoadingSender(false);
 					}
 				} catch (error) {
 					///////////////////////////
@@ -255,10 +259,8 @@ const Checkout = () => {
 				}
 			} else {
 				try {
-					const response = await axios.post(
-						`${process.env.REACT_APP_SERVER_API_URL}api/v1/private/order-purchase/add-order-with-purchase-guest`,
-						userShippingAddress
-					);
+					setIsLoadingSender(true);
+					const response = await addOrderPurchaseGuest(userShippingAddress);
 					if (response.status === 200) {
 						console.log("Order put in db:", response.data);
 						setShowTextModal("Order is successful!");
@@ -271,6 +273,7 @@ const Checkout = () => {
 						setFloor("");
 						setDate("");
 						setTime("");
+						setIsLoadingSender(false);
 					}
 				} catch (error) {
 					console.log(error);
@@ -473,13 +476,19 @@ const Checkout = () => {
 									</fieldset>
 								</div>
 
-								<button
-									disabled={!formValid}
-									onClick={handleDoOrder}
-									className="addToCart__btn"
-								>
-									Payment
-								</button>
+								{isLoadingSender ? (
+									<div className="text-center">
+										<Spinner />
+									</div>
+								) : (
+									<button
+										disabled={!formValid}
+										onClick={handleDoOrder}
+										className="addToCart__btn"
+									>
+										Payment
+									</button>
+								)}
 							</form>
 						</Col>
 
@@ -496,6 +505,11 @@ const Checkout = () => {
 										Total: <span>${totalAmount}</span>
 									</h5>
 								</div>
+							</div>
+							<div className="checkout__bill mt-5">
+								<h6 className="d-flex justify-content-center">
+									<span>Cash Payment on the spot</span>
+								</h6>
 							</div>
 						</Col>
 					</Row>

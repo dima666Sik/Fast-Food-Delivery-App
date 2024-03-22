@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { setLike, setStatus } from "../../../actions/post/setLikes";
+import { setStatus } from "../../../actions/post/setStatus";
 import { getListStatusForUser } from "../../../actions/get/getLikes";
 import { axiosLogout, clearUser, setUser } from "../user/userSlice";
 
 import { cartActions } from "./cartSlice";
 import { refresh } from "../../../actions/post/refresh";
+import { setLike } from "../../../actions/put/setLikes";
 
 const initialState = {
 	listCartsLiked: [],

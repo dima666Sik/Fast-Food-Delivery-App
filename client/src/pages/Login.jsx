@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Form, Modal, Button } from "react-bootstrap";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useValidationAuthForms } from "../hooks/useValidationAuthForms";
@@ -10,6 +9,7 @@ import { clearUser, setUser } from "../redux/store/user/userSlice";
 import { cartActionsLiked } from "../redux/store/shopping-cart/cartsLikedSlice.js";
 import { cartActions } from "../redux/store/shopping-cart/cartSlice";
 import ModalAlert from "../components/alerts/ModalAlert";
+import { login } from "../actions/post/login";
 
 const Login = (props) => {
 	const {
@@ -42,16 +42,10 @@ const Login = (props) => {
 
 	const dispatch = useDispatch();
 
-	const accessToken = useSelector((state) => state.user.accessToken);
-
 	const handleSignInClick = async () => {
 		try {
 			console.log("hi");
-			const response = await axios.post(
-				`${process.env.REACT_APP_SERVER_API_URL}api/v1/auth/login`,
-				{ email, password },
-				{ headers: { "Content-Type": "application/json" } }
-			);
+			const response = await login(email, password);
 			console.log("Logged in:", response.data);
 
 			if (response.data.message_response.status_response) {

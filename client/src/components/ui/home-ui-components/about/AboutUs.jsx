@@ -9,18 +9,18 @@ const featureData = [
 	{
 		title: "Quick Delivery",
 		imgUrl: featureImg01,
-		desc: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Minus, doloremque.",
+		desc: "Fast delivery is a convenient option for customers who prioritize timely service.",
 	},
 
 	{
 		title: "Super Dine In",
 		imgUrl: featureImg02,
-		desc: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Minus, doloremque.",
+		desc: "We offers a wide selection of delicious food options.",
 	},
 	{
 		title: "Easy Pick Up",
 		imgUrl: featureImg03,
-		desc: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Minus, doloremque.",
+		desc: "It is easy to pick up the purchase.",
 	},
 ];
 
@@ -35,12 +35,12 @@ const AboutUs = () => {
 						we will <span>take care</span>
 					</h2>
 					<p className="mb-1 mt-4 feature__text">
-						Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor,
-						officiis?
+						Fast delivery is our top priority, ensuring that your order reaches
+						you quickly and efficiently.
 					</p>
 					<p className="feature__text">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam,
-						eius.{" "}
+						We strive to provide speedy and reliable delivery service to ensure
+						your satisfaction.
 					</p>
 				</Col>
 

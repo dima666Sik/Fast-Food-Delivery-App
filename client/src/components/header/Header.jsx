@@ -91,7 +91,7 @@ export default function Header() {
 										<Nav.Link onClick={onLogout}>
 											<i className="bi bi-box-arrow-right"></i>
 										</Nav.Link>
-										{roleUser === "USER" && (
+										{roleUser && (
 											<Nav.Link as={Link} to="/profile">
 												{userFirstName}
 											</Nav.Link>

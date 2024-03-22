@@ -31,9 +31,10 @@ const ProductCard = (props) => {
 	);
 
 	const accessToken = useSelector((state) => state.user.accessToken);
+	const userRole = useSelector((state) => state.user.role);
 
 	const changeLike = () => {
-		if (isAuthenticated) {
+		if (isAuthenticated && userRole !== "ADMIN") {
 			dispatch(
 				axiosSetLikeAndStatus({
 					id,
@@ -81,9 +82,7 @@ const ProductCard = (props) => {
 			{showModal && (
 				<ModalAlert
 					paramTitle={"Error Authenticated"}
-					paramBody={
-						"You don't have rights to like. Please Authorization/Registration in this Application..."
-					}
+					paramBody={"You don't have rights to like."}
 					onShow={showModal}
 					onHide={() => setShowModal(false)}
 				/>

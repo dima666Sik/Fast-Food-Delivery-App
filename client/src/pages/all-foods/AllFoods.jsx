@@ -11,6 +11,7 @@ import "./AllFoods.css";
 import Pagination from "../../components/pagination/Pagination";
 import { useGetAllProducts } from "../../hooks/useGetAllProducts";
 import { axiosGetStatusLikes } from "../../redux/store/shopping-cart/cartsLikedSlice";
+import { getSortedChoiceProducts } from "../../actions/get/getSortedChoiceProducts";
 
 const AllFoods = () => {
 	const { products, isLoading } = useGetAllProducts();
@@ -34,23 +35,14 @@ const AllFoods = () => {
 
 			setIsLoadingSort(true);
 			const fetchData = async () => {
-				axios
-					.get(`http://localhost:8086/api/v1/foods/sorted/${sortedChoice}`)
-					.then((response) => {
-						const updatedProducts = response.data.map((product) => {
-							return {
-								...product,
-								image01: `${process.env.REACT_APP_SERVER_API_URL}public/images/products/${product.image01}`,
-								image02: `${process.env.REACT_APP_SERVER_API_URL}public/images/products/${product.image02}`,
-								image03: `${process.env.REACT_APP_SERVER_API_URL}public/images/products/${product.image03}`,
-							};
-						});
-						setProductData(updatedProducts);
-					})
-					.catch((error) => {
-						console.log(error);
-					})
-					.finally(() => setIsLoadingSort(false));
+				try {
+					const updatedProducts = await getSortedChoiceProducts(sortedChoice);
+					setProductData(updatedProducts);
+				} catch (error) {
+					console.log(error);
+				} finally {
+					setIsLoadingSort(false);
+				}
 			};
 			fetchData();
 		}

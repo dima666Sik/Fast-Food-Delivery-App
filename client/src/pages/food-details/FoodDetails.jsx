@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { Col, Container, Row, Spinner } from "react-bootstrap";
 import axios from "axios";
 
@@ -22,6 +22,9 @@ import {
 	cartActionsLiked,
 } from "../../redux/store/shopping-cart/cartsLikedSlice";
 import { refresh } from "../../actions/post/refresh";
+import { deleteReview } from "../../actions/delete/deleteReview";
+import { getAllReviewsToProduct } from "../../actions/get/getAllReviewsToProduct";
+import { addReview } from "../../actions/post/addReview";
 
 const FoodDetails = () => {
 	const [tab, setTab] = useState("desc");
@@ -32,19 +35,23 @@ const FoodDetails = () => {
 	const [relatedProduct, setRelatedProduct] = useState([]);
 	const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 	const [reviews, setReviews] = useState([]);
-	const [isLoadingComments, setIsLoadingComments] = useState(false);
 	const [isFetchingComments, setIsFetchingComments] = useState(false);
 	const accessToken = useSelector((state) => state.user.accessToken);
+	const userEmail = useSelector((state) => state.user.email);
+	const userRole = useSelector((state) => state.user.role);
 	const dispatch = useDispatch();
 	const [showModal, setShowModal] = useState(false);
 	const reviewContainerRef = useRef(null);
 	const [showTextModal, setShowTextModal] = useState("");
+	const [deletedReview, setDeletedReview] = useState(false);
+	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (!isLoading && products) {
+		if (!isLoading && products.length > 0) {
 			const selectedProduct = products.find(
 				(product) => product.id.toString() === id
 			);
+			console.log(selectedProduct);
 			if (selectedProduct) {
 				setProduct(selectedProduct);
 				const selectedRelPr = products.filter(
@@ -53,6 +60,8 @@ const FoodDetails = () => {
 				if (selectedRelPr) {
 					setRelatedProduct(selectedRelPr);
 				}
+			} else {
+				navigate("/");
 			}
 		}
 	}, [id, product, isLoading]);
@@ -99,6 +108,7 @@ const FoodDetails = () => {
 
 	const submitHandler = async (e) => {
 		e.preventDefault();
+
 		console.log(accessToken, reviewMsg, product.id);
 		if (product?.id) {
 			console.log("+");
@@ -109,15 +119,7 @@ const FoodDetails = () => {
 
 			try {
 				setIsFetchingComments(true); // Установка состояния перед началом загрузки комментариев
-				const response = await axios.post(
-					`${process.env.REACT_APP_SERVER_API_URL}api/v1/private/food-reviews/add-review-for-product`,
-					dataProductReview,
-					{
-						headers: {
-							Authorization: "Bearer " + accessToken,
-						},
-					}
-				);
+				const response = await addReview(accessToken, dataProductReview);
 				setReviewMsg("");
 				console.log(response.data);
 			} catch (error) {
@@ -176,20 +178,14 @@ const FoodDetails = () => {
 	};
 
 	useEffect(() => {
-		if (product?.id) {
-			setIsLoadingComments(true);
-
-			axios
-				.get(
-					`${process.env.REACT_APP_SERVER_API_URL}api/v1/foods/get-all-reviews-to-product?product_id=${product.id}`
-				)
-				.then((response) => {
+		const fetchData = async () => {
+			if (product?.id) {
+				try {
+					const response = await getAllReviewsToProduct(product.id);
 					const getReviews = response.data;
 					setReviews(getReviews);
-					setIsLoadingComments(false);
 					console.log(getReviews);
-				})
-				.catch(async (error) => {
+				} catch (error) {
 					if (
 						error.response.data ===
 						"Access token was expired! Refresh is valid!"
@@ -236,9 +232,63 @@ const FoodDetails = () => {
 						);
 						setReviewMsg("");
 					}
-				});
+				}
+			}
+		};
+		fetchData();
+	}, [product, isFetchingComments, deletedReview]);
+
+	async function handleDeleteClick(review_id) {
+		console.log(review_id);
+		try {
+			await deleteReview(accessToken, product.id, review_id);
+			setDeletedReview(!deletedReview);
+		} catch (error) {
+			if (
+				error.response.data === "Access token was expired! Refresh is valid!"
+			) {
+				try {
+					const response = await refresh(accessToken);
+
+					if (response.status === 200) {
+						if (response.data.access_token) {
+							// Dispatch the setUser action
+							dispatch(
+								setUser({
+									accessToken: response.data.access_token,
+								})
+							);
+							setShowTextModal("Tokens was Updated, please continue use site.");
+							setShowModal(true);
+						}
+					}
+				} catch (error) {
+					console.log(error);
+					throw error; // пробрасываем ошибку выше для обработки в setLikes
+				}
+			}
+
+			if (
+				error.response.data ===
+					"You need to reauthorize! Tokens all were expired. You will be much to authorization!" ||
+				error.response.data ===
+					"All Tokens (access & refresh) were expired! Please generate news tokens!" ||
+				error.response.data === "Valid Refresh token was expired..." ||
+				error.response.data === "Tokens from client is bad!"
+			) {
+				setShowTextModal(
+					"You don't have rights to delete review, refresh token was expired. Please Authorization in this Application..."
+				);
+				setShowModal(true);
+				dispatch(
+					axiosLogout({
+						accessToken,
+					})
+				);
+				setReviewMsg("");
+			}
 		}
-	}, [product, isFetchingComments]);
+	}
 
 	useEffect(() => {
 		if (reviewContainerRef.current) {
@@ -359,9 +409,32 @@ const FoodDetails = () => {
 																key={review.id}
 															>
 																<div className="review">
-																	<p className="user__name mb-0">
-																		{review.first_name} {review.last_name}
-																	</p>
+																	<div className="review-container-dots-list">
+																		<p className="user__name mb-0">
+																			{review.first_name} {review.last_name}
+																		</p>
+																		{review.email === userEmail && (
+																			<div className="dropdown">
+																				<i
+																					className="bi bi-three-dots-vertical dropdown-toggle"
+																					data-toggle="dropdown"
+																				></i>
+																				<ul className="dropdown-menu">
+																					<li>
+																						<span
+																							className="delete-selection"
+																							onClick={() =>
+																								handleDeleteClick(review.id)
+																							}
+																						>
+																							Delete
+																						</span>
+																					</li>
+																				</ul>
+																			</div>
+																		)}
+																	</div>
+
 																	<p className="user__email">{review.email}</p>
 																	<p className="feedback__text">
 																		{review.review}
@@ -371,7 +444,7 @@ const FoodDetails = () => {
 														))}
 													</div>
 												)}
-												{isAuthenticated && (
+												{isAuthenticated && userRole !== "ADMIN" && (
 													<form className="form mt-5" onSubmit={submitHandler}>
 														<div className="form__group">
 															<textarea

@@ -7,7 +7,7 @@ export const useGetAllProducts = () => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-	const accessToken = useSelector((state) => state.user.accessToken);
+
 	useEffect(() => {
 		setIsLoading(true);
 		const fetchData = async () => {
@@ -18,6 +18,7 @@ export const useGetAllProducts = () => {
 				.then((response) => {
 					// setTimeout(() => {
 					const updatedProducts = response.data.map((product) => {
+						console.log(product);
 						return {
 							...product,
 							image01: `${process.env.REACT_APP_SERVER_API_URL}public/images/products/${product.image01}`,

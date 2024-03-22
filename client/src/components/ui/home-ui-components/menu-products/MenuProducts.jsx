@@ -51,7 +51,7 @@ const MenuProducts = () => {
 		<Container>
 			<Row>
 				<Col lg="12" className="text-center">
-					<h2>Popular Foods</h2>
+					<h2>Chief Foods</h2>
 				</Col>
 
 				<Col lg="12" style={{ paddingBottom: "20px" }}>

@@ -11,11 +11,10 @@ const HotFood = () => {
 	console.log(products);
 	useEffect(() => {
 		if (!isLoading) {
-			const filteredFood = products.filter(
-				(item) => item.category === "Pizza" || item.category === "Burger"
-			);
-			const sliceFood = filteredFood.slice(0, 4);
-			setHotFood(sliceFood);
+			const filteredFood = products.filter((item) => item.category === "Pizza");
+			const sortedFood = filteredFood.sort((a, b) => b.likes - a.likes);
+			const slicedFood = sortedFood.slice(0, 4);
+			setHotFood(slicedFood);
 		}
 	}, [isLoading]);
 
@@ -23,7 +22,7 @@ const HotFood = () => {
 		<Container>
 			<Row>
 				<Col lg="12" className="text-center mb-5 ">
-					<h2>Hot Food</h2>
+					<h2>Hot Pizza</h2>
 				</Col>
 
 				{isLoading || !hotFood ? (

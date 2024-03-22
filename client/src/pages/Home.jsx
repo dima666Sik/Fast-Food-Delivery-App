@@ -21,7 +21,6 @@ const Home = () => {
 	}, []);
 
 	useEffect(() => {
-		console.log("памагити");
 		if (isAuthenticated) {
 			dispatch(
 				axiosGetStatusLikes({

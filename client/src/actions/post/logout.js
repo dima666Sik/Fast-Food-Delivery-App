@@ -13,7 +13,6 @@ export const logout = async (accessToken) => {
 		);
 		return response;
 	} catch (error) {
-		// console.error(error);
-		throw error; // пробрасываем ошибку выше для обработки
+		throw error;
 	}
 };

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Form, Modal, Button } from "react-bootstrap";
-import axios from "axios";
 
 import { useValidationAuthForms } from "../hooks/useValidationAuthForms";
 import AlertText from "../components/alerts/AlertText";
 import { useValidFormsBtn } from "../hooks/useValidFormsBtn";
 import ModalAlert from "../components/alerts/ModalAlert";
+import { register } from "../actions/post/register";
 
 const Register = (props) => {
 	const {
@@ -72,13 +72,11 @@ const Register = (props) => {
 			last_name: lastName,
 			email: email,
 			password: password,
+			is_admin: false,
 		};
 
 		try {
-			const response = await axios.post(
-				`${process.env.REACT_APP_SERVER_API_URL}api/v1/auth/registration`,
-				userData
-			);
+			const response = await register(userData);
 
 			if (response.status === 200) {
 				console.log(userData);
@@ -89,7 +87,6 @@ const Register = (props) => {
 			console.error(error);
 			setShowTextModal(error.response.data.message_response);
 			setShowModal(true);
-			// alert("Registration failed. Please try again later.");
 		}
 	};
 

@@ -12,6 +12,7 @@ import { useReview } from "../../hooks/useReview";
 import ModalAlert from "../../components/alerts/ModalAlert";
 
 import { useSelector } from "react-redux";
+import { sendEmail } from "../../actions/post/sendEmail";
 
 const Contact = () => {
 	const { formValid, setFormValid } = useValidFormsBtn();
@@ -22,6 +23,7 @@ const Contact = () => {
 	const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 	const userName = useSelector((state) => state.user.firstName);
 	const userEmail = useSelector((state) => state.user.email);
+	const userRole = useSelector((state) => state.user.role);
 
 	const {
 		email,
@@ -52,22 +54,25 @@ const Contact = () => {
 	const handleReviewClick = async (e) => {
 		e.preventDefault();
 
-		const userData = {
+		const mailData = {
 			username: firstName,
 			from: email,
 			message: review,
 		};
 
+		if (userRole === "ADMIN") {
+			setShowTextModal("You admin. Access denied to send mail.");
+			setShowModal(true);
+			return;
+		}
+
 		try {
 			setIsLoadingSender(true);
 
-			const response = await axios.post(
-				`${process.env.REACT_APP_SERVER_API_URL}api/v1/email/contact-review`,
-				userData
-			);
+			const response = await sendEmail(mailData);
 
 			if (response.status === 200) {
-				console.log(userData);
+				console.log(mailData);
 				console.log("Review: ", response.data);
 				if (!isAuthenticated) {
 					setEmail("");
