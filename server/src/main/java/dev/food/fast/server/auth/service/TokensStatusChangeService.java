@@ -39,6 +39,7 @@ public class TokensStatusChangeService {
     }
 
     public void revokeAllUserTokens(User user) {
+        System.out.println("qwer");
         var validUserAccessTokensOptional = accessTokenRepository.findValidAccessTokenByUser(user.getId());
         if (validUserAccessTokensOptional.isEmpty()) {
             deleteUserTokens(user);

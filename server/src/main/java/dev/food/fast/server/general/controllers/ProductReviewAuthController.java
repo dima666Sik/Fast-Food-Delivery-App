@@ -21,4 +21,10 @@ public class ProductReviewAuthController {
         return productReviewService.addProductReview(authentication, productReviewRequest);
     }
 
+    @DeleteMapping("/delete-review-to-product")
+    public ResponseEntity<?> deleteProductReview(Authentication authentication,
+                                              @RequestParam("product_id") Long productId,
+                                              @RequestParam("review_id") Long reviewId) {
+        return productReviewService.deleteProductReview(authentication, productId, reviewId);
+    }
 }

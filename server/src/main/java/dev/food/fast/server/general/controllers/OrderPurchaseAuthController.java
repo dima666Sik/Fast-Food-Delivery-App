@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/private/order-purchase")
@@ -24,8 +21,10 @@ public class OrderPurchaseAuthController {
         return orderPurchaseService.addOrderWithPurchaseUser(authentication, orderPurchaseRequest);
     }
 
-    @PostMapping("/add-order-with-purchase-guest")
-    public ResponseEntity<?> addOrderWithPurchaseGuest(@RequestBody OrderPurchaseRequest orderPurchaseRequest) {
-        return orderPurchaseService.addOrderWithPurchaseGuest(orderPurchaseRequest);
+    @GetMapping("/get-order-with-purchase-user")
+    public ResponseEntity<?> getOrderWithPurchaseUser(Authentication authentication) {
+        return orderPurchaseService.getOrderWithPurchaseUser(authentication);
     }
+
+
 }

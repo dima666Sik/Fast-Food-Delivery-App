@@ -32,7 +32,7 @@ public class ProductStatusLikesAuthController {
     }
 
     @GetMapping("/get-status-products")
-    public ResponseEntity<?> getStatusProducts(
+    public ResponseEntity<?> getListStatusProducts(
             Authentication authentication
     ) {
         return productLikesService.getListStatusProducts(authentication);

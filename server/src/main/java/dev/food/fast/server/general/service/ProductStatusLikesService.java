@@ -31,6 +31,7 @@ public class ProductStatusLikesService {
     ) {
         try {
             String userEmail = authentication.getName();
+            System.out.println("userEmail: "+userEmail);
             var userOptional = userRepository.findByEmail(userEmail);
             if (userOptional.isEmpty()) {
                 return ResponseEntity.ok()

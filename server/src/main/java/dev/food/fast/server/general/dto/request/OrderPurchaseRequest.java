@@ -31,15 +31,18 @@ public class OrderPurchaseRequest {
     @JsonProperty("floor_number")
     private String floorNumber;
 
-    @JsonProperty("order_date")
-    private String date;
-    @JsonProperty("order_time")
-    private String time;
+    @JsonProperty("order_date_arrived")
+    private String dateArrived;
+    @JsonProperty("order_time_arrived")
+    private String timeArrived;
 
     @JsonProperty("total_amount")
     private Double totalAmount;
     @JsonProperty("delivery")
     private Boolean delivery;
+
+    @JsonProperty("cash_payment")
+    private Boolean cashPayment;
 
     private List<PurchaseItemRequest> purchaseItems;
 }

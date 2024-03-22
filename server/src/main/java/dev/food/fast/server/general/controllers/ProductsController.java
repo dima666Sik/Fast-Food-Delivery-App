@@ -1,7 +1,6 @@
 package dev.food.fast.server.general.controllers;
 
 import dev.food.fast.server.general.models.product.Product;
-import dev.food.fast.server.general.dto.request.ProductRequest;
 import dev.food.fast.server.general.service.ProductReviewService;
 import dev.food.fast.server.general.service.ProductsService;
 import lombok.RequiredArgsConstructor;
@@ -17,18 +16,12 @@ public class ProductsController {
     private final ProductsService service;
     private final ProductReviewService productReviewService;
 
-    @PostMapping("/add-product")
-    public ResponseEntity<?> addProduct(@RequestBody ProductRequest request) {
-        return service.addProduct(request);
-    }
-
-
     @PostMapping("/add-all-default-products")
     public ResponseEntity<?> addAllDefaultProducts() {
         List<Product> products = service.getAllDefaultProducts();
 
         for (Product product : products) {
-            ResponseEntity<?> response = service.addProduct(product);
+            ResponseEntity<?> response = service.addDefaultProduct(product);
         }
 
         return ResponseEntity.ok("Products added successfully");

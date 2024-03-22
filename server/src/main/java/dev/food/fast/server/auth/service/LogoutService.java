@@ -60,7 +60,7 @@ public class LogoutService implements LogoutHandler {
             accessTokenRepository.save(accessToken);
             refreshTokenRepository.save(refreshToken);
 
-            SecurityContextHolder.clearContext();
+//            SecurityContextHolder.clearContext();
         }
     }
 }

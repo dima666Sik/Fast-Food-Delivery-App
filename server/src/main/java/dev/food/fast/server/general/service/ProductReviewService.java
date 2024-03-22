@@ -75,4 +75,50 @@ public class ProductReviewService {
 
         return ResponseEntity.ok(productReviewResponsesList);
     }
+
+    public ResponseEntity<?> deleteProductReview(Authentication authentication, Long productId, Long reviewId) {
+        try {
+            String userEmail = authentication.getName();
+            var userOptional = userRepository.findByEmail(userEmail);
+            if (userOptional.isEmpty()) {
+                return ResponseEntity.ok()
+                        .body(MessageResponse.builder()
+                                .message("User not found...")
+                                .status(false)
+                                .build());
+            }
+            User user = userOptional.get();
+
+            var productOptional = productsRepository.findById(productId);
+            System.out.println("---------------------------------------+"+ productId + " "+ reviewId);
+            if (productOptional.isEmpty()) {
+                return ResponseEntity.ok()
+                        .body(MessageResponse.builder()
+                                .message("Product not found...")
+                                .status(false)
+                                .build());
+            }
+            Product product = productOptional.get();
+            System.out.println("---------------------------------------++");
+            // Проверяем, является ли пользователь автором отзыва
+            var isReviewAuthor = productReviewRepository.findByIdAndProductIdAndUserId(reviewId,product.getId(),user.getId());
+            System.out.println("---------------------------------------+++");
+            if (isReviewAuthor.isEmpty()) {
+                return ResponseEntity.ok()
+                        .body(MessageResponse.builder()
+                                .message("Not found review!")
+                                .status(false)
+                                .build());
+            }
+
+            System.out.println("---------------------------------------+++++");
+            productReviewRepository.delete(isReviewAuthor.get());
+
+            return ResponseEntity.ok("Product review was deleted successfully");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.ok("Product review was add unsuccessfully");
+        }
+    }
 }

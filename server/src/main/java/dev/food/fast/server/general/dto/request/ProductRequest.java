@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
@@ -11,11 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductRequest {
     private String title;
-    private Double price;
-    private Integer likes;
-    private String image01;
-    private String image02;
-    private String image03;
     private String category;
     private String description;
+    private MultipartFile image01;
+    private MultipartFile image02;
+    private MultipartFile image03;
+    private Double price;
 }

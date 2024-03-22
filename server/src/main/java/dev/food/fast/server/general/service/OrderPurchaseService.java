@@ -4,11 +4,14 @@ import dev.food.fast.server.auth.models.User;
 import dev.food.fast.server.auth.dto.response.MessageResponse;
 import dev.food.fast.server.auth.repository.UserRepository;
 import dev.food.fast.server.auth.service.JwtService;
+import dev.food.fast.server.general.dto.response.OrderPurchaseResponse;
+import dev.food.fast.server.general.dto.response.PurchaseItemResponse;
 import dev.food.fast.server.general.models.order.*;
 import dev.food.fast.server.general.models.product.Product;
 import dev.food.fast.server.general.dto.request.PurchaseItemRequest;
 import dev.food.fast.server.general.dto.request.OrderPurchaseRequest;
 import dev.food.fast.server.general.repository.*;
+import dev.food.fast.server.mail.service.EmailService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +25,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class OrderPurchaseService {
-    private final JwtService jwtService;
     private final UserRepository userRepository;
     private final ProductsRepository productsRepository;
     private final AddressOrderRepository addressOrderRepository;
@@ -30,6 +32,7 @@ public class OrderPurchaseService {
     private final BasicOrderUserRepository basicOrderUserRepository;
     private final BasicOrderGuestRepository basicOrderGuestRepository;
     private final PurchaseRepository purchaseRepository;
+    private final EmailService emailService;
 
     public ResponseEntity<?> addOrderWithPurchaseUser(Authentication authentication, OrderPurchaseRequest orderPurchaseRequest) {
         try {
@@ -130,7 +133,7 @@ public class OrderPurchaseService {
         basicOrderGuestRepository.save(basicOrderGuest);
         purchaseRepository.saveAll(purchaseList);
 
-        return ResponseEntity.ok("Order was add successfully");
+        return emailService.sendOrderOnEmailGuest(orderPurchaseRequest,basicOrder.getId(),purchaseList);
     }
 
     private AddressOrder createAddressOrder(OrderPurchaseRequest orderPurchaseRequest) {
@@ -144,23 +147,93 @@ public class OrderPurchaseService {
     }
 
     private BasicOrder createBasicOrder(OrderPurchaseRequest orderPurchaseRequest, AddressOrder addressOrder) {
+
         if (orderPurchaseRequest.getDelivery()) {
             return BasicOrder.builder()
                     .phone(orderPurchaseRequest.getPhone())
-                    .orderDate(orderPurchaseRequest.getDate())
-                    .orderTime(orderPurchaseRequest.getTime())
+                    .orderDateArrived(orderPurchaseRequest.getDateArrived())
+                    .orderTimeArrived(orderPurchaseRequest.getTimeArrived())
                     .totalAmount(orderPurchaseRequest.getTotalAmount())
                     .addressOrder(addressOrder)
+                    .cashPayment(orderPurchaseRequest.getCashPayment())
                     .build();
         }
         else {
             return BasicOrder.builder()
                     .phone(orderPurchaseRequest.getPhone())
-                    .orderDate(orderPurchaseRequest.getDate())
-                    .orderTime(orderPurchaseRequest.getTime())
+                    .orderDateArrived(orderPurchaseRequest.getDateArrived())
+                    .orderTimeArrived(orderPurchaseRequest.getTimeArrived())
                     .totalAmount(orderPurchaseRequest.getTotalAmount())
+                    .cashPayment(orderPurchaseRequest.getCashPayment())
                     .build();
         }
     }
 
+    public ResponseEntity<?> getOrderWithPurchaseUser(Authentication authentication) {
+        try {
+            String userEmail = authentication.getName();
+            var userOptional = userRepository.findByEmail(userEmail);
+            if (userOptional.isEmpty()) {
+                return ResponseEntity.ok()
+                        .body(MessageResponse.builder()
+                                .message("User not found...")
+                                .status(false)
+                                .build());
+            }
+            User user = userOptional.get();
+
+            List<BasicOrderUser> orders = basicOrderUserRepository.findByUserOrderByIdDesc(user);
+            List<OrderPurchaseResponse> orderResponses = new ArrayList<>();
+
+            for (BasicOrderUser orderUser : orders) {
+                OrderPurchaseResponse orderResponse = createOrderPurchaseResponse(orderUser);
+                orderResponses.add(orderResponse);
+            }
+
+            return ResponseEntity.ok(orderResponses);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.ok("Failed to retrieve orders");
+        }
+    }
+
+    private OrderPurchaseResponse createOrderPurchaseResponse(BasicOrderUser orderUser) {
+        BasicOrder basicOrder = orderUser.getBasicOrder();
+        AddressOrder addressOrder = basicOrder.getAddressOrder();
+
+        OrderPurchaseResponse orderResponse = new OrderPurchaseResponse();
+        orderResponse.setId(basicOrder.getId());
+        orderResponse.setPhone(basicOrder.getPhone());
+        orderResponse.setDateArrived(basicOrder.getOrderDateArrived());
+        orderResponse.setTimeArrived(basicOrder.getOrderTimeArrived());
+        orderResponse.setTotalAmount(basicOrder.getTotalAmount());
+        orderResponse.setDelivery(basicOrder.getAddressOrder() != null);
+
+        if (addressOrder != null) {
+            orderResponse.setCity(addressOrder.getCity());
+            orderResponse.setStreet(addressOrder.getStreet());
+            orderResponse.setHouseNumber(addressOrder.getHouseNumber());
+            orderResponse.setFlatNumber(addressOrder.getFlatNumber());
+            orderResponse.setFloorNumber(addressOrder.getFloorNumber());
+        }
+
+        List<Purchase> purchases = purchaseRepository.findByBasicOrderUser(orderUser);
+        List<PurchaseItemResponse> purchaseResponses = new ArrayList<>();
+
+        for (Purchase purchase : purchases) {
+            PurchaseItemResponse purchaseResponse = new PurchaseItemResponse();
+            purchaseResponse.setId(purchase.getProduct().getId());
+            purchaseResponse.setImage01(purchase.getProduct().getImage01());
+            purchaseResponse.setTitle(purchase.getProduct().getTitle());
+            purchaseResponse.setPrice(purchase.getProduct().getPrice());
+            purchaseResponse.setQuantity(purchase.getQuantity());
+            purchaseResponse.setTotalPrice(purchase.getTotalPrice());
+
+            purchaseResponses.add(purchaseResponse);
+        }
+
+        orderResponse.setPurchaseItems(purchaseResponses);
+        return orderResponse;
+    }
 }

@@ -19,4 +19,6 @@ public class RegisterRequest {
   private String lastName;
   private String email;
   private String password;
+  @JsonProperty("is_admin")
+  private Boolean isAdmin;
 }
