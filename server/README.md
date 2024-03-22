@@ -1,4 +1,4 @@
-## Server part Food Ordering App
+# Server part Food Ordering App
 
 ## List of Contents
 
