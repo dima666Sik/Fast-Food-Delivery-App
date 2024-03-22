@@ -6,8 +6,6 @@
 - [Technologies](#technologies)
 - [Project Structure](#project-structure)
 - [Usage](#usage)
-- [Database](#database)
-- [Diagram business logic](#diagram-business-logic)
 - [Author Info](#author-info)
 
 ---
