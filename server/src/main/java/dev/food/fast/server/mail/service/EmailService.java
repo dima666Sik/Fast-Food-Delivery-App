@@ -162,7 +162,7 @@ public class EmailService {
             int quantity = purchase.getQuantity();
             double totalPrice = purchase.getTotalPrice();
 
-            String imagePath = "src/main/resources/static/public/images/products/" + imageName;
+            String imagePath = partURLtoImages + imageName;
             try {
                 String absolutePath = ResourceUtils.getFile(imagePath).getAbsolutePath();
                 FileSystemResource photoFile = new FileSystemResource(absolutePath);
