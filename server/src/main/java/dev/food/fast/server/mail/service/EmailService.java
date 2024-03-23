@@ -164,7 +164,7 @@ public class EmailService {
 
             String imagePath = partURLtoImages + imageName;
             try {
-                String absolutePath = ResourceUtils.getFile(imagePath).getAbsolutePath();
+                String absolutePath = System.getProperty("user.dir") + imagePath;
                 FileSystemResource photoFile = new FileSystemResource(absolutePath);
                 helper.addInline(imageName, photoFile);
                 tableBuilder.append("<tr>")
@@ -175,8 +175,6 @@ public class EmailService {
                         .append("</tr>");
             } catch (MessagingException e) {
                 e.printStackTrace();
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
             }
         }
 
