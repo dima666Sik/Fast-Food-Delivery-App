@@ -14,7 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/public/images/products/**")
-                .addResourceLocations("file:" + System.getProperty("user.dir") + partURLtoImages + "/")
+                .addResourceLocations("file:" + System.getProperty("user.dir") + partURLtoImages)
                 .setCacheControl(CacheControl.noCache());
     }
 }
