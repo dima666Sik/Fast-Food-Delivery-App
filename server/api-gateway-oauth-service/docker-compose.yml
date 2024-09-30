@@ -1,0 +1,39 @@
+version: "3.9"
+
+#services:
+
+#  postgres:
+#    container_name: postgres
+#    image: postgres
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#    environment:
+#      POSTGRES_USER: dimasik666
+#      POSTGRES_PASSWORD: password
+#      POSTGRES_DB: users_info_db
+#    ports:
+#      - "5433:5432"
+#    restart: unless-stopped
+
+# api gateway
+#  api-gateway-oauth-service:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    env_file: ./src/main/resources/.env
+#    container_name: api-gateway-oauth-service
+#    ports:
+#      - "8080:8080"
+##    depends_on:
+##      - consul
+##      - postgres
+#    environment:
+#      OAUTH-GOOGLE-CLIENT-ID: ${GOOGLE_CLIENT_ID}
+#      OAUTH-GOOGLE-CLIENT-SECRET: ${GOOGLE_CLIENT_SECRET}
+#      CONSUL-HOST: ${CONSUL_HOST}
+#      CONSUL-PORT: ${CONSUL_PORT}
+#      REDIRECT-URL: ${GOOGLE_REDIRECT_URI}
+
+
+#volumes:
+#  postgres_data:
