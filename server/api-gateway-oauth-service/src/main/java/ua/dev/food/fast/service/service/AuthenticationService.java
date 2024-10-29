@@ -21,10 +21,10 @@ import ua.dev.food.fast.service.domain.model.Role;
 import ua.dev.food.fast.service.domain.model.User;
 import ua.dev.food.fast.service.domain.model.UserPermission;
 import ua.dev.food.fast.service.repository.*;
+import ua.dev.food.fast.service.util.ConstantMessageExceptions;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +42,7 @@ public class AuthenticationService {
     public Mono<ResponseEntity<MessageResponse>> register(RegisterRequest request) {
         return userRepository.findByEmail(request.getEmail()).flatMap(user -> Mono.just(ResponseEntity.badRequest()
                 .body(MessageResponse.builder()
-                    .message("User with email " + request.getEmail() + " already exists")
+                    .message(ConstantMessageExceptions.userAlreadyExists(user.getEmail()))
                     .status(false)
                     .build())))
             .switchIfEmpty(Mono.defer(() -> {
@@ -74,7 +74,7 @@ public class AuthenticationService {
                         .then(changeStatusTokensService.saveUserRefreshToken(savedUser, refreshToken))
                         .thenReturn(ResponseEntity.status(HttpStatus.CREATED)
                             .body(MessageResponse.builder()
-                                .message("User registration " + request.getEmail() + " is successful")
+                                .message(ConstantMessageExceptions.userRegisterSuccessful(savedUser.getEmail()))
                                 .status(true)
                                 .mainResponse(AuthenticationResponse.builder()
                                     .accessToken(jwtToken)
@@ -89,7 +89,7 @@ public class AuthenticationService {
         return userRepository.findByEmail(request.getEmail()).flatMap(user -> {
             if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
                 return Mono.just(ResponseEntity.badRequest()
-                    .body(MessageResponse.builder().message("Incorrect password.")
+                    .body(MessageResponse.builder().message(ConstantMessageExceptions.INCORRECT_PASSWORD)
                         .status(false).build()));
             }
 
@@ -110,7 +110,7 @@ public class AuthenticationService {
                         .then(changeStatusTokensService.saveUserToken(user, jwtToken))
                         .then(changeStatusTokensService.saveUserRefreshToken(user, refreshToken))
                         .thenReturn(ResponseEntity.ok(MessageResponse.builder()
-                            .message("User authorization " + user.getEmail() + " is successful")
+                            .message(ConstantMessageExceptions.userAuthSuccessful(user.getEmail()))
                             .status(true)
                             .mainResponse(AuthenticationResponse.builder()
                                 .accessToken(jwtToken)
@@ -120,18 +120,18 @@ public class AuthenticationService {
                 });
 
         }).switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(MessageResponse.builder()
-            .message("Incorrect email. User not found...")
+            .message(ConstantMessageExceptions.INCORRECT_EMAIL)
             .status(false)
             .build())));
     }
 
-    public Mono<ResponseEntity<MessageResponse>> refreshTokens(ServerHttpRequest request, ServerHttpResponse response) {
+    public Mono<ResponseEntity<MessageResponse>> refreshTokens(ServerHttpRequest request) {
         final String authHeader = request.getHeaders().getFirst("Authorization");
-        final String jwt = authHeader != null && authHeader.startsWith("Bearer ") ? authHeader.substring(7) : null;
+        final String jwt = authHeader != null && authHeader.startsWith(ConstantMessageExceptions.BEARER_HEADER) ? authHeader.substring(7) : null;
 
         if (jwt == null) {
             return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(MessageResponse.builder().message("Authorization header is missing")
+                .body(MessageResponse.builder().message(ConstantMessageExceptions.AUTHORIZATION_HEADER_IS_EMPTY)
                     .status(false).build()));
         }
 
@@ -141,21 +141,21 @@ public class AuthenticationService {
                 .flatMap(refreshToken -> userRepository.findById(accessToken.getUserId())
                     .flatMap(user -> {
                         if (jwtService.isTokenValid(refreshToken.getToken(), user)) {
-                            return expireAndGenerateNewTokens(user, response);
+                            return expireAndGenerateNewTokens(user);
                         } else {
                             return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                                 .body(MessageResponse.builder()
-                                    .message("Refresh token is invalid or expired")
+                                    .message(ConstantMessageExceptions.INVALID_TOKEN)
                                     .status(false)
                                     .build()));
                         }
                     }));
         }).switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(MessageResponse.builder().message("Token not found")
+            .body(MessageResponse.builder().message(ConstantMessageExceptions.ACCESS_TOKEN_NOT_FOUND)
                 .status(false).build())));
     }
 
-    private Mono<ResponseEntity<MessageResponse>> expireAndGenerateNewTokens(User user, ServerHttpResponse response) {
+    private Mono<ResponseEntity<MessageResponse>> expireAndGenerateNewTokens(User user) {
         var newAccessToken = jwtService.generateToken(user);
         var newRefreshToken = jwtService.generateRefreshToken(user);
 
@@ -163,25 +163,17 @@ public class AuthenticationService {
             .then(changeStatusTokensService.expireAllUserRefreshTokens(user))
             .then(changeStatusTokensService.saveUserToken(user, newAccessToken))
             .then(changeStatusTokensService.saveUserRefreshToken(user, newRefreshToken))
-            .then(Mono.defer(() -> {
+            .map(saved -> {
                 var messageResponse = MessageResponse.builder()
-                    .message("Tokens were refreshed")
+                    .message(ConstantMessageExceptions.TOKENS_WERE_REFRESHED)
                     .status(true)
                     .mainResponse(AuthenticationResponse.builder()
                         .accessToken(newAccessToken)
                         .refreshToken(newRefreshToken)
                         .build())
                     .build();
-
-                try {
-                    return response.writeWith(Mono.just(response.bufferFactory()
-                            .wrap(new ObjectMapper().writeValueAsBytes(messageResponse))))
-                        .thenReturn(ResponseEntity.ok(messageResponse));
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-            }))
-            .onErrorResume(IOException.class, e -> Mono.error(new RuntimeException("Error writing response", e)));
+                return ResponseEntity.ok(messageResponse);
+            });
     }
 
 

@@ -80,8 +80,15 @@ back-end:
         expiration: ${JWT_ACCESS_EXPIRATION}
       refresh:
         expiration: ${JWT_REFRESH_EXPIRATION}
+    # This list is used to exclude paths from authentication processing when security configuration is enabled
+    auth-whitelist: ${AUTH_WHITELIST}
+    custom:
+      allowed:
+        paths: ${ALLOWED_PATHS:}
   urls:
     url-all-images: ${URL_ALL_IMAGES}
+    url-path-pattern: ${URL_PATH_PATTERN}
+
 #Frontend uri
 front-end:
   uri: ${FRONT_END_URI}

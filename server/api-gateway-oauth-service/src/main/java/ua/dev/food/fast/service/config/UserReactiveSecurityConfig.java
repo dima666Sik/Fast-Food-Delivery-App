@@ -12,6 +12,7 @@ import reactor.core.publisher.Mono;
 import ua.dev.food.fast.service.repository.PermissionRepository;
 import ua.dev.food.fast.service.repository.UserPermissionRepository;
 import ua.dev.food.fast.service.repository.UserRepository;
+import ua.dev.food.fast.service.util.ConstantMessageExceptions;
 
 @Configuration
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class UserReactiveSecurityConfig {
                     user.setPermissions(permissions);
                     return user;
                 }))
-            .switchIfEmpty(Mono.error(new UsernameNotFoundException("User not found")))
+            .switchIfEmpty(Mono.error(new UsernameNotFoundException(ConstantMessageExceptions.USER_NOT_FOUND)))
             .cast(UserDetails.class);
     }
 

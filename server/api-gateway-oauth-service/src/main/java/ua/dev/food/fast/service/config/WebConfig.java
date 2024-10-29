@@ -24,13 +24,20 @@ public class WebConfig implements WebFluxConfigurer {
     private String partURLtoImages;
 
     /**
+     * The value obtained from the application's properties file.
+     * This value is used to define a URL path pattern in the application.
+     */
+    @Value("${back-end.urls.url-path-pattern}")
+    private String urlPathPattern;
+
+    /**
      * Overrides the default resource handling behavior to serve product images from a specific directory.
      *
      * @param registry The {@link ResourceHandlerRegistry} used to register resource handlers.
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/public/images/products/**")
+        registry.addResourceHandler(urlPathPattern)
             .addResourceLocations(Paths.get(System.getProperty("user.dir"), partURLtoImages).toUri().toString())
             .setCacheControl(CacheControl.maxAge(0, TimeUnit.SECONDS).cachePrivate());
     }

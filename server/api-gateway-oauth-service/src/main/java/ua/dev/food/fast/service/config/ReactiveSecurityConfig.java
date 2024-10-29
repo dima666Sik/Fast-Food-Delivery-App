@@ -1,6 +1,7 @@
 package ua.dev.food.fast.service.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -16,6 +17,8 @@ import ua.dev.food.fast.service.config.jwt.JwtAuthenticationFilter;
 @RequiredArgsConstructor
 @EnableWebFluxSecurity
 public class ReactiveSecurityConfig {
+    @Value("${back-end.security.auth-whitelist}")
+    private String[] authWhitelist;
 
     private final CorsConfigurationSource corsConfig;
     private final JwtAuthenticationFilter jwtAuthFilter;
@@ -27,9 +30,7 @@ public class ReactiveSecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfig))  // Configure CORS if needed
             .csrf(ServerHttpSecurity.CsrfSpec::disable)
             .authorizeExchange(exchange -> exchange
-                .pathMatchers("/api/v2/auth/**", "/api/v2/slider/**",
-                    "/public/**", "/api/v2/foods/**",
-                    "/api/v2/email/**", "/api/v2/order-purchase/**")
+                .pathMatchers(authWhitelist)
                 .permitAll()
                 .anyExchange()
                 .authenticated()

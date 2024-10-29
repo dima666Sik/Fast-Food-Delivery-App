@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import ua.dev.food.fast.service.repository.AccessTokenRepository;
 import ua.dev.food.fast.service.repository.RefreshTokenRepository;
+import ua.dev.food.fast.service.util.ConstantMessageExceptions;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +44,7 @@ public class LogoutService implements ServerLogoutHandler {
                             .then();
                     }))
             .onErrorResume(e -> tokensHandlingService.setReactiveStatus(exchange.getExchange(),
-                "Logout was not successful.",
+                ConstantMessageExceptions.UNSUCCESSFUL_LOGOUT,
                 HttpStatus.FORBIDDEN));
     }
 }

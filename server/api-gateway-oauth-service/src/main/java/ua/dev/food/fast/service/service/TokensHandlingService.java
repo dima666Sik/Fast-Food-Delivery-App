@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.stereotype.Service;
@@ -20,9 +19,7 @@ import ua.dev.food.fast.service.domain.model.TokenType;
 import ua.dev.food.fast.service.domain.model.User;
 import ua.dev.food.fast.service.repository.AccessTokenRepository;
 import ua.dev.food.fast.service.repository.RefreshTokenRepository;
-
-import java.util.Collection;
-import java.util.List;
+import ua.dev.food.fast.service.util.ConstantMessageExceptions;
 
 @Service
 @RequiredArgsConstructor
@@ -107,9 +104,12 @@ public class TokensHandlingService {
                         .contextWrite(ReactiveSecurityContextHolder.withAuthentication(authToken));
                 }
                 return setReactiveStatus(exchange,
-                    "Token is not valid",
+                    ConstantMessageExceptions.INVALID_TOKEN,
                     HttpStatus.UNAUTHORIZED);
-            });
+            })
+            .switchIfEmpty(setReactiveStatus(exchange,
+                ConstantMessageExceptions.USER_NOT_FOUND,
+                HttpStatus.NOT_FOUND));
     }
 
     public Mono<Void> handleExpiredToken(String jwt, ServerWebExchange exchange) {
@@ -119,18 +119,21 @@ public class TokensHandlingService {
                 var userId = accessToken.getUserId();
                 return refreshTokenRepository.findValidRefreshTokenByUserId(userId)
                     .flatMap(refreshToken -> {
-                        String userEmail = jwtService.extractUsername(refreshToken.getToken());
+                        jwtService.extractUsername(refreshToken.getToken());
                         return setReactiveStatus(exchange,
-                            "Access token was expired! Refresh is valid! For user: " + userEmail,
+                            ConstantMessageExceptions.ACCESS_TOKEN_HAS_EXPIRED,
                             HttpStatus.UNAUTHORIZED);
                     })
+                    .switchIfEmpty(setReactiveStatus(exchange,
+                        ConstantMessageExceptions.REFRESH_TOKEN_NOT_FOUND,
+                        HttpStatus.NOT_FOUND))
                     .onErrorResume(ExpiredJwtException.class, e ->
                         setReactiveStatus(exchange,
-                            "All Tokens (access & refresh) were expired! Please generate new tokens!",
+                            ConstantMessageExceptions.ACCESS_REFRESH_TOKENS_HAVE_EXPIRED,
                             HttpStatus.UNAUTHORIZED));
             })
             .switchIfEmpty(setReactiveStatus(exchange,
-                "User not found...",
+                ConstantMessageExceptions.ACCESS_TOKEN_NOT_FOUND,
                 HttpStatus.NOT_FOUND));
     }
 

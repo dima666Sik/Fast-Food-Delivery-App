@@ -18,7 +18,7 @@ public class AuthenticationController {
 
     private final AuthenticationService service;
 
-    @PostMapping("/registration")
+    @PostMapping("/register")
     public Mono<ResponseEntity<MessageResponse>> register(@RequestBody RegisterRequest request) {
         return service.register(request);
     }
@@ -30,8 +30,8 @@ public class AuthenticationController {
 
 
     @PostMapping("/refresh-tokens")
-    public Mono<ResponseEntity<MessageResponse>> refreshTokens(ServerHttpRequest request, ServerHttpResponse response) {
-        return service.refreshTokens(request, response);
+    public Mono<ResponseEntity<MessageResponse>> refreshTokens(ServerHttpRequest request) {
+        return service.refreshTokens(request);
     }
 
 }
