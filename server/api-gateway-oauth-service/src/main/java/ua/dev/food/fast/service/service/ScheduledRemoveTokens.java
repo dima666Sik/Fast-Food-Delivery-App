@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ScheduledRemoveTokens {
     private static final Logger log = LoggerFactory.getLogger(ScheduledRemoveTokens.class);
-    private final TokensStatusChangeService tokensStatusChangeService;
+    private final TokensHandlingService tokensHandlingService;
 
     @Scheduled(fixedRate = 5000000)
     public void reportCurrentTime() {
-        tokensStatusChangeService.deleteUserTokens()
-                                 .then(tokensStatusChangeService.deleteUserRefreshTokens())
-                                 .doOnSuccess(aVoid -> log.info("The expired and revoked tokens were removed."))
-                                 .subscribe();  // You must subscribe to trigger reactive execution
+        tokensHandlingService.deleteUserTokens()
+            .then(tokensHandlingService.deleteUserRefreshTokens())
+            .doOnSuccess(aVoid -> log.info("The expired and revoked tokens were removed."))
+            .subscribe();
     }
 }

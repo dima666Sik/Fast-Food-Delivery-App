@@ -1,10 +1,13 @@
-package ua.dev.food.fast.service.models;
+package ua.dev.food.fast.service.domain.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,12 +37,14 @@ public class User implements UserDetails {
     @Column
     private String password;
 
-    @Column("role")
-    private Role role;
+    @Transient
+    private List<Permission> permissions = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return permissions.stream()
+            .map(permission -> new SimpleGrantedAuthority(permission.getRole().name()))
+            .toList();
     }
 
     @Override
@@ -74,6 +79,6 @@ public class User implements UserDetails {
 
     @Override
     public String toString() {
-        return "User(id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", role=" + role + ")";
+        return "User(id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", permissions=" + permissions + ")";
     }
 }

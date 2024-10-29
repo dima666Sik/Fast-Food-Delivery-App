@@ -1,4 +1,4 @@
-package ua.dev.food.fast.service.dto.response;
+package ua.dev.food.fast.service.domain.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

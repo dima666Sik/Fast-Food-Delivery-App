@@ -1,4 +1,4 @@
-package ua.dev.food.fast.service.models;
+package ua.dev.food.fast.service.domain.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
@@ -10,8 +10,9 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table("refresh_tokens")  // R2DBC table mapping
-public class RefreshToken {
+@Table("access_tokens")  // R2DBC table mapping
+@ToString
+public class AccessToken {
 
     @Id
     private Long id;

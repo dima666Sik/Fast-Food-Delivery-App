@@ -1,4 +1,4 @@
-package ua.dev.food.fast.service.dto.request;
+package ua.dev.food.fast.service.domain.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AuthenticationRequest {
 
-  private String email;
-  private String password;
+    private String email;
+    private String password;
 }

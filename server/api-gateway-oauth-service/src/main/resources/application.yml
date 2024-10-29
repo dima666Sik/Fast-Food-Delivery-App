@@ -15,8 +15,6 @@ spring:
           uri: lb://product-service
           predicates:
             - Path=/product-service/**
-          filters:
-            - RewritePath=/product-service/(?<remaining>.*), /${remaining}
 
         - id: order-service-route
           uri: lb://order-service
@@ -42,13 +40,13 @@ spring:
           uri: lb://chat-gpt-service
           predicates:
             - Path=/chat-gpt-service/**
-#      routes:
-#        - id: searcher-service-route
-#          uri: lb://searcher-service
-#          predicates:
-#            - Path=/api/search/**
-#          filters:
-#            - RewritePath=/api/search/(?<remaining>.*), /api/${remaining}
+  #      routes:
+  #        - id: searcher-service-route
+  #          uri: lb://searcher-service
+  #          predicates:
+  #            - Path=/api/search/**
+  #          filters:
+  #            - RewritePath=/api/search/(?<remaining>.*), /api/${remaining}
 
   config:
     import:

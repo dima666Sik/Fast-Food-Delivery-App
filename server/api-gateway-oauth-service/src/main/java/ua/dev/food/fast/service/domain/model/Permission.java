@@ -1,4 +1,4 @@
-package ua.dev.food.fast.service.models;
+package ua.dev.food.fast.service.domain.model;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -9,6 +9,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 @Table("permissions")
 public class Permission {
     @Id
