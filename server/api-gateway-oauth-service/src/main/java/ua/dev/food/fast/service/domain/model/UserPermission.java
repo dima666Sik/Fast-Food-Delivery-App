@@ -3,6 +3,7 @@ package ua.dev.food.fast.service.domain.model;
 import lombok.*;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+import reactor.core.publisher.Mono;
 
 @Builder
 @NoArgsConstructor

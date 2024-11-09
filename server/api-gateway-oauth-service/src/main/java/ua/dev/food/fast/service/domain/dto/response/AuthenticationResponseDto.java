@@ -10,12 +10,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessageResponse {
+public class AuthenticationResponseDto {
 
-    @JsonProperty("message_response")
-    private String message;
-    @JsonProperty("status_response")
-    private boolean status;
-    @JsonProperty("main_response")
-    private AuthenticationResponse mainResponse;
+    @JsonProperty("access_token")
+    private String accessToken;
+    @JsonProperty("refresh_token")
+    private String refreshToken;
 }

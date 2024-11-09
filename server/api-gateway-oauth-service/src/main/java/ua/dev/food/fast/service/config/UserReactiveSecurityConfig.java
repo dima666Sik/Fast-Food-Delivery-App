@@ -13,6 +13,7 @@ import ua.dev.food.fast.service.repository.PermissionRepository;
 import ua.dev.food.fast.service.repository.UserPermissionRepository;
 import ua.dev.food.fast.service.repository.UserRepository;
 import ua.dev.food.fast.service.util.ConstantMessageExceptions;
+import ua.dev.jwt.service.JwtDecodeService;
 
 @Configuration
 @RequiredArgsConstructor

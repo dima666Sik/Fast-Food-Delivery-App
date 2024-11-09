@@ -40,13 +40,6 @@ spring:
           uri: lb://chat-gpt-service
           predicates:
             - Path=/chat-gpt-service/**
-  #      routes:
-  #        - id: searcher-service-route
-  #          uri: lb://searcher-service
-  #          predicates:
-  #            - Path=/api/search/**
-  #          filters:
-  #            - RewritePath=/api/search/(?<remaining>.*), /api/${remaining}
 
   config:
     import:
@@ -75,7 +68,6 @@ eureka:
 back-end:
   security:
     jwt:
-      secret-key: ${SECRET_KEY}
       access:
         expiration: ${JWT_ACCESS_EXPIRATION}
       refresh:
@@ -85,9 +77,6 @@ back-end:
     custom:
       allowed:
         paths: ${ALLOWED_PATHS:}
-  urls:
-    url-all-images: ${URL_ALL_IMAGES}
-    url-path-pattern: ${URL_PATH_PATTERN}
 
 #Frontend uri
 front-end:
@@ -100,6 +89,33 @@ logging:
       springframework:
         r2dbc: DEBUG
     liquibase: DEBUG
+
+# Testing configuration
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+    import:
+      - .env[.properties]
+  r2dbc:
+    url: ${R2DBC_TEST_URL}
+    username: test
+    password: test
+  liquibase:
+    url: ${JDBC_TEST_URL}
+    user: test
+    password: test
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+back-end:
+  security:
+    jwt:
+      access:
+        expiration: ${JWT_ACCESS_EXPIRATION}
+      refresh:
+        expiration: ${JWT_REFRESH_EXPIRATION}
+---
 #  server:
 #    max-threads-for-peer-replication: 0
 #    enableSelfPreservation: false

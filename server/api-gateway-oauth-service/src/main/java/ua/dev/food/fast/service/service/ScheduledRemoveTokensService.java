@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ScheduledRemoveTokens {
-    private static final Logger log = LoggerFactory.getLogger(ScheduledRemoveTokens.class);
+public class ScheduledRemoveTokensService {
+    private static final Logger log = LoggerFactory.getLogger(ScheduledRemoveTokensService.class);
     private final TokensHandlingService tokensHandlingService;
 
     @Scheduled(fixedRate = 5000000)

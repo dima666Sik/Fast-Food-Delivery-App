@@ -13,6 +13,7 @@ databaseChangeLog:
                     foreignKeyName: user_id
                     referencedTableName: users
                     referencedColumnNames: id
+                    deleteCascade: true
               - column:
                   name: permission_id
                   type: BIGINT

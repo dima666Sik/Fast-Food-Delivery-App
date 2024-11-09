@@ -41,3 +41,4 @@ databaseChangeLog:
                     foreignKeyName: user_id
                     referencedTableName: users
                     referencedColumnNames: id
+                    deleteCascade: true

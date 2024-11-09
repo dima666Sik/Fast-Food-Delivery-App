@@ -3,6 +3,8 @@ package ua.dev.food.fast.service.util;
 public final class ConstantMessageExceptions {
 
     public static final String BEARER_HEADER = "Bearer ";
+    public static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
+    ;
 
     private ConstantMessageExceptions() {
         // Private constructor to prevent instantiation
@@ -20,19 +22,9 @@ public final class ConstantMessageExceptions {
     public static final String REFRESH_TOKEN_NOT_FOUND = "Refresh token not found";
     public static final String INCORRECT_EMAIL = "Incorrect email. User not found";
     public static final String INCORRECT_PASSWORD = "Incorrect password";
-    public static final String USER_ALREADY_EXISTS = "User with this email already exists";
-    public static final String USER_NOT_AUTHORIZED = "User is not authorized";
-    public static final String FORBIDDEN_ACCESS = "Access denied. You are not authorized to perform this action.";
-
-    public static String userRegisterSuccessful(String email) {
-        return "User with email " + email + " registered successfully!";
-    }
 
     public static String userAlreadyExists(String email) {
         return "User with email " + email + " already exists";
     }
 
-    public static String userAuthSuccessful(String email) {
-        return "User authorization " + email + " is successful";
-    }
 }

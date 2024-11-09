@@ -17,6 +17,8 @@ import ua.dev.food.fast.service.domain.model.AccessToken;
 import ua.dev.food.fast.service.domain.model.RefreshToken;
 import ua.dev.food.fast.service.domain.model.TokenType;
 import ua.dev.food.fast.service.domain.model.User;
+import ua.dev.food.fast.service.exception_handler.exception.AuthorizationTokenException;
+import ua.dev.food.fast.service.exception_handler.exception.IncorrectUserDataException;
 import ua.dev.food.fast.service.repository.AccessTokenRepository;
 import ua.dev.food.fast.service.repository.RefreshTokenRepository;
 import ua.dev.food.fast.service.util.ConstantMessageExceptions;
@@ -103,16 +105,12 @@ public class TokensHandlingService {
                     return chain.filter(exchange)
                         .contextWrite(ReactiveSecurityContextHolder.withAuthentication(authToken));
                 }
-                return setReactiveStatus(exchange,
-                    ConstantMessageExceptions.INVALID_TOKEN,
-                    HttpStatus.UNAUTHORIZED);
+                return Mono.error(new AuthorizationTokenException(ConstantMessageExceptions.INVALID_TOKEN));
             })
-            .switchIfEmpty(setReactiveStatus(exchange,
-                ConstantMessageExceptions.USER_NOT_FOUND,
-                HttpStatus.NOT_FOUND));
+            .switchIfEmpty(Mono.error(new IncorrectUserDataException(ConstantMessageExceptions.USER_NOT_FOUND)));
     }
 
-    public Mono<Void> handleExpiredToken(String jwt, ServerWebExchange exchange) {
+    public Mono<Void> handleExpiredToken(String jwt) {
         return accessTokenRepository.findByToken(jwt)
             .flatMap(accessToken -> {
 
@@ -120,31 +118,13 @@ public class TokensHandlingService {
                 return refreshTokenRepository.findValidRefreshTokenByUserId(userId)
                     .flatMap(refreshToken -> {
                         jwtService.extractUsername(refreshToken.getToken());
-                        return setReactiveStatus(exchange,
-                            ConstantMessageExceptions.ACCESS_TOKEN_HAS_EXPIRED,
-                            HttpStatus.UNAUTHORIZED);
+                        return Mono.error(new AuthorizationTokenException(ConstantMessageExceptions.ACCESS_TOKEN_HAS_EXPIRED));
                     })
-                    .switchIfEmpty(setReactiveStatus(exchange,
-                        ConstantMessageExceptions.REFRESH_TOKEN_NOT_FOUND,
-                        HttpStatus.NOT_FOUND))
+                    .switchIfEmpty(Mono.error(new AuthorizationTokenException(ConstantMessageExceptions.REFRESH_TOKEN_NOT_FOUND)))
                     .onErrorResume(ExpiredJwtException.class, e ->
-                        setReactiveStatus(exchange,
-                            ConstantMessageExceptions.ACCESS_REFRESH_TOKENS_HAVE_EXPIRED,
-                            HttpStatus.UNAUTHORIZED));
+                        Mono.error(new AuthorizationTokenException(ConstantMessageExceptions.ACCESS_REFRESH_TOKENS_HAVE_EXPIRED)))
+                    .then();
             })
-            .switchIfEmpty(setReactiveStatus(exchange,
-                ConstantMessageExceptions.ACCESS_TOKEN_NOT_FOUND,
-                HttpStatus.NOT_FOUND));
-    }
-
-    public Mono<Void> setReactiveStatus(ServerWebExchange exchange, String textMessage, HttpStatus statusCode) {
-        ServerHttpResponse response = exchange.getResponse();
-        response.setStatusCode(statusCode);
-        response.getHeaders().setContentType(MediaType.TEXT_PLAIN);
-
-        byte[] bytes = textMessage.getBytes();
-        DataBuffer buffer = response.bufferFactory().wrap(bytes);
-
-        return response.writeWith(Mono.just(buffer));
+            .switchIfEmpty(Mono.error(new AuthorizationTokenException(ConstantMessageExceptions.ACCESS_TOKEN_NOT_FOUND)));
     }
 }

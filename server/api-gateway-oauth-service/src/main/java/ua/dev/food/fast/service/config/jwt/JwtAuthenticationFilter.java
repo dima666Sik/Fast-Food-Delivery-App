@@ -10,11 +10,13 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
+import ua.dev.food.fast.service.exception_handler.exception.AuthorizationTokenException;
 import ua.dev.food.fast.service.repository.AccessTokenRepository;
 import ua.dev.food.fast.service.service.TokensHandlingService;
 import ua.dev.food.fast.service.util.ConstantMessageExceptions;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Component
@@ -34,22 +36,22 @@ public class JwtAuthenticationFilter implements WebFilter {
             return chain.filter(exchange);
         }
 
-        String authHeader = exchange.getRequest().getHeaders().getFirst("Authorization");
-        if (authHeader == null || !authHeader.startsWith(ConstantMessageExceptions.BEARER_HEADER)) {
-            return tokensHandlingService.setReactiveStatus(exchange, ConstantMessageExceptions.AUTHORIZATION_HEADER_IS_EMPTY, HttpStatus.NOT_FOUND);
+        Optional<String> authHeader = Optional.ofNullable(exchange.getRequest().getHeaders().getFirst("Authorization"));
+        if (authHeader.isEmpty() || !authHeader.get().startsWith(ConstantMessageExceptions.BEARER_HEADER)) {
+            return Mono.error(new AuthorizationTokenException(ConstantMessageExceptions.AUTHORIZATION_HEADER_IS_EMPTY));
         }
 
-        String jwt = authHeader.substring(7);
+        String jwt = authHeader.get().substring(7);
 
         return accessTokenRepository.findByToken(jwt).flatMap(token -> {
                 if (token.isExpired()) {
-                    return tokensHandlingService.setReactiveStatus(exchange, ConstantMessageExceptions.ACCESS_TOKEN_HAS_EXPIRED, HttpStatus.UNAUTHORIZED);
+                    return Mono.error(new AuthorizationTokenException(ConstantMessageExceptions.ACCESS_TOKEN_HAS_EXPIRED));
                 } else if (token.isRevoked()) {
-                    return tokensHandlingService.setReactiveStatus(exchange, ConstantMessageExceptions.ACCESS_TOKEN_HAS_REVOKED, HttpStatus.UNAUTHORIZED);
+                    return Mono.error(new AuthorizationTokenException(ConstantMessageExceptions.ACCESS_TOKEN_HAS_REVOKED));
                 } else return tokensHandlingService.handleValidToken(jwt, exchange, chain);
             })
-            .switchIfEmpty(tokensHandlingService.setReactiveStatus(exchange, ConstantMessageExceptions.ACCESS_TOKEN_NOT_FOUND, HttpStatus.NOT_FOUND))
-            .onErrorResume(ExpiredJwtException.class, e -> tokensHandlingService.handleExpiredToken(jwt, exchange));
+            .switchIfEmpty(Mono.error(new AuthorizationTokenException(ConstantMessageExceptions.ACCESS_TOKEN_NOT_FOUND)))
+            .onErrorResume(ExpiredJwtException.class, e -> tokensHandlingService.handleExpiredToken(jwt));
     }
 
 

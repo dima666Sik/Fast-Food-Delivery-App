@@ -15,7 +15,6 @@ public interface AccessTokenRepository extends ReactiveCrudRepository<AccessToke
         """)
     Mono<AccessToken> findValidAccessTokenByUserId(@Param("user_id") Long userId);
 
-    @Query("SELECT id, token, token_type, is_revoked, is_expired, user_id FROM access_tokens WHERE token = :token")
     Mono<AccessToken> findByToken(@Param("token") String token);
 
     @Query(value = """

@@ -3,37 +3,25 @@ package ua.dev.food.fast.service.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import ua.dev.food.fast.service.domain.model.User;
+import ua.dev.jwt.service.JwtDecodeService;
 
-import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 @Service
-public class JwtService {
+@RequiredArgsConstructor
+public class JwtService extends JwtDecodeService {
 
-    @Value("${back-end.security.jwt.secret-key}")
-    private String secretKey;
     @Value("${back-end.security.jwt.access.expiration}")
     private long jwtExpiration;
     @Value("${back-end.security.jwt.refresh.expiration}")
     private long refreshExpiration;
-
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
-    }
-
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
-    }
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> extraClaims = new HashMap<>();
@@ -49,7 +37,7 @@ public class JwtService {
         return generateToken(extraClaims, userDetails);
     }
 
-    public String generateToken(
+    private String generateToken(
         Map<String, Object> extraClaims,
         UserDetails userDetails
     ) {
@@ -88,20 +76,6 @@ public class JwtService {
 
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
-    }
-
-    private Claims extractAllClaims(String token) {
-        return Jwts
-            .parserBuilder()
-            .setSigningKey(getSignInKey())
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
-    }
-
-    private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
     }
 
 
