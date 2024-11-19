@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/tables/create-slider-images-table.yaml
+  - include:
+      file: db/changelog/tables/create-products-table.yaml
+  - include:
+      file: db/changelog/tables/create-product-reviews-table.yaml
+  - include:
+      file: db/changelog/tables/create-product-status-likes-table.yaml

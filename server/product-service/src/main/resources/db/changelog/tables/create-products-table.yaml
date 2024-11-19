@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0
+      author: dima
+      changes:
+        - createSequence:
+            sequenceName: product_id_sequence
+            startValue: 1
+        - createTable:
+            tableName: products
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: price
+                  type: DECIMAL(10, 2)
+              - column:
+                  name: likes
+                  type: BIGINT
+              - column:
+                  name: image01
+                  type: VARCHAR(255)
+              - column:
+                  name: image02
+                  type: VARCHAR(255)
+              - column:
+                  name: image03
+                  type: VARCHAR(255)
+              - column:
+                  name: category
+                  type: VARCHAR(255)
+              - column:
+                  name: description
+                  type: TEXT

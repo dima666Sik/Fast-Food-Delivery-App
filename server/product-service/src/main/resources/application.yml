@@ -4,8 +4,56 @@ server:
 spring:
   application:
     name: product-service
+  config:
+    import:
+      - .env[.properties]
+
+  r2dbc:
+    url: ${R2DBC_URL}
+    username: ${USER_NAME_DB}
+    password: ${PASSWORD_DB}
+
+  #Liquibase configuration
+  liquibase:
+    url: ${JDBC_URL}
+    user: ${USER_NAME_DB}
+    password: ${PASSWORD_DB}
+    enabled: true
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8083/eureka/
+
+back-end:
+  urls:
+    url-all-images: ${URL_ALL_IMAGES}
+    url-path-pattern: ${URL_PATH_PATTERN}
+
+# Testing configuration
+logging:
+  level:
+    root: INFO
+    ua.dev.food.fast.service: DEBUG
+  file:
+    name: logger.log
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+    import:
+      - .env[.properties]
+  r2dbc:
+    url: ${R2DBC_TEST_URL}
+    username: test
+    password: test
+  liquibase:
+    url: ${JDBC_TEST_URL}
+    user: test
+    password: test
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+---

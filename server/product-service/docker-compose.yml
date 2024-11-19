@@ -1,0 +1,23 @@
+services:
+
+  postgres-product-info:
+    container_name: postgres-product-info
+    image: postgres
+    volumes:
+      - postgres-product-info-data:/data/postgres
+    environment:
+      POSTGRES_USER: dimasik666
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: products_info_db
+    ports:
+      - "5434:5432"
+    networks:
+      - postgres-network
+    restart: unless-stopped
+
+volumes:
+  postgres-product-info-data:
+
+networks:
+  postgres-network:
+    external: true
