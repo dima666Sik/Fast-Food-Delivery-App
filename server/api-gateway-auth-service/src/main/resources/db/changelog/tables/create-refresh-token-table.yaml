@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: dima
+      changes:
+        - createTable:
+            tableName: refresh_tokens
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: token
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: token_type
+                  type: VARCHAR(50)
+                  defaultValue: 'BEARER'
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_revoked
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_expired
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: user_id
+                    referencedTableName: users
+                    referencedColumnNames: id
+                    deleteCascade: true

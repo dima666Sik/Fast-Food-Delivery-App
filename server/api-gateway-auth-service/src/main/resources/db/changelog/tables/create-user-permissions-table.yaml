@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0
+      author: admin
+      changes:
+        - createTable:
+            tableName: user_permissions
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: user_id
+                    referencedTableName: users
+                    referencedColumnNames: id
+                    deleteCascade: true
+              - column:
+                  name: permission_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: permission_id
+                    referencedTableName: permissions
+                    referencedColumnNames: id
