@@ -15,16 +15,16 @@
 	font-size: 1rem !important;
 	cursor: pointer;
 	color: #f7f5eb !important;
-	background-color: orangered !important;
-	border-color: orangered !important;
+	background-color: #534e4c !important;
+	border-color: #534e4c !important;
 	transition: 0.3s all ease-in;
 	border: 2px solid transparent;
 }
 
 .order__button:hover {
-	box-shadow: 0px 0px 20px 10px rgb(255, 138, 96);
-	background-color: rgb(255, 85, 23) !important;
-	border-color: rgb(255, 85, 23) !important;
+	box-shadow: 0px 0px 20px 10px rgb(148, 128, 16);
+	background-color: rgb(207, 180, 24) !important;
+	border-color: rgb(207, 180, 24) !important;
 }
 
 .block__title {

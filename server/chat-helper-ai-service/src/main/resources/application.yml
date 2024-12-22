@@ -1,0 +1,24 @@
+server:
+  port: 8165
+
+spring:
+  application:
+    name: chat-helper-ai-service
+  config:
+    import:
+      - .env[.properties]
+eureka:
+  client:
+    service-url:
+      defaultZone: ${DEFAULT_ZONE_EUREKA}
+
+openai:
+  api:
+    url: ${OPEN_AI_API_URL}
+    key: ${OPEN_AI_KEY}
+    model: gpt-4o-mini
+    temperature: 0.2
+    max-tokens: 120
+    top-p: 1
+    frequency-penalty: 0
+    presence-penalty: 0

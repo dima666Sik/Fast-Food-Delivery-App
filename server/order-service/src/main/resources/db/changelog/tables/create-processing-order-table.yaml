@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: 8
+      author: dima
+      changes:
+        - createTable:
+            tableName: processing_order
+            columns:
+              - column:
+                  name: order_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: courier_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+

@@ -1,0 +1,33 @@
+server:
+  port: 8097
+
+spring:
+  application:
+    name: email-sender-service
+  config:
+    import:
+      - .env[.properties]
+  mail:
+    host: ${MAIL_HOST}
+    protocol: ${MAIL_PROTOCOL}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+    virtual-host: /
+back-end:
+  urls:
+    url:
+      to-imgs: ${PATH_TO_PRODUCT_IMAGES}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${DEFAULT_ZONE_EUREKA}

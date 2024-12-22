@@ -3,7 +3,7 @@ import axios from "axios";
 export const logout = async (accessToken) => {
 	try {
 		const response = await axios.post(
-			`${process.env.REACT_APP_SERVER_API_URL}api/v1/auth/logout`,
+			`${process.env.REACT_APP_SERVER_API_URL}api/v2/auth/logout`,
 			{},
 			{
 				headers: {
@@ -13,6 +13,7 @@ export const logout = async (accessToken) => {
 		);
 		return response;
 	} catch (error) {
+		console.log(error.response.data.message);
 		throw error;
 	}
 };

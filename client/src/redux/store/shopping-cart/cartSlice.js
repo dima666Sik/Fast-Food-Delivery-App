@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
+import { roundToTwoDecimals } from "../../../utils/utils";
 
 const encryptData = (data) => {
 	const encryptedData = CryptoJS.AES.encrypt(
@@ -68,12 +69,16 @@ const cartSlice = createSlice({
 				];
 			} else {
 				existItem.quantity++;
-				existItem.totalPrice =
-					Number(existItem.totalPrice) + Number(newItem.price);
+				existItem.totalPrice = roundToTwoDecimals(
+					Number(existItem.totalPrice) + Number(newItem.price)
+				);
 			}
 
 			state.totalAmount = state.cartItems.reduce(
-				(total, item) => total + Number(item.price) * Number(item.quantity),
+				(total, item) =>
+					roundToTwoDecimals(
+						total + Number(item.price) * Number(item.quantity)
+					),
 				0
 			);
 
@@ -91,12 +96,16 @@ const cartSlice = createSlice({
 				state.cartItems = state.cartItems.filter((item) => item.id !== id);
 			} else {
 				existingItem.quantity--;
-				existingItem.totalPrice =
-					Number(existingItem.totalPrice) - Number(existingItem.price);
+				existingItem.totalPrice = roundToTwoDecimals(
+					Number(existingItem.totalPrice) - Number(existingItem.price)
+				);
 			}
 
 			state.totalAmount = state.cartItems.reduce(
-				(total, item) => total + Number(item.price) * Number(item.quantity),
+				(total, item) =>
+					roundToTwoDecimals(
+						total + Number(item.price) * Number(item.quantity)
+					),
 				0
 			);
 
@@ -115,7 +124,10 @@ const cartSlice = createSlice({
 			}
 
 			state.totalAmount = state.cartItems.reduce(
-				(total, item) => total + Number(item.price) * Number(item.quantity),
+				(total, item) =>
+					roundToTwoDecimals(
+						total + Number(item.price) * Number(item.quantity)
+					),
 				0
 			);
 

@@ -1,7 +1,15 @@
 package ua.dev.food.fast.service;
 
-public class Main {
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import reactivefeign.spring.config.EnableReactiveFeignClients;
+
+@SpringBootApplication(scanBasePackages = {"ua.dev.feign.clients", "ua.dev.food.fast.service"})
+@EnableReactiveFeignClients(
+    basePackages = "ua.dev.feign.clients"
+)
+public class SpringEmailSenderService {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        SpringApplication.run(SpringEmailSenderService.class, args);
     }
 }

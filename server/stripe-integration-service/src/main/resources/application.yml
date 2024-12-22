@@ -1,0 +1,23 @@
+server:
+  port: 8156
+
+spring:
+  application:
+    name: stripe-integration-service
+
+  config:
+    import:
+      - .env[.properties]
+
+
+#Eureka configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: ${DEFAULT_ZONE_EUREKA}
+
+
+#Stripe configuration
+stripe:
+  secret-key: ${STRIPE_SECRET_KEY}
+  publishable-key: ${STRIPE_PUBLISHABLE_KEY}

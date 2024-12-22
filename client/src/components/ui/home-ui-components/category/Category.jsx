@@ -12,12 +12,12 @@ const categoryData = [
 		imgUrl: categoryImg2,
 	},
 	{
-		display: "Hamburger",
-		imgUrl: categoryImg1,
-	},
-	{
 		display: "Sushi",
 		imgUrl: categoryImg3,
+	},
+	{
+		display: "Hamburger",
+		imgUrl: categoryImg1,
 	},
 ];
 

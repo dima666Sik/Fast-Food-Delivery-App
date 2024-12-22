@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: dima
+      changes:
+        - createTable:
+            tableName: basic_order
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: phone
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: order_date_arrived
+                  type: VARCHAR(20)
+              - column:
+                  name: order_time_arrived
+                  type: VARCHAR(20)
+              - column:
+                  name: total_amount
+                  type: DECIMAL(19, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: address_order_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: cash_payment
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: order_timestamp
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false

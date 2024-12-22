@@ -35,11 +35,11 @@ const Home = () => {
 			<Helmet title="Home">
 				<Slider />
 				<section className="section__container">
-					<Category />
-				</section>
-				<section className="section__container">
 					<AboutUs />
 				</section>
+				{/* <section className="section__container">
+					<Category />
+				</section> */}
 				<section className="section__container">
 					<MenuProducts />
 				</section>

@@ -1,0 +1,59 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: order-service
+  config:
+    import:
+      - .env[.properties]
+
+  r2dbc:
+    url: ${R2DBC_URL}
+    username: ${USER_NAME_DB}
+    password: ${PASSWORD_DB}
+
+  #Liquibase configuration
+  liquibase:
+    url: ${JDBC_URL}
+    user: ${USER_NAME_DB}
+    password: ${PASSWORD_DB}
+    enabled: true
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${DEFAULT_ZONE_EUREKA}
+
+# Testing configuration
+logging:
+  level:
+    root: INFO
+    ua.dev.food.fast.service: DEBUG
+  file:
+    name: logger.log
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+    import:
+      - .env[.properties]
+  r2dbc:
+    url: ${R2DBC_TEST_URL}
+    username: test
+    password: test
+  liquibase:
+    url: ${JDBC_TEST_URL}
+    user: test
+    password: test
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+---

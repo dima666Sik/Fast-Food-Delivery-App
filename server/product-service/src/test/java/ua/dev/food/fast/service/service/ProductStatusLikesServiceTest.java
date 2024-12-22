@@ -112,7 +112,7 @@ class ProductStatusLikesServiceTest {
         Long userId = 10L;
         Product product = Product.builder().id(1L).likes(100L).build();
         ProductStatusLikes productStatusLikes = ProductStatusLikes.builder().id(1L).productId(1L).status(true).build();
-        ProductStatusLikesResponseDto responseDto = ProductStatusLikesResponseDto.builder().id(1L).likes(100L)
+        ProductStatusLikesResponseDto responseDto = ProductStatusLikesResponseDto.builder().idProduct(1L).likes(100L)
             .status(true).build();
 
         // Mock behavior

@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Spinner } from "react-bootstrap";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 
 import Helmet from "../../components/helmet/Helmet";
 import ProductCard from "../../components/ui/product-card/ProductCard";
 import CommonAd from "../../components/ui/common-ad/CommonAd";
-// import products from "../../assets/fake-data/products.js";
 import "./AllFoods.css";
 import Pagination from "../../components/pagination/Pagination";
 import { useGetAllProducts } from "../../hooks/useGetAllProducts";

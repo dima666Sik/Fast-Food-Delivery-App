@@ -11,9 +11,4 @@ public class ProductBeanConfig {
     public JwtDecodeService jwtDecodeService() {
         return new JwtDecodeService();
     }
-
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
 }

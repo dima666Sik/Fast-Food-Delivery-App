@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: dima
+      changes:
+        - insert:
+            tableName: statuses
+            columns:
+              - column:
+                  name: state
+                  value: PENDING
+        - insert:
+            tableName: statuses
+            columns:
+              - column:
+                  name: state
+                  value: IN_TRANSIT
+        - insert:
+            tableName: statuses
+            columns:
+              - column:
+                  name: state
+                  value: DELIVERED

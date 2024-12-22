@@ -33,8 +33,8 @@
 
 .category span {
 	padding: 5px 10px;
-	background: #ff9c7ba3;
-	color: #212245;
+	background: #534e4ca3;
+	color: #fde4e4;
 	border-radius: 5px;
 }
 
@@ -56,13 +56,13 @@
 }
 
 .tab__active {
-	color: orangered;
+	color: #514f4e;
 }
 
 .form {
 	width: 60%;
 	margin: auto;
-	background: #ff9c7ba3;
+	background: #534e4ca3;
 	padding: 20px;
 	border-radius: 5px;
 }
@@ -105,7 +105,7 @@
 }
 
 .review {
-	background: #ff9c7ba3;
+	background: #d0c93ca3;
 	padding: 20px;
 	border-radius: 5px;
 	word-break: break-word;
@@ -114,7 +114,7 @@
 .review-container {
 	max-height: 500px;
 	overflow: auto;
-	background: mistyrose;
+	background: rgb(255, 245, 225);
 }
 .review-container-dots-list {
 	display: flex;

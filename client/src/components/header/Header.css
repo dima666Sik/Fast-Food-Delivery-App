@@ -2,9 +2,9 @@
 	color: black;
 }
 
-.bi.bi-cart-plus {
-	color: orangered;
-}
+/* .bi.bi-cart-plus {
+	color: #534e4c;
+} */
 
 .navbar__pos {
 	box-shadow: 0px 0px 15px rgba(176, 176, 176, 0.5);
@@ -20,7 +20,7 @@
 	position: absolute;
 	top: 5px;
 	right: -2px;
-	background: orangered;
+	background: #534e4c;
 	color: #f7f5eb;
 	width: 14px;
 	height: 14px;

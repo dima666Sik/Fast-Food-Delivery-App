@@ -45,7 +45,7 @@ Finally, custom hooks such as "useGetAllProducts", "useReview", "useValidationAu
 
 ### Diagram of the functional components
 
-![Diagram of the functional components](github-files/functional-components-diagram.png)
+![Diagram of the functional components](../github-files/Client_Components_Diagram.drawio.png)
 
 ## Usage
 
@@ -85,7 +85,8 @@ npm start
 ✔️ Cart and checkout page <br>
 ✔️ Contact page <br>
 ✔️ Login and Register page + Data Validation<br>
-✔️ Modern minimalist UI
+✔️ Crart components to analitics
+✔️ Stripe components to payment
 
 ### Markers
 

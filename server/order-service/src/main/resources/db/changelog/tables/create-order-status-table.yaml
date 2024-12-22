@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: 6
+      author: dima
+      changes:
+        - createTable:
+            tableName: status_order
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: order_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false

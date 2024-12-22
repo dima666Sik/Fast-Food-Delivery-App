@@ -38,26 +38,33 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     @Transactional
-    public Mono<AuthenticationResponseDto> register(RegisterRequestDto request) {
+    public Mono<AuthenticationResponseDto> registerUser(RegisterRequestDto request) {
+        return registerByRoles(request, Role.USER);
+    }
+
+    @Override
+    @Transactional
+    public Mono<AuthenticationResponseDto> registerAdmin(RegisterRequestDto request) {
+        return registerByRoles(request, Role.ADMIN);
+    }
+
+    @Override
+    public Mono<AuthenticationResponseDto> registerCourier(RegisterRequestDto request) {
+        return registerByRoles(request, Role.COURIER);
+    }
+
+    private Mono<AuthenticationResponseDto> registerByRoles(RegisterRequestDto request, Role role) {
         return userRepository.findByEmail(request.getEmail())
             .flatMap(user -> Mono.<AuthenticationResponseDto>error(new UserAlreadyExistsException(ConstantMessageExceptions.userAlreadyExists(user.getEmail()))))
             .switchIfEmpty(Mono.defer(() -> {
-                var user = User.builder().firstName(request.getFirstName())
-                    .lastName(request.getLastName()).email(request.getEmail())
-                    .password(passwordEncoder.encode(request.getPassword()))
-                    .permissions(List.of(Permission.builder().role(Role.USER).build()))
-                    .build();
+                var user = User.builder().firstName(request.getFirstName()).lastName(request.getLastName())
+                    .email(request.getEmail()).password(passwordEncoder.encode(request.getPassword()))
+                    .permissions(List.of(Permission.builder().role(role).build())).build();
                 return userRepository.save(user).flatMap(savedUser -> {
-                    List<Mono<UserPermission>> listUserPermissionsMonos = user.getPermissions()
-                        .stream()
-                        .map(permission -> permissionRepository.findPermissionByRole(permission.getRole()
-                                .name())
-                            .map(foundPermission -> UserPermission.builder()
-                                .userId(user.getId())
-                                .permissionId(foundPermission.getId())
-                                .build()))
-                        .toList();
-
+                    List<Mono<UserPermission>> listUserPermissionsMonos = user.getPermissions().stream()
+                        .map(permission -> permissionRepository.findPermissionByRole(permission.getRole().name())
+                            .map(foundPermission -> UserPermission.builder().userId(user.getId())
+                                .permissionId(foundPermission.getId()).build())).toList();
                     var jwtToken = jwtService.generateToken(savedUser);
                     var refreshToken = jwtService.generateRefreshToken(savedUser);
 
@@ -68,9 +75,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     return permissionsFlux.flatMap(userPermissionRepository::save) // Save each UserPermission reactively
                         .then(changeStatusTokensService.saveUserToken(savedUser, jwtToken))
                         .then(changeStatusTokensService.saveUserRefreshToken(savedUser, refreshToken))
-                        .thenReturn(AuthenticationResponseDto.builder()
-                            .accessToken(jwtToken)
-                            .refreshToken(refreshToken)
+                        .thenReturn(AuthenticationResponseDto.builder().accessToken(jwtToken).refreshToken(refreshToken)
                             .build());
                 });
             }));
@@ -90,7 +95,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .flatMap(permissions -> {
                     // Set permissions on the user
                     user.setPermissions(permissions);
-
                     // Generate tokens
                     var jwtToken = jwtService.generateToken(user);
                     var refreshToken = jwtService.generateRefreshToken(user);
@@ -100,9 +104,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         .then(changeStatusTokensService.expireAllUserRefreshTokens(user))
                         .then(changeStatusTokensService.saveUserToken(user, jwtToken))
                         .then(changeStatusTokensService.saveUserRefreshToken(user, refreshToken))
-                        .thenReturn(AuthenticationResponseDto.builder()
-                            .accessToken(jwtToken)
-                            .refreshToken(refreshToken)
+                        .thenReturn(AuthenticationResponseDto.builder().accessToken(jwtToken).refreshToken(refreshToken)
                             .build());
                 });
 
@@ -113,22 +115,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional
     public Mono<AuthenticationResponseDto> refreshTokens(ServerHttpRequest request) {
         final String authHeader = request.getHeaders().getFirst("Authorization");
-        final Optional<String> jwt = (authHeader != null && authHeader.startsWith(ConstantMessageExceptions.BEARER_HEADER))
-            ? Optional.of(authHeader.substring(7)) : Optional.empty();
+        final Optional<String> jwt = (authHeader != null && authHeader.startsWith(ConstantMessageExceptions.BEARER_HEADER)) ? Optional.of(authHeader.substring(7)) : Optional.empty();
 
         return jwt.map(s -> accessTokenRepository.findByToken(s).flatMap(accessToken -> {
-                    var userId = accessToken.getUserId();
-                    return refreshTokenRepository.findValidRefreshTokenByUserId(userId)
-                        .flatMap(refreshToken -> userRepository.findById(userId)
-                            .flatMap(user -> {
-                                if (jwtService.isTokenValid(refreshToken.getToken(), user)) {
+                var userId = accessToken.getUserId();
+                return refreshTokenRepository.findValidRefreshTokenByUserId(userId)
+                    .flatMap(refreshToken -> userRepository.findById(userId).flatMap(user -> {
+                        if (jwtService.isTokenValid(refreshToken.getToken(), user)) {
+                            return userPermissionRepository.findAllByUserId(userId)
+                                .flatMap(userPermission -> permissionRepository.findById(userPermission.getPermissionId()))
+                                .collectList().flatMap(permissions -> {
+                                    user.setPermissions(permissions);
                                     return expireAndGenerateNewTokens(user);
-                                } else {
-                                    return Mono.error(new AuthorizationTokenException(ConstantMessageExceptions.INVALID_TOKEN));
-                                }
-                            }));
-                })
-                .switchIfEmpty(Mono.error(new AuthorizationTokenException(ConstantMessageExceptions.ACCESS_TOKEN_NOT_FOUND))))
+                                });
+                        } else {
+                            return Mono.error(new AuthorizationTokenException(ConstantMessageExceptions.INVALID_TOKEN));
+                        }
+                    }));
+            }).switchIfEmpty(Mono.error(new AuthorizationTokenException(ConstantMessageExceptions.ACCESS_TOKEN_NOT_FOUND))))
             .orElseGet(() -> Mono.error(new AuthorizationTokenException(ConstantMessageExceptions.AUTHORIZATION_HEADER_IS_EMPTY)));
 
     }
@@ -136,13 +140,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public Mono<UserDto> getUserByUserId(Long userId) {
         return userRepository.findById(userId)
-            .map(user -> UserDto.builder()
-                .email(user.getEmail())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .build())
+            .map(user -> UserDto.builder().email(user.getEmail()).firstName(user.getFirstName())
+                .lastName(user.getLastName()).build())
             .switchIfEmpty(Mono.error(new IncorrectUserDataException(ConstantMessageExceptions.USER_NOT_FOUND)));
     }
+
 
     private Mono<AuthenticationResponseDto> expireAndGenerateNewTokens(User user) {
         var newAccessToken = jwtService.generateToken(user);
@@ -152,9 +154,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             .then(changeStatusTokensService.expireAllUserRefreshTokens(user))
             .then(changeStatusTokensService.saveUserToken(user, newAccessToken))
             .then(changeStatusTokensService.saveUserRefreshToken(user, newRefreshToken))
-            .map(saved -> AuthenticationResponseDto.builder()
-                .accessToken(newAccessToken)
-                .refreshToken(newRefreshToken)
+            .map(saved -> AuthenticationResponseDto.builder().accessToken(newAccessToken).refreshToken(newRefreshToken)
                 .build());
     }
 

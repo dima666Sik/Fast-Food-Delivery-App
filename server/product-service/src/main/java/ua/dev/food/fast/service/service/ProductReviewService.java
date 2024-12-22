@@ -66,4 +66,21 @@ public class ProductReviewService {
                 .flatMap(productReviewRepository::delete));
     }
 
+    @Transactional
+    public Mono<Void> editProductReview(String authHeader, Long productId, Long productReviewId, String productReviewMsg) {
+        Long userId = jwtDecodeService.extractUserDataFromBearerHeader(authHeader);
+
+        return productRepository.findById(productId)
+            .switchIfEmpty(Mono.error(new ResourceNotFoundException(MessageConstants.PRODUCT_NOT_FOUND)))
+            .flatMap(product ->
+                productReviewRepository.findByIdAndProductIdAndUserId(productReviewId, product.getId(), userId)
+                    .flatMap(productReview -> {
+                        productReview.setReview(productReviewMsg);
+                        return productReviewRepository.save(productReview);
+                    })
+                    .switchIfEmpty(Mono.error(new ResourceNotFoundException(MessageConstants.PRODUCT_REVIEW_NOT_FOUND)))
+            )
+            .then();
+    }
+
 }

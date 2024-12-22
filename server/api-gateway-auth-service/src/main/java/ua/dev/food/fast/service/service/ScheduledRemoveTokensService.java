@@ -6,6 +6,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+/***
+ * Service responsible for periodically removing expired and revoked tokens.
+ * This class uses a fixed-rate scheduler to execute the cleanup operation.
+ */
 @Service
 @RequiredArgsConstructor
 public class ScheduledRemoveTokensService {

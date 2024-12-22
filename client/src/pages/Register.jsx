@@ -78,14 +78,14 @@ const Register = (props) => {
 		try {
 			const response = await register(userData);
 
-			if (response.status === 200) {
+			if (response.status === 201) {
 				console.log(userData);
 				console.log("Register in:", response.data);
 				handleLoginClick();
 			}
 		} catch (error) {
 			console.error(error);
-			setShowTextModal(error.response.data.message_response);
+			setShowTextModal(error.response.data.message);
 			setShowModal(true);
 		}
 	};
@@ -196,8 +196,8 @@ const Register = (props) => {
 								className="text-light"
 								variant="primary"
 								style={{
-									backgroundColor: "orangered",
-									borderColor: "orangered",
+									backgroundColor: "green",
+									borderColor: "green",
 								}}
 								onClick={handleRegisterClick}
 							>

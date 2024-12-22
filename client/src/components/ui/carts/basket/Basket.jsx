@@ -25,7 +25,7 @@ const Basket = () => {
 			handleToggleVisibleCart();
 		}
 	};
-
+	console.log("mmmm");
 	return (
 		<div className="cart__container" onClick={handleClickOutside}>
 			<ListGroup className="cart">

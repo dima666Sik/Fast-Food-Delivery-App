@@ -26,13 +26,13 @@
 .product__price {
 	font-weight: 600;
 	font-size: 1.2rem;
-	color: orangered;
+	color: #514f4e;
 }
 
 .addToCart__btn {
 	border: none;
 	padding: 7px 25px;
-	background: orangered;
+	background: #514f4e;
 	color: #f7f5eb;
 	border-radius: 5px;
 	font-size: 0.9rem;

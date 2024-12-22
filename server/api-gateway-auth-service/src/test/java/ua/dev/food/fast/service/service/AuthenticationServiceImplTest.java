@@ -66,7 +66,7 @@ class AuthenticationServiceImplTest {
     void testRegisterWhenUserAlreadyExists() {
         when(userRepository.findByEmail(registerRequestDto.getEmail())).thenReturn(Mono.just(user));
 
-        Mono<AuthenticationResponseDto> result = authenticationService.register(registerRequestDto);
+        Mono<AuthenticationResponseDto> result = authenticationService.registerUser(registerRequestDto);
 
         StepVerifier.create(result)
             .expectErrorMatches(throwable -> throwable instanceof UserAlreadyExistsException && throwable.getMessage()
@@ -89,7 +89,7 @@ class AuthenticationServiceImplTest {
         when(changeStatusTokensService.saveUserToken(user, "accessToken")).thenReturn(Mono.empty());
         when(changeStatusTokensService.saveUserRefreshToken(user, "refreshToken")).thenReturn(Mono.empty());
 
-        Mono<AuthenticationResponseDto> result = authenticationService.register(registerRequestDto);
+        Mono<AuthenticationResponseDto> result = authenticationService.registerUser(registerRequestDto);
 
         StepVerifier.create(result).assertNext(response -> {
             assertEquals("accessToken", response.getAccessToken());

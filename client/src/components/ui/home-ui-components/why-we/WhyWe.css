@@ -1,9 +1,9 @@
 .bi.bi-check2-circle {
-	color: orangered;
+	color: rgb(255, 187, 0);
 }
 
 .fast__food__title span {
-	color: orangered;
+	color: rgb(255, 187, 0);
 }
 
 .fast__food__desc {
@@ -18,7 +18,7 @@
 
 .choose__us__title i {
 	font-weight: 500 !important;
-	color: orangered;
+	color: rgb(255, 187, 0);
 }
 
 .choose__us__desc {

@@ -19,7 +19,7 @@ const initialState = {
 	firstName: null,
 	lastName: null,
 	email: null,
-	role: null,
+	roles: [],
 };
 
 export const axiosLogout = createAsyncThunk(
@@ -34,6 +34,7 @@ export const axiosLogout = createAsyncThunk(
 				dispatch(cartActionsLiked.clearCartsLiked());
 			}
 		} catch (error) {
+			console.log(error.message);
 			return rejectWithValue({
 				message: error.message,
 				code: error.code,
@@ -57,7 +58,10 @@ const userSlice = createSlice({
 				state.firstName = decodedToken.first_name;
 				state.lastName = decodedToken.last_name;
 				state.email = decodedToken.sub;
-				state.role = decodedToken.role;
+				state.roles = Array.isArray(decodedToken.roles)
+					? decodedToken.roles
+					: [decodedToken.roles];
+				console.log(state.roles, state.email);
 			}
 			setUserAccessTokenFunc(state.accessToken);
 			console.log("setUser: ", { ...state });
@@ -69,7 +73,7 @@ const userSlice = createSlice({
 			state.firstName = null;
 			state.lastName = null;
 			state.email = null;
-			state.role = null;
+			state.roles = [];
 			state.isAuthenticated = false;
 			setUserAccessTokenFunc(state.accessToken);
 			console.log("clearUser", state.accessToken, state.isAuthenticated);

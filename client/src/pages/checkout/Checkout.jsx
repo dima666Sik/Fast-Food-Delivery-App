@@ -1,30 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Col, Container, Row, Spinner } from "react-bootstrap";
 import PhoneInput from "react-phone-input-2";
-// import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import "react-phone-input-2/lib/style.css";
-import Helmet from "../../components/helmet/Helmet";
-import CommonAd from "../../components/ui/common-ad/CommonAd";
-import ModalAlert from "../../components/alerts/ModalAlert";
-import AlertText from "../../components/alerts/AlertText";
-import { useValidationAuthForms } from "../../hooks/useValidationAuthForms";
-import "./Checkout.css";
-import axios from "axios";
-import {
-	axiosLogout,
-	clearUser,
-	setUser,
-} from "../../redux/store/user/userSlice";
-import { cartActions } from "../../redux/store/shopping-cart/cartSlice";
-import { cartActionsLiked } from "../../redux/store/shopping-cart/cartsLikedSlice";
-import { useValidFormsBtn } from "../../hooks/useValidFormsBtn";
-import { refresh } from "../../actions/post/refresh";
 import {
 	addOrderPurchaseGuest,
 	addOrderPurchaseUser,
 } from "../../actions/post/addOrderPurchase";
+import { refresh } from "../../actions/post/refresh";
+import AlertText from "../../components/alerts/AlertText";
+import ModalAlert from "../../components/alerts/ModalAlert";
+import Helmet from "../../components/helmet/Helmet";
+import CommonAd from "../../components/ui/common-ad/CommonAd";
+import { useValidationAuthForms } from "../../hooks/useValidationAuthForms";
+import { useValidFormsBtn } from "../../hooks/useValidFormsBtn";
+import { axiosLogout, setUser } from "../../redux/store/user/userSlice";
+import { roundToTwoDecimals } from "../../utils/utils";
+import "./Checkout.css";
+import { Elements } from "@stripe/react-stripe-js";
+import CheckoutStripeForm from "./CheckoutStripeForm";
+import { loadStripe } from "@stripe/stripe-js";
 
 const Checkout = () => {
 	const [delivery, setDelivery] = useState(true);
@@ -42,7 +38,9 @@ const Checkout = () => {
 
 	const cartTotalAmount = useSelector((state) => state.cart.totalAmount);
 	const [shippingCost, setShippingCost] = useState("40");
-	const totalAmount = cartTotalAmount + Number(shippingCost);
+	const totalAmount = roundToTwoDecimals(
+		cartTotalAmount + Number(shippingCost)
+	);
 	const [showModal, setShowModal] = useState(false);
 
 	const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
@@ -56,6 +54,7 @@ const Checkout = () => {
 
 	const { formValid, setFormValid } = useValidFormsBtn();
 	const [isLoadingSender, setIsLoadingSender] = useState(false);
+	const [isCashPayment, setIsCashPayment] = useState(true);
 
 	const {
 		email,
@@ -173,7 +172,7 @@ const Checkout = () => {
 				total_amount: totalAmount,
 				delivery: delivery,
 
-				cash_payment: true,
+				cash_payment: isCashPayment,
 
 				purchaseItems: newList,
 			};
@@ -212,8 +211,8 @@ const Checkout = () => {
 					///////////////////////////
 					console.log(error, accessToken);
 					if (
-						error.response.data ===
-						"Access token was expired! Refresh is valid!"
+						error.response.data.message === "Access token has expired" ||
+						error.response.data.message === "Access token has revoked"
 					) {
 						try {
 							const response = await refresh(accessToken);
@@ -239,15 +238,14 @@ const Checkout = () => {
 					}
 
 					if (
-						error.response.data ===
-							"You need to reauthorize! Tokens all were expired. You will be much to authorization!" ||
-						error.response.data ===
-							"All Tokens (access & refresh) were expired! Please generate news tokens!" ||
-						error.response.data === "Valid Refresh token was expired..." ||
-						error.response.data === "Tokens from client is bad!"
+						error.response.data.message ===
+							"Access & Refresh tokens have expired" ||
+						error.response.data.message === "Access token not found" ||
+						error.response.data.message === "Refresh token not found" ||
+						error.response.data.message === "Invalid token"
 					) {
 						setShowTextModal(
-							"You don't have rights to review, refresh token was expired. Please Authorization in this Application..."
+							"You don't have rights to review. Please Authorization in this Application..."
 						);
 						setShowModal(true);
 						dispatch(
@@ -278,8 +276,7 @@ const Checkout = () => {
 				} catch (error) {
 					console.log(error);
 					console.error(error.response);
-					console.error(error.response.data);
-					console.error(error.response.data.access_token);
+					console.error(error.response.data.message);
 				}
 			}
 		}
@@ -301,6 +298,45 @@ const Checkout = () => {
 
 		return `${year}-${month}-${day}`;
 	};
+
+	const [stripePromise, setStripePromise] = useState(null);
+	const [clientSecret, setClientSecret] = useState("");
+
+	useEffect(() => {
+		fetch(`${process.env.REACT_APP_SERVER_API_URL}api/v2/payment/config`)
+			.then(async (r) => {
+				console.log(r);
+				const { publishableKey } = await r.json();
+				console.log("publishableKey", publishableKey);
+				setStripePromise(loadStripe(publishableKey));
+			})
+			.catch((err) => {
+				console.error("Error creating payment intent:", err);
+			});
+	}, []);
+
+	useEffect(() => {
+		console.log(totalAmount);
+		fetch(
+			`${process.env.REACT_APP_SERVER_API_URL}api/v2/payment/create-payment-intent`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json", // Указывает, что тело запроса в формате JSON
+				},
+				body: JSON.stringify({ amount: totalAmount }), // Передаём примерную сумму в центах
+			}
+		)
+			.then(async (result) => {
+				console.log(result);
+				const { client_secret } = await result.json();
+				console.log("clientSecret", client_secret);
+				setClientSecret(client_secret);
+			})
+			.catch((err) => {
+				console.error("Error creating payment intent:", err);
+			});
+	}, [totalAmount]);
 
 	return (
 		<Helmet title="Checkout">
@@ -327,6 +363,22 @@ const Checkout = () => {
 							>
 								Delivery
 							</button>
+							<div className="payment-method-buttons">
+								<button
+									className={`addToCart__btn mb-4 ${isCashPayment && "active"}`}
+									onClick={() => setIsCashPayment(true)}
+								>
+									Cash Payment
+								</button>
+								<button
+									className={`addToCart__btn mb-4 ms-4 ${
+										!isCashPayment && "active"
+									}`}
+									onClick={() => setIsCashPayment(false)}
+								>
+									Card Payment
+								</button>
+							</div>
 							<h4 className="mb-4">Shipping Address</h4>
 							<h6 className="mb-4">Basic Info:</h6>
 							<form className="checkout__form">
@@ -480,7 +532,7 @@ const Checkout = () => {
 									<div className="text-center">
 										<Spinner />
 									</div>
-								) : (
+								) : isCashPayment ? (
 									<button
 										disabled={!formValid}
 										onClick={handleDoOrder}
@@ -488,6 +540,8 @@ const Checkout = () => {
 									>
 										Payment
 									</button>
+								) : (
+									<></>
 								)}
 							</form>
 						</Col>
@@ -508,7 +562,20 @@ const Checkout = () => {
 							</div>
 							<div className="checkout__bill mt-5">
 								<h6 className="d-flex justify-content-center">
-									<span>Cash Payment on the spot</span>
+									{isCashPayment ? (
+										"Cash Payment on the spot"
+									) : (
+										<>
+											{clientSecret && stripePromise && (
+												<Elements
+													stripe={stripePromise}
+													options={{ clientSecret }}
+												>
+													<CheckoutStripeForm handleDoOrder={handleDoOrder} />
+												</Elements>
+											)}
+										</>
+									)}
 								</h6>
 							</div>
 						</Col>

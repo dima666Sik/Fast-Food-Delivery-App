@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: dima
+      changes:
+        - createTable:
+            tableName: basic_order_guest
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: contact_email
+                  type: VARCHAR(255)
+              - column:
+                  name: basic_order_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false

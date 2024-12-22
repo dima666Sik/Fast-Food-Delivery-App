@@ -5,7 +5,6 @@
 - [Description](#description)
 - [Technologies](#technologies)
 - [Project Structure](#project-structure)
-- [Usage](#usage)
 - [Author Info](#author-info)
 
 ---
@@ -15,9 +14,10 @@
 ### Preview, I hope you enjoy it 😊
 
 Welcome to server part of the Food Ordering App that consists of APIs for interacting with the client side application.
-For the backend, we used the Spring Boot, Spring Security, Hibernate frameworks and part of Spring Data framework namely
-Spring Data JPA.
-The application uses the REST architectural approach, which involves using HTTP methods to interact with resources on
+For the backend, we used the WebFlux, Liquibase, Spring Security, R2DBC PostgreSql,
+Stripe API, RabbitMQ, OpenAI API, Thymeleaf, Eureka, Gmail SMTP Server, Docker.
+The application uses the REST microservices architectural approach, which involves using HTTP methods to interact with
+resources on
 the server.
 All technologies you can see in the part of this README.md under the heading [Technologies](#technologies).
 
@@ -26,60 +26,77 @@ All technologies you can see in the part of this README.md under the heading [Te
 ## Technologies
 
 - `Java Core`
-- `Spring Core`
-- `Spring Boot`
+- `WebFlux`
+- `Liquibase`
 - `Spring Security`
-- `Spring Data JPA`
-- `JavaMail library`
-- `lombok`
-- `RDBMS MySQL`
+- `R2DBC PostgreSQL`
+- `Stripe API`
+- `RabbitMQ`
+- `OpenAI API`
+- `Thymeleaf`
+- `Eureka`
+- `JavaMail library(Gmail SMTP Server)`
+- `Docker`
 - `Maven`
+- `lombok`
 
 ---
 
 ## Project Structure
 
-- The application consists of three package, and each module contains of layers.
-- An app modules:
-    - `auth`: This package is responsible for authentication-related functionality, including user registration and
-      login. To ensure security, we use JWT tokens to authenticate users during requests to the server;
-    - `general`: The "general" package contains classes that are responsible for most of the functionality of the application,
-      the controllers process HTTP requests after the user successfully passes the filter.
-      Examples include: requests to process products, slides, product preferences, product reviews,
-      product sorting by certain parameters, and more.
-      It includes common business logic, and other essential components.
-    - `mail`: This package contains classes that are responsible for interaction with mail.
+- The microservices mainly consist of three layers (controller, service, repository).
+- `Gateway-Auth-Service`: Manages authentication, authorization, and request routing between services.
+- `Product-Service`: Handles product management, including retrieving product details and serving static files.
+- `Email-Sender-Service`: Manages email notifications and communication with users.
+- `Order-Service`: Processes customer orders, including order creation and tracking.
+- `Stripe-Integration-Service`: Facilitates seamless payment processing through Stripe API.
+- `Chat-Helper-AI-Service`: Integrates with an AI assistant to provide interactive customer support and enhanced user
+  experience.
+
+### Usecase Diagram
+
+![Usecase Diagram](../github-files/Usecase%20Diagram%20-%20full_large.drawio.png)
 
 ### The architecture of the backend of the web application
 
 - The architecture of the backend of the web application:<br>
-  ![The architecture](src/main/resources/github-files/server-part-of-app-diagram.png)
-  - The web layer is the top layer of the architecture and is responsible for interacting with the user and processing incoming requests. The web layer processes HTTP requests, validates and processes input data, executes business logic, and returns the correct response to the user. 
-  - The service layer is responsible for implementing the business logic of the application. At this level, services can interact with the repository level to obtain the necessary data and ensure the execution of business rules. 
-  - The repository level is the lowest in the architecture and is responsible for storing and accessing application data.
+  ![The architecture](../github-files/Architecture%20diagram.drawio.png)
+    - About the microservices you can check on [Project Structure](#project-structure).
+    - About layers:
+        - The web layer is the top layer of the architecture and is responsible for interacting with the user and
+          processing
+          incoming requests. The web layer processes HTTP requests, validates and processes input data, executes
+          business
+          logic, and returns the correct response to the user.
+        - The service layer is responsible for implementing the business logic of the application. At this level,
+          services
+          can interact with the repository level to obtain the necessary data and ensure the execution of business
+          rules.
+        - The repository level is the lowest in the architecture and is responsible for storing and accessing
+          application
+          data.
 
 ### Web application database diagram
-The Hibernate used as part of Spring Data JPA, which provides an abstraction for working with databases through JPA (Java Persistence API).
-JPA defines a standard for working with object-relational mapping (ORM) in Java applications. JpaRepository is part of Spring Data JPA that provides an abstraction for working with databases.
-- Web application database:<br>
-  ![Database](src/main/resources/github-files/database-diagram.png)
 
----
+The application uses R2DBC PostgreSQL as the databases,
+leveraging its reliability and scalability for handling complex data operations.
+The databases include well-structured schemas:
 
-## Usage
+- `Users Schema`: Stores user data, including credentials, roles, and authentication details.
+- `Products Schema`: Manages product information, such as names, descriptions, prices, and images, etc.
+- `Orders Schema`: Order details, statuses, and associated user and product data, etc.
 
-1. I would you recommended to clone my project from the GitHub.
-   <br> If you want to do this, please use this command:
+#### Web application database (users_info_db):
 
-```md  
-git clone https://github.com/dima666Sik/Fast-Food-Delivery-App.git
-```
+![Database](../github-files/gateway_db_diagram.drawio.png)
 
-2. To run this project, you will need to install:
-    - JDK 17 or higher;
-    - MySQL RDBMS.
-3. If you want to start this project please change the `application.properties` on valid data.
+#### Web application database (products_info_db):
 
+![Database](../github-files/product_db_diagram.drawio.png)
+
+#### Web application database (orders_info_db):
+
+![Database](../github-files/orders_db_diagram.drawio.png)
 ---
 
 ## Author Info

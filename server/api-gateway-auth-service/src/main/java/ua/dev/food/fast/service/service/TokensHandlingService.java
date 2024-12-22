@@ -24,6 +24,10 @@ import ua.dev.food.fast.service.repository.AccessTokenRepository;
 import ua.dev.food.fast.service.repository.RefreshTokenRepository;
 import ua.dev.food.fast.service.util.ConstantMessageExceptions;
 
+/***
+ * Service for handling operations related to access and refresh tokens.
+ * Provides functionality for managing token expiration, deletion, and validation.
+ */
 @Service
 @RequiredArgsConstructor
 @Log4j2
@@ -34,6 +38,12 @@ public class TokensHandlingService {
     private final ReactiveUserDetailsService userDetailsService;
     private final JwtService jwtService;
 
+    /**
+     * Expires all valid refresh tokens associated with the specified user.
+     *
+     * @param user the user whose refresh tokens should be expired
+     * @return a {@link Mono<Void>} indicating completion
+     */
     public Mono<Void> expireAllUserRefreshTokens(User user) {
         return refreshTokenRepository.findValidRefreshTokenByUserId(user.getId())
             .flatMap(validRefreshUserToken -> {
@@ -42,6 +52,12 @@ public class TokensHandlingService {
             });
     }
 
+    /**
+     * Expires all valid access tokens associated with the specified user.
+     *
+     * @param user the user whose access tokens should be expired
+     * @return a {@link Mono<Void>} indicating completion
+     */
     public Mono<Void> expireAllUserTokens(User user) {
         return accessTokenRepository.findValidAccessTokenByUserId(user.getId())
             .flatMap(validAccessUserToken -> {
@@ -50,6 +66,11 @@ public class TokensHandlingService {
             });
     }
 
+    /**
+     * Deletes all expired and revoked access tokens.
+     *
+     * @return a {@link Mono<Void>} indicating completion
+     */
     public Mono<Void> deleteUserTokens() {
         return accessTokenRepository.findAllExpiredAndRevokedTokens()
             .collectList()
@@ -61,6 +82,11 @@ public class TokensHandlingService {
             });
     }
 
+    /**
+     * Deletes all expired and revoked refresh tokens.
+     *
+     * @return a {@link Mono<Void>} indicating completion
+     */
     public Mono<Void> deleteUserRefreshTokens() {
         return refreshTokenRepository.findAllExpiredAndRevokedRefreshTokens()
             .collectList()
@@ -72,6 +98,13 @@ public class TokensHandlingService {
             });
     }
 
+    /**
+     * Saves a new access token for the specified user.
+     *
+     * @param user     the user for whom the token is being saved
+     * @param jwtToken the JWT string representing the token
+     * @return a {@link Mono<AccessToken>} containing the saved token
+     */
     public Mono<AccessToken> saveUserToken(User user, String jwtToken) {
         var token = AccessToken.builder()
             .userId(user.getId())
@@ -83,6 +116,13 @@ public class TokensHandlingService {
         return accessTokenRepository.save(token);
     }
 
+    /**
+     * Saves a new refresh token for the specified user.
+     *
+     * @param user     the user for whom the token is being saved
+     * @param jwtToken the JWT string representing the token
+     * @return a {@link Mono<RefreshToken>} containing the saved token
+     */
     public Mono<RefreshToken> saveUserRefreshToken(User user, String jwtToken) {
         var token = RefreshToken.builder()
             .userId(user.getId())
@@ -94,24 +134,41 @@ public class TokensHandlingService {
         return refreshTokenRepository.save(token);
     }
 
+    /**
+     * Handles a valid token by authenticating the user and continuing the filter chain.
+     *
+     * @param jwt      the JWT token to validate
+     * @param exchange the current server web exchange
+     * @param chain    the filter chain to continue processing
+     * @return a {@link Mono<Void>} indicating completion or an error
+     */
     public Mono<Void> handleValidToken(String jwt, ServerWebExchange exchange, WebFilterChain chain) {
-        String userEmail = jwtService.extractUsername(jwt);
-        return userDetailsService.findByUsername(userEmail)
-            .doOnNext(user -> log.info("Founded user: " + user.getUsername()))
-            .switchIfEmpty(Mono.error(new IncorrectUserDataException(ConstantMessageExceptions.USER_NOT_FOUND)))
-            .flatMap(userDetails -> {
-                if (jwtService.isTokenValid(jwt, userDetails)) {
-                    UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        try {
+            String userEmail = jwtService.extractUsername(jwt);
+            return userDetailsService.findByUsername(userEmail)
+                .doOnNext(user -> log.info("Founded user: " + user.getUsername()))
+                .switchIfEmpty(Mono.error(new IncorrectUserDataException(ConstantMessageExceptions.USER_NOT_FOUND)))
+                .flatMap(userDetails -> {
+                    if (jwtService.isTokenValid(jwt, userDetails)) {
+                        UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-                    return chain.filter(exchange)
-                        .contextWrite(ReactiveSecurityContextHolder.withAuthentication(authToken));
-                }
-                return Mono.error(new AuthorizationTokenException(ConstantMessageExceptions.INVALID_TOKEN));
-            });
-
+                        return chain.filter(exchange)
+                            .contextWrite(ReactiveSecurityContextHolder.withAuthentication(authToken));
+                    }
+                    return Mono.error(new AuthorizationTokenException(ConstantMessageExceptions.INVALID_TOKEN));
+                });
+        } catch (ExpiredJwtException e) {
+            return Mono.error(new AuthorizationTokenException(ConstantMessageExceptions.ACCESS_TOKEN_HAS_EXPIRED));
+        }
     }
 
+    /**
+     * Handles an expired access token by checking for a valid refresh token and taking appropriate actions.
+     *
+     * @param jwt the expired JWT token
+     * @return a {@link Mono<Void>} indicating completion or an error
+     */
     public Mono<Void> handleExpiredToken(String jwt) {
         return accessTokenRepository.findByToken(jwt)
             .flatMap(accessToken -> {

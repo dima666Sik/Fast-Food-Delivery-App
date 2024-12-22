@@ -13,7 +13,7 @@ export const useGetAllProducts = () => {
 		const fetchData = async () => {
 			axios
 				.get(
-					`${process.env.REACT_APP_SERVER_API_URL}api/v1/foods/get-all-products`
+					`${process.env.REACT_APP_SERVER_API_URL}api/v2/product/foods/get-all-products`
 				)
 				.then((response) => {
 					// setTimeout(() => {

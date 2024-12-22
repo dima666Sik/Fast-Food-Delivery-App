@@ -6,6 +6,8 @@ target/
 .mvn
 mvnw
 mvnw.cmd
+*.log
+*.log.*.gz
 
 
 ### STS ###

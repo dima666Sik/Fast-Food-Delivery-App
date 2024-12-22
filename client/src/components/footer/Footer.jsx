@@ -107,7 +107,7 @@ const Footer = () => {
 				<Row className="mt-5">
 					<Col lg="6" md="6">
 						<p className="copyright__text">
-							Copyright - 2023, website made by Dmytro Kohol. All Rights
+							Copyright - 2024, website made by Dmytro Kohol. All Rights
 							Reserved.
 						</p>
 					</Col>

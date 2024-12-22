@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .order-info {
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 1.5rem;
+        }
+
+        img {
+            width: 70px;
+        }
+    </style>
+    <title>Order-email template</title>
+</head>
+<body>
+<div class="order-info">
+    <p><b><strong>Order ID: </strong> <span th:text="${order.orderGuestId()}"></span></b></p>
+    <p><strong>Phone: </strong> <span th:text="${order.phone}"></span></p>
+    <p><strong>Order Date: </strong> <span th:text="${order.dateArrived}"></span></p>
+    <p><strong>Order Time: </strong> <span th:text="${order.timeArrived}"></span></p>
+    <p><strong>Total Order Price: </strong> <span th:text="${order.totalAmount}"></span>$</p>
+    <p><strong>Delivery Type: </strong>
+        <span th:text="${order.delivery ? 'Yes' : 'No'}"></span>
+    </p>
+</div>
+<table>
+    <tr>
+        <th>Product Img</th>
+        <th>Product Name</th>
+        <th>Quantity</th>
+        <th>Total Price</th>
+    </tr>
+    <tr th:each="purchase : ${purchaseList}">
+        <td><img th:src="@{'cid:' + ${purchase.image01}}" alt="Product img"/></td>
+        <td th:text="${purchase.title}"></td>
+        <td th:text="${purchase.quantity}"></td>
+        <td th:text="${purchase.totalPrice} + ' $'"></td>
+    </tr>
+</table>
+</body>
+</html>

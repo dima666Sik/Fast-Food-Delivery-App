@@ -28,7 +28,8 @@ public class SliderController {
 
     @PostMapping("/add-slider-images")
     public Mono<ResponseEntity<Void>> addImagesToSlider() {
-        List.of("first_slide.png", "second_slide.png", "third_slide.png").forEach(service::addImageToSlider);
-        return Mono.just(ResponseEntity.status(HttpStatus.CREATED).build());
+        return Flux.fromIterable(List.of("1_slide.png", "2_slide.png", "3_slide.png"))
+            .flatMap(service::addImageToSlider)
+            .then(Mono.just(ResponseEntity.status(HttpStatus.CREATED).build()));
     }
 }

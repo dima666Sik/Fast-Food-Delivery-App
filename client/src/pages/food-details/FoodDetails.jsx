@@ -1,30 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { Col, Container, Row, Spinner } from "react-bootstrap";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 
-import { cartActions } from "../../redux/store/shopping-cart/cartSlice";
-import Helmet from "../../components/helmet/Helmet";
-import CommonAd from "../../components/ui/common-ad/CommonAd";
-import ProductCard from "../../components/ui/product-card/ProductCard";
-import "./FoodDetails.css";
-import { useGetAllProducts } from "../../hooks/useGetAllProducts";
-import { useValidFormsBtn } from "../../hooks/useValidFormsBtn";
-import ModalAlert from "../../components/alerts/ModalAlert";
-import {
-	axiosLogout,
-	clearUser,
-	setUser,
-} from "../../redux/store/user/userSlice";
-import {
-	axiosGetStatusLikes,
-	cartActionsLiked,
-} from "../../redux/store/shopping-cart/cartsLikedSlice";
-import { refresh } from "../../actions/post/refresh";
 import { deleteReview } from "../../actions/delete/deleteReview";
 import { getAllReviewsToProduct } from "../../actions/get/getAllReviewsToProduct";
 import { addReview } from "../../actions/post/addReview";
+import { refresh } from "../../actions/post/refresh";
+import ModalAlert from "../../components/alerts/ModalAlert";
+import Helmet from "../../components/helmet/Helmet";
+import CommonAd from "../../components/ui/common-ad/CommonAd";
+import ProductCard from "../../components/ui/product-card/ProductCard";
+import { useGetAllProducts } from "../../hooks/useGetAllProducts";
+import { useValidFormsBtn } from "../../hooks/useValidFormsBtn";
+import { cartActions } from "../../redux/store/shopping-cart/cartSlice";
+import { axiosGetStatusLikes } from "../../redux/store/shopping-cart/cartsLikedSlice";
+import { axiosLogout, setUser } from "../../redux/store/user/userSlice";
+import "./FoodDetails.css";
 
 const FoodDetails = () => {
 	const [tab, setTab] = useState("desc");
@@ -125,7 +117,8 @@ const FoodDetails = () => {
 			} catch (error) {
 				console.log(error, accessToken);
 				if (
-					error.response.data === "Access token was expired! Refresh is valid!"
+					error.response.data.message === "Access token has expired" ||
+					error.response.data.message === "Access token has revoked"
 				) {
 					try {
 						const response = await refresh(accessToken);
@@ -151,15 +144,14 @@ const FoodDetails = () => {
 				}
 
 				if (
-					error.response.data ===
-						"You need to reauthorize! Tokens all were expired. You will be much to authorization!" ||
-					error.response.data ===
-						"All Tokens (access & refresh) were expired! Please generate news tokens!" ||
-					error.response.data === "Valid Refresh token was expired..." ||
-					error.response.data === "Tokens from client is bad!"
+					error.response.data.message ===
+						"Access & Refresh tokens have expired" ||
+					error.response.data.message === "Access token not found" ||
+					error.response.data.message === "Refresh token not found" ||
+					error.response.data.message === "Invalid token"
 				) {
 					setShowTextModal(
-						"You don't have rights to review, refresh token was expired. Please Authorization in this Application..."
+						"You don't have rights to review. Please Authorization in this Application..."
 					);
 					setShowModal(true);
 					dispatch(
@@ -186,9 +178,15 @@ const FoodDetails = () => {
 					setReviews(getReviews);
 					console.log(getReviews);
 				} catch (error) {
+					if (error.response.status === 404 && reviews.length !== 0) {
+						const getReviews = [];
+						setReviews(getReviews);
+						console.log(getReviews);
+					}
+
 					if (
-						error.response.data ===
-						"Access token was expired! Refresh is valid!"
+						error.response.data.message === "Access token has expired" ||
+						error.response.data.message === "Access token has revoked"
 					) {
 						try {
 							const response = await refresh(accessToken);
@@ -214,15 +212,14 @@ const FoodDetails = () => {
 					}
 
 					if (
-						error.response.data ===
-							"You need to reauthorize! Tokens all were expired. You will be much to authorization!" ||
-						error.response.data ===
-							"All Tokens (access & refresh) were expired! Please generate news tokens!" ||
-						error.response.data === "Valid Refresh token was expired..." ||
-						error.response.data === "Tokens from client is bad!"
+						error.response.data.message ===
+							"Access & Refresh tokens have expired" ||
+						error.response.data.message === "Access token not found" ||
+						error.response.data.message === "Refresh token not found" ||
+						error.response.data.message === "Invalid token"
 					) {
 						setShowTextModal(
-							"You don't have rights to review, refresh token was expired. Please Authorization in this Application..."
+							"You don't have rights to review. Please Authorization in this Application..."
 						);
 						setShowModal(true);
 						dispatch(
@@ -245,7 +242,8 @@ const FoodDetails = () => {
 			setDeletedReview(!deletedReview);
 		} catch (error) {
 			if (
-				error.response.data === "Access token was expired! Refresh is valid!"
+				error.response.data.message === "Access token has expired" ||
+				error.response.data.message === "Access token has revoked"
 			) {
 				try {
 					const response = await refresh(accessToken);
@@ -269,15 +267,14 @@ const FoodDetails = () => {
 			}
 
 			if (
-				error.response.data ===
-					"You need to reauthorize! Tokens all were expired. You will be much to authorization!" ||
-				error.response.data ===
-					"All Tokens (access & refresh) were expired! Please generate news tokens!" ||
-				error.response.data === "Valid Refresh token was expired..." ||
-				error.response.data === "Tokens from client is bad!"
+				error.response.data.message ===
+					"Access & Refresh tokens have expired" ||
+				error.response.data.message === "Access token not found" ||
+				error.response.data.message === "Refresh token not found" ||
+				error.response.data.message === "Invalid token"
 			) {
 				setShowTextModal(
-					"You don't have rights to delete review, refresh token was expired. Please Authorization in this Application..."
+					"You don't have rights to review. Please Authorization in this Application..."
 				);
 				setShowModal(true);
 				dispatch(
@@ -392,7 +389,8 @@ const FoodDetails = () => {
 											</div>
 										) : (
 											<div className="tab__form mb-3">
-												{reviews.message_response ? (
+												{console.log(reviews)}
+												{reviews.length === 0 ? (
 													<div className="review pt-5 mb-5 pb-5">
 														<p className="user__name text-center my-0">
 															Review is absent

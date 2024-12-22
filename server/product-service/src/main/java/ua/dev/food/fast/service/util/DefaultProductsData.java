@@ -65,30 +65,64 @@ public class DefaultProductsData {
             .description("Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta ad et est, fugiat repudiandae neque illo delectus commodi magnam explicabo autem voluptates eaque velit vero facere mollitia. Placeat rem, molestiae error obcaecati enim doloribus impedit aliquam, maiores qui minus neque.")
             .build();
 
+        Product product6 = Product.builder()
+            .title("Sushi 1")
+            .price(new BigDecimal("115.0"))
+            .likes(130L)
+            .image01("sushi_1.png")
+            .image02("sushi_1.png")
+            .image03("sushi_1.png")
+            .category("Sushi")
+            .description("Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta ad et est, fugiat repudiandae neque illo delectus commodi magnam explicabo autem voluptates eaque velit vero facere mollitia. Placeat rem, molestiae error obcaecati enim doloribus impedit aliquam, maiores qui minus neque.")
+            .build();
+
+        Product product7 = Product.builder()
+            .title("Sushi 2")
+            .price(new BigDecimal("110.0"))
+            .likes(90L)
+            .image01("sushi_2.png")
+            .image02("sushi_2.png")
+            .image03("sushi_2.png")
+            .category("Sushi")
+            .description("Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta ad et est, fugiat repudiandae neque illo delectus commodi magnam explicabo autem voluptates eaque velit vero facere mollitia. Placeat rem, molestiae error obcaecati enim doloribus impedit aliquam, maiores qui minus neque.")
+            .build();
+
+        Product product8 = Product.builder()
+            .title("Sushi 3")
+            .price(new BigDecimal("110.0"))
+            .likes(125L)
+            .image01("sushi_3.png")
+            .image02("sushi_3.png")
+            .image03("sushi_3.png")
+            .category("Sushi")
+            .description("Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta ad et est, fugiat repudiandae neque illo delectus commodi magnam explicabo autem voluptates eaque velit vero facere mollitia. Placeat rem, molestiae error obcaecati enim doloribus impedit aliquam, maiores qui minus neque.")
+            .build();
+
+        Product product9 = Product.builder()
+            .title("Cheese Burger")
+            .price(new BigDecimal("24.0"))
+            .likes(170L)
+            .image01("product_04.jpg")
+            .image02("product_08.jpg")
+            .image03("product_09.jpg")
+            .category("Burger")
+            .description("Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta ad et est, fugiat repudiandae neque illo delectus commodi magnam explicabo autem voluptates eaque velit vero facere mollitia. Placeat rem, molestiae error obcaecati enim doloribus impedit aliquam, maiores qui minus neque.")
+            .build();
+        Product product10 = Product.builder()
+            .title("Royal Cheese Burger")
+            .price(new BigDecimal("24.0"))
+            .likes(110L)
+            .image01("product_01.jpg")
+            .image02("product_01_1.jpg")
+            .image03("product_01_3.jpg")
+            .category("Burger")
+            .description("Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta ad et est, fugiat repudiandae neque illo delectus commodi magnam explicabo autem voluptates eaque velit vero facere mollitia. Placeat rem, molestiae error obcaecati enim doloribus impedit aliquam, maiores qui minus neque.")
+            .build();
         // Continue for the remaining products in the same pattern...
 
         return List.of(
             product1, product2, product3, product4, product5,
-            Product.builder()
-                .title("Cheese Burger")
-                .price(new BigDecimal("24.0"))
-                .likes(170L)
-                .image01("product_04.jpg")
-                .image02("product_08.jpg")
-                .image03("product_09.jpg")
-                .category("Burger")
-                .description("Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta ad et est, fugiat repudiandae neque illo delectus commodi magnam explicabo autem voluptates eaque velit vero facere mollitia. Placeat rem, molestiae error obcaecati enim doloribus impedit aliquam, maiores qui minus neque.")
-                .build(),
-            Product.builder()
-                .title("Royal Cheese Burger")
-                .price(new BigDecimal("24.0"))
-                .likes(110L)
-                .image01("product_01.jpg")
-                .image02("product_01_1.jpg")
-                .image03("product_01_3.jpg")
-                .category("Burger")
-                .description("Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta ad et est, fugiat repudiandae neque illo delectus commodi magnam explicabo autem voluptates eaque velit vero facere mollitia. Placeat rem, molestiae error obcaecati enim doloribus impedit aliquam, maiores qui minus neque.")
-                .build()
+            product6, product7, product8, product9, product10
         );
     }
 

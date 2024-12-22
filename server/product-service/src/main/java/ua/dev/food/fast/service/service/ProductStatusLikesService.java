@@ -64,7 +64,7 @@ public class ProductStatusLikesService {
             return productLikesRepository.findByUserId(userId)
                 .switchIfEmpty(Flux.error(new ResourceNotFoundException(MessageConstants.NOT_FOUND_LIKES_FROM_USER)))
                 .flatMap(productStatusLikes -> productRepository.findById(productStatusLikes.getProductId())
-                    .map(product -> ProductStatusLikesResponseDto.builder().id(productStatusLikes.getId())
+                    .map(product -> ProductStatusLikesResponseDto.builder().idProduct(product.getId())
                         .likes(product.getLikes()).status(productStatusLikes.getStatus()).build()));
         });
     }

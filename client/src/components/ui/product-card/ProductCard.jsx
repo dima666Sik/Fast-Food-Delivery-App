@@ -31,10 +31,10 @@ const ProductCard = (props) => {
 	);
 
 	const accessToken = useSelector((state) => state.user.accessToken);
-	const userRole = useSelector((state) => state.user.role);
+	const roleUsers = useSelector((state) => state.user.roles);
 
 	const changeLike = () => {
-		if (isAuthenticated && userRole !== "ADMIN") {
+		if (isAuthenticated && roleUsers.includes("USER")) {
 			dispatch(
 				axiosSetLikeAndStatus({
 					id,

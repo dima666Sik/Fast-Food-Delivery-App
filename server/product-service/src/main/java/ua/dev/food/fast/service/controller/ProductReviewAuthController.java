@@ -28,4 +28,13 @@ public class ProductReviewAuthController {
         return productReviewService.deleteProductReview(authHeader, productId, productReviewId)
             .then(Mono.fromCallable(() -> ResponseEntity.ok().build()));
     }
+
+    @PutMapping("/edit-review-to-product")
+    public Mono<ResponseEntity<Void>> editProductReview(@RequestHeader(value = "Authorization") String authHeader,
+                                                        @RequestParam("product_id") Long productId,
+                                                        @RequestParam("product_review_id") Long productReviewId,
+                                                        @RequestParam("product_review_msg") String productReviewMsg) {
+        return productReviewService.editProductReview(authHeader, productId, productReviewId, productReviewMsg)
+            .then(Mono.fromCallable(() -> ResponseEntity.ok().build()));
+    }
 }

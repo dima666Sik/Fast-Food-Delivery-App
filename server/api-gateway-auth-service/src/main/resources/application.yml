@@ -1,6 +1,15 @@
 server:
   port: 8080
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  endpoint:
+    prometheus:
+      enabled: true
+
 spring:
   application:
     name: gateway-auth-service
@@ -21,6 +30,12 @@ spring:
           predicates:
             - Path=/api/v2/product/**
 
+        # New rote endpoint for static files product service
+        - id: product-service-static-files
+          uri: lb://product-service
+          predicates:
+            - Path=/public/images/**
+
         - id: email-sender-service-route
           uri: lb://email-sender-service
           predicates:
@@ -29,17 +44,17 @@ spring:
         - id: order-service-route
           uri: lb://order-service
           predicates:
-            - Path=/order-service/**
+            - Path=/api/v2/order-purchase/**
 
-        - id: credit-card-service-route
-          uri: lb://credit-card-service
+        - id: stripe-integration-service-route
+          uri: lb://stripe-integration-service
           predicates:
-            - Path=/credit-card-service/**
+            - Path=/api/v2/payment/**
 
-        - id: chat-gpt-service-route
-          uri: lb://chat-gpt-service
+        - id: chat-helper-ai-service-route
+          uri: lb://chat-helper-ai-service
           predicates:
-            - Path=/chat-gpt-service/**
+            - Path=/api/v2/chat-ai-helper/**
 
   config:
     import:

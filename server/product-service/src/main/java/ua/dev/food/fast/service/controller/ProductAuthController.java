@@ -17,7 +17,8 @@ import ua.dev.food.fast.service.util.MessageConstants;
 public class ProductAuthController {
     private final ProductService service;
 
-    @PostMapping(value = "/add-product", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    //    @PostMapping(value = "/add-product", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/add-product")
     public Mono<ResponseEntity<String>> addProduct(
         @RequestPart("files") Flux<FilePart> files,
         @RequestPart("data") ProductRequestDto request

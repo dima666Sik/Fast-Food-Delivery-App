@@ -48,15 +48,16 @@ const Login = (props) => {
 			const response = await login(email, password);
 			console.log("Logged in:", response.data);
 
-			if (response.data.message_response.status_response) {
+			if (response.status === 200 && response.data.access_token) {
 				dispatch(setUser({ accessToken: response.data.access_token }));
 				dispatch(cartActions.clearCart());
+
 				props.onHide();
 			}
 		} catch (error) {
 			console.log(error);
 			// console.error("Failed to log in");
-			setShowTextModal(error.response.data.message_response);
+			setShowTextModal(error.response.data.message);
 			setShowModal(true);
 		}
 	};
@@ -131,8 +132,8 @@ const Login = (props) => {
 								className="text-light"
 								variant="primary"
 								style={{
-									backgroundColor: "orangered",
-									borderColor: "orangered",
+									backgroundColor: "green",
+									borderColor: "green",
 								}}
 								onClick={handleSignInClick}
 							>

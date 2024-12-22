@@ -6,7 +6,7 @@ export const addOrderPurchaseUser = async (
 ) => {
 	try {
 		const response = await axios.post(
-			`${process.env.REACT_APP_SERVER_API_URL}api/v1/private/order-purchase/add-order-with-purchase-user`,
+			`${process.env.REACT_APP_SERVER_API_URL}api/v2/order-purchase/private/add-order-with-purchase-user`,
 			userShippingAddress,
 			{
 				headers: {
@@ -16,6 +16,7 @@ export const addOrderPurchaseUser = async (
 		);
 		return response;
 	} catch (error) {
+		console.log(error.response.data.message);
 		throw error;
 	}
 };
@@ -23,11 +24,12 @@ export const addOrderPurchaseUser = async (
 export const addOrderPurchaseGuest = async (userShippingAddress) => {
 	try {
 		const response = await axios.post(
-			`${process.env.REACT_APP_SERVER_API_URL}api/v1/order-purchase/add-order-with-purchase-guest`,
+			`${process.env.REACT_APP_SERVER_API_URL}api/v2/order-purchase/add-order-with-purchase-guest`,
 			userShippingAddress
 		);
 		return response;
 	} catch (error) {
+		console.log(error.response.data.message);
 		throw error;
 	}
 };

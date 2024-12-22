@@ -3,7 +3,7 @@ import axios from "axios";
 export const getSortedChoiceProducts = async (sortedChoice) => {
 	try {
 		const response = await axios.get(
-			`http://localhost:8086/api/v1/foods/sorted/${sortedChoice}`
+			`${process.env.REACT_APP_SERVER_API_URL}api/v2/product/foods/sort/${sortedChoice}`
 		);
 
 		const updatedProducts = response.data.map((product) => {
@@ -16,6 +16,7 @@ export const getSortedChoiceProducts = async (sortedChoice) => {
 		});
 		return updatedProducts;
 	} catch (error) {
+		console.log(error.response.data.message);
 		throw error;
 	}
 };

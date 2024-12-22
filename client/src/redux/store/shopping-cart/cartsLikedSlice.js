@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { setStatus } from "../../../actions/post/setStatus";
+import { setStatus } from "../../../actions/put/setStatus";
 import { getListStatusForUser } from "../../../actions/get/getLikes";
 import { axiosLogout, clearUser, setUser } from "../user/userSlice";
 
@@ -19,9 +19,11 @@ export const axiosSetLikeAndStatus = createAsyncThunk(
 		{ rejectWithValue, getState, dispatch }
 	) => {
 		try {
+			console.log(id, likes);
 			const existItemIndex = getState().cartsLiked.listCartsLiked.findIndex(
 				(item) => item.id === id
 			);
+			console.log(existItemIndex, id, likes);
 			if (existItemIndex !== -1) {
 				const newStatus =
 					!getState().cartsLiked.listCartsLiked[existItemIndex].status;
@@ -30,7 +32,7 @@ export const axiosSetLikeAndStatus = createAsyncThunk(
 					getState().cartsLiked.listCartsLiked[existItemIndex].likes;
 
 				const newLike = newStatus ? currentLikes + 1 : currentLikes - 1;
-
+				console.log(existItemIndex, newStatus, id, currentLikes);
 				await setLike(id, newLike, accessToken);
 
 				await setStatus(id, newStatus, accessToken);
@@ -61,9 +63,11 @@ export const axiosSetLikeAndStatus = createAsyncThunk(
 		} catch (error) {
 			console.log(error, accessToken);
 			if (
-				error.response.data === "Access token was expired! Refresh is valid!"
+				error.response.data.message === "Access token has expired" ||
+				error.response.data.message === "Access token has revoked"
 			) {
 				try {
+					console.log("refresh");
 					const response = await refresh(accessToken);
 
 					if (response.status === 200) {
@@ -83,13 +87,13 @@ export const axiosSetLikeAndStatus = createAsyncThunk(
 			}
 
 			if (
-				error.response.data ===
-					"You need to reauthorize! Tokens all were expired. You will be much to authorization!" ||
-				error.response.data ===
-					"All Tokens (access & refresh) were expired! Please generate news tokens!" ||
-				error.response.data === "Valid Refresh token was expired..." ||
-				error.response.data === "Tokens from client is bad!"
+				error.response.data.message ===
+					"Access & Refresh tokens have expired" ||
+				error.response.data.message === "Access token not found" ||
+				error.response.data.message === "Refresh token not found" ||
+				error.response.data.message === "Invalid token"
 			) {
+				console.log("log out");
 				dispatch(
 					axiosLogout({
 						accessToken,
@@ -119,10 +123,14 @@ export const axiosGetStatusLikes = createAsyncThunk(
 			); // Обновляем состояние Redux
 		} catch (error) {
 			console.log(error.response, accessToken);
+			console.log(error.response.data);
+			console.log(error.response.data.message);
 			if (
-				error.response.data === "Access token was expired! Refresh is valid!"
+				error.response.data.message === "Access token has expired" ||
+				error.response.data.message === "Access token has revoked"
 			) {
 				try {
+					console.log("refresh");
 					const responseToken = await refresh(accessToken);
 
 					if (responseToken.status === 200) {
@@ -143,13 +151,13 @@ export const axiosGetStatusLikes = createAsyncThunk(
 			}
 
 			if (
-				error.response.data ===
-					"You need to reauthorize! Tokens all were expired. You will be much to authorization!" ||
-				error.response.data ===
-					"All Tokens (access & refresh) were expired! Please generate news tokens!" ||
-				error.response.data === "Valid Refresh token was expired..." ||
-				error.response.data === "Tokens from client is bad!"
+				error.response.data.message ===
+					"Access & Refresh tokens have expired" ||
+				error.response.data.message === "Access token not found" ||
+				error.response.data.message === "Refresh token not found" ||
+				error.response.data.message === "Invalid token"
 			) {
+				console.log("log out");
 				dispatch(
 					axiosLogout({
 						accessToken,

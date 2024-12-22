@@ -24,18 +24,22 @@ const SliderCaption = ({ title, description }) => {
 const Slider = () => {
 	const [images, setImages] = useState([]);
 	const [isLoadingSlider, setIsLoadingSlider] = useState(false);
-
 	useEffect(() => {
 		setIsLoadingSlider(true);
 		axios
-			.get(`${process.env.REACT_APP_SERVER_API_URL}api/v1/slider/images`)
+			.get(
+				`${process.env.REACT_APP_SERVER_API_URL}api/v2/product/slider/images`
+			)
 			.then((response) => {
 				const imageUrls = response.data.map((image) => image.urlImg);
-				// console.log(imageUrls);
+				console.log(imageUrls);
 				setImages(imageUrls);
 				setIsLoadingSlider(false);
 			})
-			.catch((error) => console.log(error));
+			.catch((error) => {
+				console.log(error);
+				setIsLoadingSlider(false);
+			});
 	}, []);
 
 	return isLoadingSlider ? (
@@ -57,7 +61,7 @@ const Slider = () => {
 					/>
 					<SliderCaption
 						title={`Do you want ${
-							index === 0 ? "pizza" : index === 1 ? "burger" : "sushi"
+							index === 0 ? "burger" : index === 1 ? "pizza" : "sushi"
 						}?`}
 						description="Order delivery from us, incredible taste and quality are guaranteed."
 					/>

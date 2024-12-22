@@ -9,6 +9,7 @@ import Cart from "../pages/cart/Cart";
 import Checkout from "../pages/checkout/Checkout";
 import Contact from "../pages/contact/Contact";
 import Profile from "../pages/profile/Profile";
+import Completion from "../pages/completion/Completion";
 
 const Routers = () => {
 	return (
@@ -21,6 +22,7 @@ const Routers = () => {
 			<Route path="/checkout" element={<Checkout />} />
 			<Route path="/contact" element={<Contact />} />
 			<Route path="/profile" element={<Profile />} />
+			<Route path="/completion" element={<Completion />} />
 			<Route path="*" element={<Navigate to="/" />} />
 		</Routes>
 	);
