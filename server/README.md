@@ -55,7 +55,7 @@ All technologies you can see in the part of this README.md under the heading [Te
 
 ### Usecase Diagram
 
-![Usecase Diagram](../github-files/Usecase%20Diagram%20-%20full_large.drawio.png)
+![Usecase Diagram](../github-files/Usecase%20Diagram-full_large.drawio.png)
 
 ### The architecture of the backend of the web application
 
